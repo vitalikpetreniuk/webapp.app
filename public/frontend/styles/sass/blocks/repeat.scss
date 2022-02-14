@@ -1,0 +1,16 @@
+.repeat {
+	width: fit-content;
+	cursor: pointer;
+	color: #5971E9;
+	img {
+		transition: .7s;
+	}
+	&.alt {
+		color: #000000;
+	}
+	&:hover {
+		img {
+			transform: rotate(180deg);
+		}
+	}
+}

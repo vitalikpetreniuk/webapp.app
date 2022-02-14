@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+<!--	<meta name="viewport"-->
+<!--				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">-->
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="description" content="Webapp">
+	<link rel="icon" href="images/logo.svg">
+	<title>index</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="css/app.min.css">
+</head>
+<body>
+<header class="header d-flex">
+	<a href="/" class="header__logo d-flex align-items-center">
+		<img src="images/logo.svg" alt="logo">
+		<span>Valuable Analytics</span>
+	</a>
+	<div class="header__buttons d-flex">
+		<button id="revenue" class="btn__header green d-flex align-items-center">
+			<img src="images/dist/icons/plus.svg" alt="plus">
+			<span>Revenue</span>
+		</button>
+		<button id="expenses" class="btn__header red d-flex align-items-center">
+			<img src="images/dist/icons/minus.svg" alt="minus">
+			<span>Expenses</span>
+		</button>
+	</div>
+</header>
+<div class="content d-flex">
+	<nav class="nav">
+		<div class="mounthly-calc d-flex flex-column">
+			<span>Net profit calculator</span>
+			<div class="mounthly-calc__list">
+				<div class="title">
+					<span>January</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>February</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>March</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>April</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>May</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>June</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>July</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>August</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>September</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>October</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>November</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+				<div class="title">
+					<span>December</span>
+				</div>
+				<ul class="inner">
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net revenue</span>
+						<span>$<span>2,000,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Total marketing costs</span>
+						<span>$<span>250,000.00</span></span>
+					</li>
+					<li class="d-flex align-items-center justify-content-between">
+						<span>Net profit/loss</span>
+						<span>-$<span>72,500.00</span></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<section class="section d-flex flex-column">
+		<div class="tabs-section active">
+			<button>Reporting</button>
+			<button class="active">Analytics</button>
+		</div>
+		<div class="type-analytics mt-20">
+			<ul class="d-flex">
+				<li>
+					<a href="#">P/C Corve model</a>
+				</li>
+				<li>
+					<a href="sweetspot.html">Sweetspot Analytics</a>
+				</li>
+				<li>
+					<a href="special.html">Specid event Analytics</a>
+				</li>
+			</ul>
+		</div>
+		<div class="datepicker d-flex mt-20">
+			<input id="datepicker" />
+			<div class="datepicker__icon d-flex align-items-center justify-content-center">
+				<img src="images/dist/icons/calendar.svg" alt="">
+			</div>
+		</div>
+		<div class="tabs-section alt active mt-24">
+			<button>Data range</button>
+			<button class="active">Month range </button>
+		</div>
+		<div class="picker-month mt-24">
+			<div class="picker-month__year d-flex align-items-center justify-content-between">
+<!--				Если кнопка не активна то добавляем класс inactive-->
+				<button class="picker-month__prev">
+					<img src="images/dist/icons/arrow-picker.svg" alt="arrow-picker">
+				</button>
+				<span>2021</span>
+				<button class="picker-month__next inactive">
+					<img src="images/dist/icons/arrow-picker.svg" alt="arrow-picker">
+				</button>
+			</div>
+			<div class="picker-month__months">
+				<ul id="listMonths" class="d-flex justify-content-between align-items-center">
+<!--					Добавляем класс range-active, когда выбираем диапазон-->
+					<li></li>
+					<li></li>
+					<li></li>
+					<li class="range-active"></li>
+					<li class="range-active"></li>
+					<li class="range-active"></li>
+					<li class="range-active"></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+		</div>
+		<div id="chartdiv" class="mt-20"></div>
+	</section>
+</div>
+<div id="modal-revenue" class="modal d-flex flex-column">
+	<span class="modal__title">Revenue</span>
+	<form id="revenueForm" class="drag-drop d-flex flex-column" action="">
+		<div class="drag-drop__input d-flex flex-column align-items-center">
+			<input class="drag-drop__file" type="file" name="files[]" id="revenueFile" data-multiple-caption="{count} files selected" multiple />
+			<div class="drag-drop__selected d-flex flex-column align-items-center">
+				<div class="drag-drop__close">
+					<img src="images/dist/icons/close.svg" alt="close">
+				</div>
+				<div class="d-flex align-items-center justify-content-center">
+					<img src="images/dist/icons/doc.svg" alt="doc">
+				</div>
+				<span>Document №1.docx</span>
+			</div>
+			<label for="revenueFile" class="drag-drop__label d-flex justify-content-center">
+				<img src="images/dist/icons/add-doc.svg" alt="add">
+				<span>Select file</span>
+			</label>
+			<!--			<button class="drag-drop__button" type="submit">Upload</button>-->
+		</div>
+		<div class="drag-drop__uploading">Uploading…</div>
+		<div class="drag-drop__success">Done!</div>
+		<div class="drag-drop__error">Error! <span></span>.</div>
+	</form>
+	<button type="submit" class="btn__modal turquoise mt-30">Download Sample</button>
+	<div class="modal__close">
+		<img src="images/dist/icons/x.svg" alt="x">
+	</div>
+</div>
+<div id="modal-expenses" class="modal d-flex flex-column">
+	<span class="modal__title">Expenses</span>
+	<div class="modal__select select blue mb-15">
+		<input class="select__input" type="hidden" name="">
+		<div class="select__head">Expenses type</div>
+		<ul class="select__list" style="display: none;">
+			<li class="select__item">Summ  $ (USD)</li>
+			<li class="select__item">% of Ad spend</li>
+			<li class="select__item">% of net revenue</li>
+		</ul>
+	</div>
+	<p class="modal__text">
+		select the date range for which you want to try on data
+	</p>
+	<form id="expensesForm" class="drag-drop d-flex flex-column" action="">
+		<div class="drag-drop__input d-flex flex-column align-items-center">
+			<input class="drag-drop__file" type="file" name="files[]" id="expensesFile" data-multiple-caption="{count} files selected" multiple />
+			<div class="drag-drop__selected d-flex flex-column align-items-center">
+				<div class="drag-drop__close">
+					<img src="images/dist/icons/close.svg" alt="close">
+				</div>
+				<div class="d-flex align-items-center justify-content-center">
+					<img src="images/dist/icons/doc.svg" alt="doc">
+				</div>
+				<span>Document №1.docx</span>
+			</div>
+			<label for="expensesFile" class="drag-drop__label d-flex justify-content-center">
+				<img src="images/dist/icons/add-doc.svg" alt="add">
+				<span>Select file</span>
+			</label>
+			<!--			<button class="drag-drop__button" type="submit">Upload</button>-->
+		</div>
+		<div class="drag-drop__uploading">Uploading…</div>
+		<div class="drag-drop__success">Done!</div>
+		<div class="drag-drop__error">Error! <span></span>.</div>
+	</form>
+	<button type="submit" class="btn__modal azure mt-30">Download Sample</button>
+	<div class="modal__close">
+		<img src="images/dist/icons/x.svg" alt="x">
+	</div>
+</div>
+<!--<div id="modal-revenue" class="modal d-flex flex-column">-->
+<!--	<span class="modal__title">Revenue</span>-->
+<!--	<form class="d-flex flex-column" action="">-->
+<!--		<div class="modal__select select">-->
+<!--			<input class="select__input" type="hidden" name="">-->
+<!--			<div class="select__head">Revenue type</div>-->
+<!--			<ul class="select__list" style="display: none;">-->
+<!--				<li class="select__item">First type</li>-->
+<!--				<li class="select__item">Second type</li>-->
+<!--				<li class="select__item">Third type</li>-->
+<!--			</ul>-->
+<!--		</div>-->
+<!--		<input class="input-field mt-15" type="number" step="10" placeholder="Summ">-->
+<!--		<div class="modal__select select alt mt-15">-->
+<!--			<input class="select__input" type="hidden" name="">-->
+<!--			<div class="select__head">Source</div>-->
+<!--			<ul class="select__list" style="display: none;">-->
+<!--				<li class="select__item">First type</li>-->
+<!--				<li class="select__item">Second type</li>-->
+<!--				<li class="select__item">Third type</li>-->
+<!--			</ul>-->
+<!--		</div>-->
+<!--		<input class="input-field mt-15" type="text" placeholder="Tag">-->
+<!--		<textarea class="input-field textarea mt-15" name="" placeholder="Comment"></textarea>-->
+<!--		<button type="submit" class="btn__modal mentol mt-30">Add Revenue</button>-->
+<!--	</form>-->
+<!--	<div class="modal__close">-->
+<!--		<img src="images/dist/icons/x.svg" alt="x">-->
+<!--	</div>-->
+<!--</div>-->
+<!--<div id="modal-expenses" class="modal d-flex flex-column">-->
+<!--	<span class="modal__title">Expenses</span>-->
+<!--	<form class="d-flex flex-column" action="">-->
+<!--		<div class="tabs-section active">-->
+<!--			<button class="small active">Fixed</button>-->
+<!--			<button class="small">Variable</button>-->
+<!--		</div>-->
+<!--		<div class="modal__select select blue mt-15">-->
+<!--			<input class="select__input" type="hidden" name="">-->
+<!--			<div class="select__head">Expenses type</div>-->
+<!--			<ul class="select__list" style="display: none;">-->
+<!--				<li class="select__item">Summ  $ (USD)</li>-->
+<!--				<li class="select__item">% of Ad spend</li>-->
+<!--				<li class="select__item">% of net revenue</li>-->
+<!--			</ul>-->
+<!--		</div>-->
+<!--		<input class="input-field mt-15" type="number" step="10" placeholder="Summ">-->
+<!--		<div class="modal__select select alt mt-15">-->
+<!--			<input class="select__input" type="hidden" name="">-->
+<!--			<div class="select__head">Source</div>-->
+<!--			<ul class="select__list" style="display: none;">-->
+<!--				<li class="select__item">First type</li>-->
+<!--				<li class="select__item">Second type</li>-->
+<!--				<li class="select__item">Third type</li>-->
+<!--			</ul>-->
+<!--		</div>-->
+<!--		<input class="input-field mt-15" type="text" placeholder="Tag">-->
+<!--		<textarea class="input-field textarea mt-15" name="" placeholder="Comment"></textarea>-->
+<!--		<div class="repeat d-flex align-items-center mt-20">-->
+<!--			<img class="mr-7" src="images/dist/icons/repeat.svg" alt="repeat">-->
+<!--			<span>Repeat monthly</span>-->
+<!--		</div>-->
+<!--		<button type="submit" class="btn__modal blue mt-20">Add Revenue</button>-->
+<!--	</form>-->
+<!--	<div class="modal__close">-->
+<!--		<img src="images/dist/icons/x.svg" alt="x">-->
+<!--	</div>-->
+<!--</div>-->
+<div class="modal-overlay"></div>
+
+
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+<script>
+	am5.ready(function() {
+
+// Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+		var root = am5.Root.new("chartdiv");
+
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+		root.setThemes([
+			am5themes_Animated.new(root)
+		]);
+
+
+// Create chart
+// https://www.amcharts.com/docs/v5/charts/xy-chart/
+		var chart = root.container.children.push(am5xy.XYChart.new(root, {
+			panX: true,
+			panY: true,
+			wheelX: "panX",
+			wheelY: "zoomX"
+		}));
+
+		chart.get("colors").set("step", 3);
+
+
+// Add cursor
+// https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+		var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+		cursor.lineY.set("visible", false);
+
+
+// Create axes
+// https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+		var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
+			maxDeviation: 0.3,
+			baseInterval: {
+				timeUnit: "day",
+				count: 1
+			},
+			renderer: am5xy.AxisRendererX.new(root, {}),
+			tooltip: am5.Tooltip.new(root, {})
+		}));
+
+		var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+			maxDeviation: 0.3,
+			renderer: am5xy.AxisRendererY.new(root, {})
+		}));
+
+
+// Create series
+// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+		var series = chart.series.push(am5xy.LineSeries.new(root, {
+			name: "Series 1",
+			xAxis: xAxis,
+			yAxis: yAxis,
+			valueYField: "value",
+			valueXField: "date",
+			tooltip: am5.Tooltip.new(root, {
+				labelText: "{valueY}"
+			})
+		}));
+		series.strokes.template.setAll({
+			strokeWidth: 2,
+			strokeDasharray: [3, 3]
+		});
+
+// Create animating bullet by adding two circles in a bullet container and
+// animating radius and opacity of one of them.
+		series.bullets.push(function(root, series, dataItem) {
+			if (dataItem.dataContext.bullet) {
+				var container = am5.Container.new(root, {});
+				var circle0 = container.children.push(am5.Circle.new(root, {
+					radius: 5,
+					fill: am5.color(0xff0000)
+				}));
+				var circle1 = container.children.push(am5.Circle.new(root, {
+					radius: 5,
+					fill: am5.color(0xff0000)
+				}));
+
+				circle1.animate({
+					key: "radius",
+					to: 20,
+					duration: 1000,
+					easing: am5.ease.out(am5.ease.cubic),
+					loops: Infinity
+				});
+				circle1.animate({
+					key: "opacity",
+					to: 0,
+					from: 1,
+					duration: 1000,
+					easing: am5.ease.out(am5.ease.cubic),
+					loops: Infinity
+				});
+
+				return am5.Bullet.new(root, {
+					sprite: container
+				})
+			}
+		})
+
+// Set data
+		var data = [{
+			date: new Date(2022, 1, 1).getTime(),
+			value: 0
+		}, {
+			date: new Date(2022, 1, 3).getTime(),
+			value: 5
+		}, {
+			date: new Date(2022, 1, 5).getTime(),
+			value: 20
+		}, {
+			date: new Date(2022, 1, 7).getTime(),
+			value: 40
+		}, {
+			date: new Date(2022, 1, 9).getTime(),
+			value: 80
+		}, {
+			date: new Date(2022, 1, 11).getTime(),
+			value: 160
+		}, {
+			date: new Date(2022, 1, 14).getTime(),
+			value: 360,
+			bullet: true
+		}]
+
+		series.data.setAll(data);
+
+
+// Make stuff animate on load
+// https://www.amcharts.com/docs/v5/concepts/animations/
+		series.appear(1000);
+		chart.appear(1000, 100);
+
+	}); // end am5.ready()
+</script>
+<script src="js/app.min.js"></script>
+</body>
+</html>

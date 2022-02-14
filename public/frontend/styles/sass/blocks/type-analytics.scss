@@ -1,0 +1,32 @@
+.type-analytics {
+	ul {
+		gap: 20px;
+		flex-wrap: wrap;
+		li {
+			cursor: pointer;
+			text-align: center;
+			min-width: 217px;
+			background: #FFFFFF;
+			border: 1px solid #ECEEF3;
+			border-radius: 4px;
+			&:hover {
+				border: 1px solid #CCD3F4;
+			}
+			&:active {
+				background: #F9FAFE;
+			}
+			@include media-max(991) {
+				min-width: auto;
+				width: 100%;
+				max-width: 200px;
+			}
+			&.active {
+				background: #DBDFF2;
+			}
+			a {
+				display: block;
+				padding: 33px 5px;
+			}
+		}
+	}
+}

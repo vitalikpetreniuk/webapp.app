@@ -1,0 +1,64 @@
+.tabs-section {
+	&.active {
+		button {
+			&:not(:last-of-type) {
+				&::before {
+					display: none;
+				}
+			}
+		}
+	}
+	button {
+		position: relative;
+		font-weight: 800;
+		font-size: 18px;
+		line-height: 14px;
+		text-align: center;
+		text-transform: uppercase;
+		color: #A3A3A3;
+		border: none;
+		background: none;
+		min-width: 113px;
+		&:hover {
+			color: #5971E9;
+		}
+		&:active {
+			color: #3C50B5;
+		}
+		&:not(:last-of-type) {
+			margin-right: 6px;
+			&::before {
+				cursor: auto;
+				content: '';
+				position: absolute;
+				right: -2px;
+				top: 50%;
+				transform: translate(0, -50%);
+				display: block;
+				background: #E4E5E5;
+				height: 24px;
+				width: 2px;
+			}
+		}
+		&.active {
+			background: #5971E9;
+			border-radius: 4px;
+			padding: 9px 0;
+			color: #FFFFFF;
+		}
+		&.small {
+			text-transform: capitalize;
+			min-width: 85px;
+		}
+	}
+	&.alt {
+		button {
+			font-weight: 300;
+			color: #A3A3A3;
+			text-transform: none;
+			&.active {
+				color: #FFFFFF;
+			}
+		}
+	}
+}

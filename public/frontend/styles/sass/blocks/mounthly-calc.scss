@@ -1,0 +1,90 @@
+.mounthly-calc {
+	& > span {
+		font-weight: 800;
+		font-size: 18px;
+		line-height: 14px;
+		text-transform: uppercase;
+		color: #FFFFFF;
+		margin-bottom: 14px;
+	}
+	&__list {
+		.title {
+			background: #4B5FC0;
+			border-radius: 4px;
+			position: relative;
+			padding: 3px 12px;
+			cursor: pointer;
+			&::before {
+				content: '';
+				display: block;
+				width: 9px;
+				height: 6px;
+				background: url("../images/dist/icons/arrow.svg") no-repeat;
+				background-size: cover;
+				position: absolute;
+				top: 50%;
+				right: 10px;
+				transform: translate(0, -50%);
+				transition: .4s;
+			}
+			&:hover {
+				background: #566BD1
+			}
+			&.active {
+				&::before {
+					top: 43%;
+					transform: rotate(-180deg);
+				}
+			}
+			&:not(:last-of-type) {
+				margin-bottom: 5px;
+			}
+			span {
+				font-weight: 800;
+				line-height: 14px;
+				color: #FFFFFF;
+			}
+		}
+		.inner {
+			padding: 0;
+			max-height: 0;
+			overflow: hidden;
+			//transition: 0.4s linear;
+			li {
+				position: relative;
+				&::before {
+					content: '';
+					bottom: -15px;
+					left: 0;
+					position: absolute;
+					width: 100%;
+					height: 1px;
+					background: rgba(0, 0, 0, 0.15);
+				}
+				&:last-of-type {
+					&::before {
+						display: none;
+					}
+				}
+				&:not(:last-of-type) {
+					margin-bottom: 30px;
+				}
+				span {
+					line-height: 14px;
+					&:first-of-type {
+						color: #172E70;
+					}
+					&:last-of-type {
+						//text-align: right;
+						color: #FFFFFF;
+					}
+				}
+			}
+			&.active {
+				padding: 10px 0 20px 0;
+				//max-height: 500px;
+				max-height: none;
+			}
+		}
+	}
+}

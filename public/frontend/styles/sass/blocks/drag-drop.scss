@@ -1,0 +1,117 @@
+.drag-drop {
+	background: #D1F1ED;
+	border-radius: 4px;
+	height: 254px;
+	position: relative;
+	&::before {
+		content: '';
+		//z-index: -1;
+		border-radius: 4px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: calc(100% - 13px);
+		height: calc(100% - 13px);
+		background: #ABDCD4;
+		outline: 2px dashed #54BCAE;
+	}
+	&.is-dragover {
+		&::before {
+			background: #87dfd1;
+		}
+	}
+	&#expensesForm {
+		background: #E6E9FC;
+		&::before {
+			background: #D2D6F4;
+			outline: 2px dashed #4E61C9;
+		}
+		.drag-drop {
+			&__label {
+				&::before {
+					color: #585D7B;
+				}
+			}
+		}
+		&.is-dragover {
+			&::before {
+				background: #b8bff3;
+			}
+		}
+	}
+	&__dragndrop,
+	&__uploading,
+	&__success,
+	&__error,
+	&__file {
+		display: none;
+	}
+	&__dragndrop {
+		display: inline;
+	}
+	&__input {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	&__label {
+		cursor: pointer;
+		background: #FFFFFF;
+		min-width: 166px;
+		border-radius: 4px;
+		width: fit-content;
+		padding: 12px 20px;
+		span {
+			margin-left: 2px;
+			font-weight: 800;
+			font-size: 16px;
+			line-height: 20px;
+			color: #000000;
+		}
+		&::before {
+			content: 'or drop here';
+			display: block;
+			text-align: center;
+			width: 100%;
+			position: absolute;
+			bottom: -28px;
+			left: 50%;
+			transform: translate(-50%);
+			font-size: 16px;
+			color: #52736D;
+		}
+	}
+	&__selected {
+		display: none !important;
+		margin-bottom: 11px;
+		background: #0a58ca;
+		padding: 12px 12px 5px 12px;
+		background: rgba(255, 255, 255, 0.5);
+		border-radius: 4px;
+		position: relative;
+		& > div:nth-of-type(2) {
+			width: 60px;
+			height: 72px;
+			background: #FFFFFF;
+			border-radius: 4px;
+			margin-bottom: 5px;
+		}
+		& > span {
+			text-align: center;
+			font-size: 7px;
+			line-height: 8px;
+		}
+		&.active {
+			display: flex !important;
+		}
+	}
+	&__close {
+		cursor: pointer;
+		position: absolute;
+		top: -28px;
+		left: 50%;
+		transform: translate(-50%);
+	}
+}

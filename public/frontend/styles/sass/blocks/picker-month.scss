@@ -1,0 +1,44 @@
+.picker-month {
+	max-width: 691px;
+	width: 100%;
+	&__year {
+		padding: 7px;
+		background: #EAEDF3;
+		border-radius: 4px;
+		button {
+			width: 19px;
+			height: 19px;
+			border: none;
+			outline: none;
+			&.inactive {
+				opacity: .4;
+			}
+			img {
+				vertical-align: inherit;
+			}
+		}
+		span {
+			font-weight: 300;
+			font-size: 16px;
+			line-height: 14px;
+			color: #5971E9;
+		}
+	}
+	&__prev {
+		transform: rotate(-180deg);
+	}
+	&__months {
+		margin-top: 15px;
+		ul {
+			li {
+				width: 8.333%;
+				cursor: pointer;
+				text-align: center;
+				&.range-active {
+					background: #5971E9;
+					color: #FFFFFF;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,103 @@
+// USER VARIABLES SECTION
+
+$accent: orange; // Accent Color
+$fontsize: 16px; // Body Font Size
+$textcolor: #000000; // Text Color
+$lineheight: 1.65; // Document Line Height
+$userfont: Gilroy, sans-serif; // User Font Family
+$systemfont: -apple-system, BlinkMacSystemFont, Arial, sans-serif; // System Font Family
+
+// Bootstrap compatible gutter variable => $gutter
+$grid-gutter-width: 34px;
+$gutter: $grid-gutter-width;
+
+// IMPORT SECTION
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import "mixins";
+
+
+@mixin font($fname, $fstyle, $fweight, $furl) {
+	@font-face {
+		font-family: $fname;
+		font-style: $fstyle;
+		font-weight: $fweight;
+		src: url($furl) format('woff2');
+	}
+}
+
+@include font('Gilroy', normal, 300, '../fonts/gilroy-light.woff2');
+@include font('Gilroy', normal, 400, '../fonts/gilroy-regular.woff2');
+@include font('Gilroy', normal, 800, '../fonts/gilroy-extrabold.woff2');
+
+
+@import 'node_modules/bootstrap/scss/bootstrap-reboot.scss'; // Bootstrap Reboot collection
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints.scss'; // Bootstrap Breakpoints mixin
+@import 'node_modules/bootstrap/scss/bootstrap-grid.scss'; // Optional Bootstrap Grid
+//@import 'node_modules/bootstrap/scss/_utilities.scss'; // Optional Bootstrap Utilites
+
+// FONTS LOAD SECTION
+
+// GENERAL CSS SETTINGS
+
+::placeholder {
+	color: #666;
+}
+
+::selection {
+	background-color: $accent;
+	color: #fff;
+}
+
+
+* {
+	padding: 0;
+	margin: 0;
+	scrollbar-width: none;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	text-decoration: none;
+	color: $textcolor;
+	&:hover {
+		color: $textcolor;
+	}
+}
+
+body {
+	font-family: $userfont;
+	font-size: $fontsize;
+	line-height: $lineheight;
+	color: $textcolor;
+	min-width: 320px;
+	position: relative;
+	overflow-x: hidden;
+	background: #F7F8FA;
+	font-weight: 300;
+}
+
+.content {
+	height: calc(100vh - 80px);
+}
+
+._over-hidden {
+	overflow: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
+//@media (min-width: 1400px) {
+//	.container {
+//		max-width: 1317px;
+//	}
+//}

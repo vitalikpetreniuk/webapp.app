@@ -1,0 +1,23 @@
+.input-field {
+	background: #EFF3F5;
+	border-radius: 4px;
+	border: none;
+	padding: 16px 10px;
+	line-height: 18px;
+	width: 100%;
+	outline: none;
+	appearance: none;
+	&[type="number"] {
+		-moz-appearance: textfield;
+		-webkit-appearance: textfield;
+		appearance: textfield;
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			display: none;
+		}
+	}
+	&::placeholder {
+		font-size: 16px;
+		line-height: 18px;
+	}
+}

@@ -1,0 +1,27 @@
+.nav {
+	overflow: auto;
+	max-width: 355px;
+	width: 100%;
+	background: linear-gradient(170.75deg, #5A60F7 0.48%, #50B7A8 85.81%);
+	padding: 30px 20px;
+	@include media-max(991) {
+		max-width: 218px;
+	}
+	&-tabs {
+		li {
+			width: fit-content;
+			cursor: pointer;
+			&:not(:last-of-type) {
+				margin-bottom: 35px;
+			}
+			a {
+				color: #fff;
+				font-size: 18px;
+				font-weight: 800;
+				line-height: 14px;
+				margin-bottom: 14px;
+				text-transform: uppercase;
+			}
+		}
+	}
+}

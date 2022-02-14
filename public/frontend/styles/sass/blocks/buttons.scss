@@ -1,0 +1,102 @@
+.btn {
+	&__header {
+		padding: 9px 35px;
+		border-radius: 4px;
+		img {
+			margin-right: 8px;
+		}
+		&.green {
+			background: #2F4632;
+			border: 1px solid #397942;
+			&:hover {
+				border: 1px solid #55E768;
+			}
+			&:active {
+				background: #3E6944;
+			}
+			span {
+				font-weight: 300;
+				font-size: 16px;
+				line-height: 16px;
+				color: #55E768;
+			}
+		}
+		&.red {
+			background: #4D3131;
+			border: 1px solid #793939;
+			&:hover {
+				border: 1px solid #FF5050;
+			}
+			&:active {
+				background: #723E3E;
+			}
+			span {
+				color: #FF5050;
+			}
+		}
+	}
+	&__modal {
+		border: none;
+		padding: 15px 10px;
+		border-radius: 4px;
+		color: rgba(255, 255, 255, 0.97);
+		font-weight: 800;
+		line-height: 20px;
+		img {
+			margin-right: 6px;
+		}
+		&.mentol {
+			background: linear-gradient(91.17deg, #5FD9C7 6.48%, #51B6A9 100.6%);
+			&:hover {
+				background: linear-gradient(91.17deg,#5fd9c7 6.48%,#53f7e2 100.6%);
+			}
+		}
+		&.blue {
+			background: linear-gradient(91.17deg, #5A69EF 6.48%, #4B5FC0 100.6%);
+			&:hover {
+				background: linear-gradient(91.17deg,#5a69ef 6.48%,#6f85eb 100.6%);
+			}
+		}
+		&.turquoise {
+			background: #FFFFFF;
+			color: #59CABA;
+			border: 1px solid #59CABA;
+		}
+		&.azure {
+			background: #FFFFFF;
+			color: #5971E9;
+			border: 1px solid #5971E9;
+		}
+		&.delete {
+			background: #FFFFFF;
+			color: #EA2B2B;
+			border: 1px solid #EA2B2B;
+		}
+		&.grey {
+			background: #FFFFFF;
+			color: #A2A2A2;
+			border: 1px solid #A2A2A2;
+		}
+	}
+	&__done {
+		border: none;
+		width: 20px;
+		height: 20px;
+		background: #B4F0BA;
+		border-radius: 4px;
+	}
+	&__delete {
+		border: none;
+		width: 20px;
+		height: 20px;
+		background: #FBB5B5;
+		border-radius: 4px;
+	}
+	&__edit {
+		border: none;
+		width: 20px;
+		height: 20px;
+		background: #B6C0F5;
+		border-radius: 4px;
+	}
+}

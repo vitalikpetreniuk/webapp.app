@@ -1,0 +1,41 @@
+.notfound {
+	padding: 40px;
+	min-height: 100vh;
+	background: linear-gradient(170.75deg, #5A60F7 0.48%, #50B7A8 85.81%);
+	span {
+		color: #FFFFFF;
+		font-weight: 800;
+		font-size: 180px;
+		@include media-max(991) {
+			font-size: 120px;
+		}
+		@include media-max(575) {
+			font-size: 60px;
+		}
+	}
+	p {
+		color: #FFFFFF;
+		text-align: center;
+		font-weight: 500;
+		font-size: 50px;
+		@include media-max(991) {
+			font-size: 30px;
+		}
+		@include media-max(575) {
+			font-size: 20px;
+		}
+	}
+	.btn__header {
+		transform: scale(1.2);
+		border: none;
+		background: rgb(255 255 255);
+		margin-top: 15px;
+		@include media-max(575) {
+			transform: scale(1);
+		}
+		span {
+			color: #5971E9;
+			font-weight: 800;
+		}
+	}
+}
