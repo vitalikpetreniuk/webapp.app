@@ -12,3 +12,5 @@
 
 @yield('error-content')
 <x-dependencies/>
+
+<x-close-tags/>

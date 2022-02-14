@@ -1,5 +1,7 @@
 <div class="modal-overlay"></div>
 
+<x-dependencies/>
+
 <script>
     am5.ready(function() {
 
@@ -139,5 +141,3 @@
 
     }); // end am5.ready()
 </script>
-
-<x-dependencies/>
