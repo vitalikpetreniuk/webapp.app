@@ -6,7 +6,7 @@ import 'flot';
 import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index.js";
 import autoComplete from "@tarekraafat/autocomplete.js/dist/autoComplete.min.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+jQuery(function ($) {
 
 	// const $form = $('.drag-drop');
 	const $revenueForm = $('#revenueForm')
@@ -216,19 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 	})
 	// }
 
-	datepicker.oninput = function () {
-		// let lengthInput = datepicker.value.length
-
-		// if (lengthInput <= 10) {
-		// 	$(`.datepicker .datepicker__icon`).css({
-		// 		'left': '85px'
-		// 	})
-		// } else {
-		// 	$(`.datepicker .datepicker__icon`).css({
-		// 		'left': '180px'
-		// 	})
-		// }
-		datepicker.value = datepicker.value.replace('to', '-')
+	if (datepicker) {
+		datepicker.oninput = function () {
+			datepicker.value = datepicker.value.replace('to', '-')
+		}
 	}
 	
 	$('#revenue').click(() => {

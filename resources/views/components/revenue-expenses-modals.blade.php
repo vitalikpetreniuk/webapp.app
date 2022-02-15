@@ -1,8 +1,11 @@
 <div id="modal-revenue" class="modal d-flex flex-column">
     <span class="modal__title">Revenue</span>
-    <form id="revenueForm" class="drag-drop d-flex flex-column" action="">
+    <form id="revenueForm" class="drag-drop d-flex flex-column" action="" method="POST"
+          enctype="multipart/form-data">
+        @csrf
         <div class="drag-drop__input d-flex flex-column align-items-center">
-            <input class="drag-drop__file" type="file" name="files[]" id="revenueFile" data-multiple-caption="{count} files selected" multiple />
+            <input class="drag-drop__file" type="file" name="files[]" id="revenueFile"
+                   data-multiple-caption="{count} files selected" multiple accept=".xls, .xlsx"/>
             <div class="drag-drop__selected d-flex flex-column align-items-center">
                 <div class="drag-drop__close">
                     <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
@@ -18,11 +21,8 @@
             </label>
             <!--			<button class="drag-drop__button" type="submit">Upload</button>-->
         </div>
-        <div class="drag-drop__uploading">Uploading…</div>
-        <div class="drag-drop__success">Done!</div>
-        <div class="drag-drop__error">Error! <span></span>.</div>
     </form>
-    <button type="submit" class="btn__modal turquoise mt-30">Download Sample</button>
+    <a href="{{ asset('xlsx/sample.xlsx') }}" type="download" download="Sample.xlsx" class="btn__modal turquoise mt-30">Download Sample</a>
     <div class="modal__close">
         <img src="{{ asset('frontend/images/dist/icons/x.svg') }}" alt="x">
     </div>
@@ -33,7 +33,7 @@
         <input class="select__input" type="hidden" name="">
         <div class="select__head">Expenses type</div>
         <ul class="select__list" style="display: none;">
-            <li class="select__item">Summ  $ (USD)</li>
+            <li class="select__item">Summ $ (USD)</li>
             <li class="select__item">% of Ad spend</li>
             <li class="select__item">% of net revenue</li>
         </ul>
@@ -41,9 +41,11 @@
     <p class="modal__text">
         select the date range for which you want to try on data
     </p>
-    <form id="expensesForm" class="drag-drop d-flex flex-column" action="">
+    <form id="expensesForm" class="drag-drop d-flex flex-column" action="" method="POST">
+        @csrf
         <div class="drag-drop__input d-flex flex-column align-items-center">
-            <input class="drag-drop__file" type="file" name="files[]" id="expensesFile" data-multiple-caption="{count} files selected" multiple />
+            <input class="drag-drop__file" type="file" name="files[]" id="expensesFile"
+                   data-multiple-caption="{count} files selected" multiple/>
             <div class="drag-drop__selected d-flex flex-column align-items-center">
                 <div class="drag-drop__close">
                     <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
@@ -59,12 +61,11 @@
             </label>
             <!--			<button class="drag-drop__button" type="submit">Upload</button>-->
         </div>
-        <div class="drag-drop__uploading">Uploading…</div>
-        <div class="drag-drop__success">Done!</div>
-        <div class="drag-drop__error">Error! <span></span>.</div>
     </form>
     <button type="submit" class="btn__modal azure mt-30">Download Sample</button>
     <div class="modal__close">
         <img src="{{ asset('frontend/images/dist/icons/x.svg') }}" alt="x">
     </div>
 </div>
+
+{!! $validator->selector('#modal-revenue') !!}

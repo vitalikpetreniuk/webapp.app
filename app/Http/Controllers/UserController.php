@@ -3,25 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use JsValidator;
+use Validator;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
 
+    /**
+     * Define your validation rules in a property in
+     * the controller to reuse the rules.
+     */
+    private $validationRules = [
+        'email' => 'required|email|exists:users',
+        'password' => 'required',
+    ];
+
+
     public function create()
     {
+        /* TODO: регистрация пользователей */
         return view('user.create');
     }
 
-    public function userForm() {
+    public function userForm(Request $request) {
 //        $user = User::create([
 //            'name' => 'webapp_admin',
 //            'email' => 'petreniuk.ua@gmail.com',
 //            'password' => Hash::make('2[x}h.PC'),
 //        ]);
-        return view('user.login');
+
+        if (auth()->check()) return redirect()->home();
+
+        $validator = JsValidator::make($this->validationRules);
+
+        return view('user.login')->with([
+            'validator' => $validator,
+        ]);
     }
 
     public function store(Request $request)
@@ -38,16 +58,17 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        session()->flash('success', 'Successful registration');
         Auth::login($user);
         return redirect()->home();
     }
 
     public function login(Request $request) {
-        $request->validate([
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-        ]);
+
+        $validation = Validator::make($request->all(), $this->validationRules);
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors());
+        }
 
         if (Auth::attempt([
             'email' => $request->email,
@@ -56,7 +77,6 @@ class UserController extends Controller
             return redirect()->home();
         }
 
-        return redirect()->back()->with('error', 'Incorrect login or password');
     }
 
 }

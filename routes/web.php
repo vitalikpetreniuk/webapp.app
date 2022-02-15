@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,16 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+    Route::post('/', 'store');
 });
 
-Route::get('/register', [UserController::class, 'create'])->name('register.create');
-Route::post('/register', [UserController::class, 'store'])->name('register.store');
+Route::controller(UserController::class)->group(function () {
+    Route::get('/register', 'create')->name('user.register-create');
+    Route::post('/register', 'store')->name('user.register.store');
 
-Route::get('/login', [UserController::class, 'userForm'])->name('login.create');
-
-Route::post('/login', [UserController::class, 'index'])->name('user.login');
+    Route::get('/login', 'userForm')->name('user.login-create');
+    Route::post('/login', 'login')->name('user.login');
+});
 
 Route::get('/special', function () {
    return view('special');

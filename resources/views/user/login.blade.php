@@ -1,20 +1,26 @@
-@extends('layouts.index')
+@extends('layouts.index-minimal')
 
 @section('forms')
 
-    <form action="{{ route('user.login') }}" class="d-flex flex-column"
-          style="max-width: 300px; margin: 0 auto; margin-top: 200px" id="login" method="post">
+    <form action="" method="POST" class="d-flex flex-column"
+          style="max-width: 300px; margin: 0 auto; margin-top: 200px" id="login-form" method="post">
         @csrf
-        <input type="email" value="Ваш email" name="email" value="{{ old('email') }}">
-        <input type="password" name="password" value="{{ old('password') }}">
-        <input type="submit" value="Отправить">
+        <div class="form-group">
+            <input type="email" autocomplete="email" placeholder="Your email" name="email" value="{{ old('email') }}">
+        </div>
+        <div class="form-group">
+            <input type="password" autocomplete="password" name="password" placeholder="Your password" value="{{ old('password') }}">
+        </div>
+        <input type="submit" value="Send">
     </form>
 
-{{--    {!! JsValidator::formRequest('App\Http\Requests\LoginForm') !!}--}}
+    {!! $validator->selector('#login-form') !!}
 
     <style>
         input {
             margin-top: 10px;
+            display: block;
+            width: 100%;
         }
     </style>
 @endsection

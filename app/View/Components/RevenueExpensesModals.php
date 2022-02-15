@@ -2,7 +2,13 @@
 
 namespace App\View\Components;
 
+use \Illuminate\Support\Facades\Request;
 use Illuminate\View\Component;
+
+use JsValidator;
+use Validator;
+
+use App\Http\Controllers\RevenueController;
 
 class RevenueExpensesModals extends Component
 {
@@ -23,6 +29,19 @@ class RevenueExpensesModals extends Component
      */
     public function render()
     {
-        return view('components.revenue-expenses-modals');
+
+        $validator = JsValidator::make(RevenueController::validationRules());
+
+        return view('components.revenue-expenses-modals')->with([
+            'validator' => $validator,
+        ]);
+    }
+
+    public function store(Request $request) {
+        $validation = Validator::make($request->all(), RevenueController::validationRules());
+
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors());
+        }
     }
 }

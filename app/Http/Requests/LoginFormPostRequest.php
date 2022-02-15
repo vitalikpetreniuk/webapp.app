@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class loginForm extends FormRequest
+class LoginFormPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,5 +28,20 @@ class loginForm extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ];
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(LoginFormPostRequest $request)
+    {
+        if (Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ])) {
+            return redirect()->home();
+        }
+
+        return redirect()->back();
     }
 }
