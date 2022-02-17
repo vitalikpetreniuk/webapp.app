@@ -40,7 +40,5 @@
     </section>
 
     </div>
-
-    <x-revenue-expenses-modals/>
     <x-footer/>
 @endsection

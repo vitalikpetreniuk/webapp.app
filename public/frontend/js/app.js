@@ -151,6 +151,8 @@ jQuery(function ($) {
 			
 			input.addEventListener('change', function () {
 				if (this.value) {
+					console.log(this)
+					console.log(this.files)
 					console.log('файл был выбран', this.value)
 					selected.classList.add('active')
 				} else {

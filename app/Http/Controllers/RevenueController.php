@@ -2,18 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Revenue;
+use App\Models\User;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Illuminate\Http\Request;
 
 class RevenueController extends Controller
 {
 
-    public function saveFile() {
+    public function val(Request $request)
+    {
+        $validation = \Validator::make($request->all(), $this::validationRules());
 
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors());
+        }
+
+        // do store stuff
     }
 
-    public static function validationRules() {
+    public function store(Request $request)
+    {
+        /* TODO: валидация формата файла */
+        if ($request->hasFile('files') && $request->file('files')->isValid()) {
+            $request->file('files');
+            $path = $request->file('files')->store('xlsx');
+
+            $this->parseUploadedXlsx($path);
+        }
+    }
+
+    public static function validationRules()
+    {
         return [
             'files' => 'required|mimes:xls,xlsx',
         ];
+    }
+
+    private function containsOnlyNull(array $array): bool
+    {
+        foreach ($array as $value) {
+            if ($value !== null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function parseUploadedXlsx($path)
+    {
+        $reader = IOFactory::createReader("Xlsx");
+        $spreadsheet = $reader->load(storage_path("app\public\\" . $path));
+        $sheet = $spreadsheet->getActiveSheet()->toArray();
+
+        try {
+            foreach ($sheet as $row) {
+                if ($this->containsOnlyNull($row)) break;
+                $date = new \DateTime();
+                $date = $date::createFromFormat('m/j/Y', $row[0]);
+                if (!$date) continue;
+                Revenue::create(
+                    [
+                        'date' => $date,
+                        'number_of_items_sold' => $row[1],
+                        'number_of_orders' => $row[2],
+                        'average_net_sales_amount' => $row[3],
+                        'coupon_amount' => $row[4],
+                        'shipping_amount' => $row[5],
+                        'gross_sales_amount' => $row[6],
+                        'net_sales_amount' => $row[7],
+                        'refund_amount' => $row[8],
+                        'user_id' => Auth::id(),
+                    ]
+                );
+            }
+        } catch (\Exception $exception) {
+            return response()->json(['error'=>'Failed importing xlsx file']);
+        }
     }
 }

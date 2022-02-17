@@ -1,11 +1,11 @@
 <div id="modal-revenue" class="modal d-flex flex-column">
     <span class="modal__title">Revenue</span>
-    <form id="revenueForm" class="drag-drop d-flex flex-column" action="" method="POST"
+    <form id="revenueForm" name="revenueForm" class="drag-drop d-flex flex-column" action="{{ route('revenues.store') }}" method="POST"
           enctype="multipart/form-data">
         @csrf
-        <div class="drag-drop__input d-flex flex-column align-items-center">
-            <input class="drag-drop__file" type="file" name="files[]" id="revenueFile"
-                   data-multiple-caption="{count} files selected" multiple accept=".xls, .xlsx"/>
+        <div class="drag-drop__input d-flex flex-column align-items-center form-group">
+            <input class="drag-drop__file" type="file" name="files" id="revenueFile"
+                   data-multiple-caption="{count} files selected" accept="xls, xlsx"/>
             <div class="drag-drop__selected d-flex flex-column align-items-center">
                 <div class="drag-drop__close">
                     <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
@@ -15,14 +15,17 @@
                 </div>
                 <span>Document №1.docx</span>
             </div>
-            <label for="revenueFile" class="drag-drop__label d-flex justify-content-center">
+            <label for="expensesFile" class="drag-drop__label d-flex justify-content-center">
                 <img src="{{ asset('frontend/images/dist/icons/add-doc.svg') }}" alt="add">
                 <span>Select file</span>
             </label>
             <!--			<button class="drag-drop__button" type="submit">Upload</button>-->
         </div>
+        <input type="submit" value="Отправить">
     </form>
-    <a href="{{ asset('xlsx/sample.xlsx') }}" type="download" download="Sample.xlsx" class="btn__modal turquoise mt-30">Download Sample</a>
+    {!! $validator->selector('#revenueForm') !!}
+    <a href="{{ asset('xlsx/sample.xlsx') }}" type="download" download="Sample.xlsx" class="btn__modal turquoise mt-30">Download
+        Sample</a>
     <div class="modal__close">
         <img src="{{ asset('frontend/images/dist/icons/x.svg') }}" alt="x">
     </div>
@@ -41,10 +44,10 @@
     <p class="modal__text">
         select the date range for which you want to try on data
     </p>
-    <form id="expensesForm" class="drag-drop d-flex flex-column" action="" method="POST">
+    <form id="expensesForm" class="drag-drop d-flex flex-column" action="" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="drag-drop__input d-flex flex-column align-items-center">
-            <input class="drag-drop__file" type="file" name="files[]" id="expensesFile"
+            <input class="drag-drop__file" type="file" name="files" id="expensesFile"
                    data-multiple-caption="{count} files selected" multiple/>
             <div class="drag-drop__selected d-flex flex-column align-items-center">
                 <div class="drag-drop__close">
@@ -68,4 +71,30 @@
     </div>
 </div>
 
-{!! $validator->selector('#modal-revenue') !!}
+{{--<script>--}}
+{{--    $('#revenueForm').on('submit', function (e) {--}}
+{{--        e.preventDefault();--}}
+{{--        let formdata = new FormData(document.querySelector('#revenueForm'))--}}
+{{--        $.ajax({--}}
+{{--            url: "{{ route('revenues.store') }}",--}}
+{{--            type: "POST",--}}
+{{--            data: formdata,--}}
+{{--            success: function (response) {--}}
+{{--                console.log(response);--}}
+{{--            },--}}
+{{--            error: function (response) {--}}
+{{--                console.log(response)--}}
+{{--            },--}}
+{{--        });--}}
+{{--    });--}}
+{{--</script>--}}
+
+<form action="{{ route('revenues.store') }}" method="POST" enctype="multipart/form-data" id="testform">
+    @csrf
+    <div class="form-group">
+        <input type="file" name="files">
+    </div>
+    <input type="submit" value="Отправить">
+</form>
+
+{!! $validator->selector('#testform') !!}
