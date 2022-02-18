@@ -1,3 +1,51 @@
-.login {
-  background: #0dcaf0;
+.authorization {
+  background: linear-gradient(170.75deg, #5A60F7 0.48%, #50B7A8 85.81%);
+  height: 100vh;
+}
+.authorization__wrapper {
+  max-width: 400px;
+  width: 100%;
+}
+.authorization__wrapper * {
+  width: 100%;
+}
+.authorization__wrapper .form-group {
+  position: relative;
+  margin-bottom: 35px;
+}
+.authorization__wrapper .form-group input {
+  border: none;
+  background: transparent;
+  outline: none;
+  border-bottom: 1px solid #f9f9f9;
+  color: #FFFFFF;
+  padding: 0 5px;
+  font-size: 18px;
+}
+.authorization__wrapper .form-group input::-moz-placeholder {
+  color: #f9f9f9;
+}
+.authorization__wrapper .form-group input:-ms-input-placeholder {
+  color: #f9f9f9;
+}
+.authorization__wrapper .form-group input::placeholder {
+  color: #f9f9f9;
+}
+.authorization__wrapper .form-group .error-help-block {
+  color: #ffaa78;
+  bottom: -24px;
+  position: absolute;
+  left: 0;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.authorization__submit {
+  padding: 18px 12px;
+  background: #4B5FC0;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 14px;
+  color: #FFFFFF;
+  border: none;
 }

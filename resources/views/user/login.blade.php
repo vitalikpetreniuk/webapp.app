@@ -2,25 +2,26 @@
 
 @section('forms')
 
-    <form action="" method="POST" class="d-flex flex-column login"
-          style="max-width: 300px; margin: 0 auto; margin-top: 200px" id="login-form" method="post">
+    <form action="" method="POST" class="d-flex justify-content-center align-items-center authorization" id="login-form" method="post">
         @csrf
-        <div class="form-group">
-            <input type="email" autocomplete="email" placeholder="Your email" name="email" value="{{ old('email') }}">
+        <div class="authorization__wrapper">
+            <div class="form-group">
+                <input type="email" autocomplete="email" placeholder="Your email" name="email" value="{{ old('email') }}">
+            </div>
+            <div class="form-group">
+                <input type="password" autocomplete="password" name="password" placeholder="Your password" value="{{ old('password') }}">
+            </div>
+            <input class="authorization__submit" type="submit" value="Send">
         </div>
-        <div class="form-group">
-            <input type="password" autocomplete="password" name="password" placeholder="Your password" value="{{ old('password') }}">
-        </div>
-        <input type="submit" value="Send">
     </form>
 
     {!! $validator->selector('#login-form') !!}
 
     <style>
-        input {
-            margin-top: 10px;
-            display: block;
-            width: 100%;
-        }
+        /*input {*/
+        /*    margin-top: 10px;*/
+        /*    display: block;*/
+        /*    width: 100%;*/
+        /*}*/
     </style>
 @endsection

@@ -1,3 +1,45 @@
-.login {
-    background: #0dcaf0;
+.authorization {
+    background: linear-gradient(170.75deg, #5A60F7 0.48%, #50B7A8 85.81%);
+    height: 100vh;
+    &__wrapper {
+        max-width: 400px;
+        width: 100%;
+        * {
+            width: 100%;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 35px;
+            input {
+                border: none;
+                background: transparent;
+                outline: none;
+                border-bottom: 1px solid #f9f9f9;
+                color: #FFFFFF;
+                padding: 0 5px;
+                font-size: 18px;
+                &::placeholder {
+                    color: #f9f9f9;
+                }
+            }
+            .error-help-block {
+                color: #ffaa78;
+                bottom: -24px;
+                position: absolute;
+                left: 0;
+                font-size: 14px;
+                transition: .3s;
+            }
+        }
+    }
+    &__submit {
+        padding: 18px 12px;
+        background: #4B5FC0;
+        border-radius: 4px;
+        font-weight: 800;
+        font-size: 16px;
+        line-height: 14px;
+        color: #FFFFFF;
+        border: none;
+    }
 }
