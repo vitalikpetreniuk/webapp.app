@@ -2,7 +2,7 @@
 
 @section('forms')
 
-    <form action="" method="POST" class="d-flex flex-column"
+    <form action="" method="POST" class="d-flex flex-column login"
           style="max-width: 300px; margin: 0 auto; margin-top: 200px" id="login-form" method="post">
         @csrf
         <div class="form-group">
