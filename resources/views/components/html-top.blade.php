@@ -9,6 +9,7 @@
     <link rel="icon" href="{{ asset('frontend/images/logo.svg') }}">
     <title>index</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/app.min.css') }}">
     <script type="text/javascript" src="{{ asset('js/app.js')}}"></script>
     {{--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"--}}
