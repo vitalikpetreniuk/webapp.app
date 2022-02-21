@@ -62,6 +62,7 @@
     </section>
     </div>
 
-    <x-revenue-expenses-modals/>
+    <x-revenue-form/>
+    <x-expense-form/>
     <x-footer/>
 @endsection

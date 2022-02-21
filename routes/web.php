@@ -19,7 +19,8 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
 });
 
-Route::post('/revenues', [\App\Http\Controllers\RevenueController::class, 'val'])->name('revenues.store');
+Route::post('/revenues/val', [\App\Http\Controllers\RevenueController::class, 'val'])->name('revenues.val');
+Route::post('/revenues', [\App\Http\Controllers\RevenueController::class, 'store'])->name('revenues.store');
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/register', 'create')->name('user.register-create');
