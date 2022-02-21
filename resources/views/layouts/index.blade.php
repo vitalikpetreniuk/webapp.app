@@ -7,7 +7,9 @@
         <x-nav/>
         @yield('content')
     </div>
-    <x-revenue-expenses-modals/>
+    <x-revenue-form/>
+    <x-expense-form/>
+
 @endif
 
 @yield('error-content')

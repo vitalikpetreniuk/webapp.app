@@ -2,10 +2,10 @@
 
 namespace App\View\Components;
 
-use App\Models\Revenue;
+use App\Http\Controllers\RevenueController;
 use Illuminate\View\Component;
 
-class Nav extends Component
+class ExpenseForm extends Component
 {
     /**
      * Create a new component instance.
@@ -17,11 +17,6 @@ class Nav extends Component
         //
     }
 
-    public function getNavData() {
-        $date = new \DateTime();
-        $year = $date->y;
-    }
-
     /**
      * Get the view / contents that represent the component.
      *
@@ -29,6 +24,12 @@ class Nav extends Component
      */
     public function render()
     {
-        return view('components.nav');
+        $validator = \JsValidator::make(RevenueController::validationRules());
+
+        return view('components.expense-form')->with(
+            [
+                'validator' => $validator
+            ]
+        );
     }
 }

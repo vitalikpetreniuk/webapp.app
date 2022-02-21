@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Revenue;
 use App\Models\User;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -79,8 +80,21 @@ class RevenueController extends Controller
                     ]
                 );
             }
+            echo json_encode([
+                'message' => 'XLSX was successfully imported'
+            ]);
         } catch (\Exception $exception) {
-            return response()->json(['error'=>'Failed importing xlsx file']);
+            $send = [];
+            $message = 'Failed importing xlsx file';
+            switch ($exception->getCode()) {
+                case 23505 : $message = 'This date has already been imported';
+            }
+            if (App::environment('production')) {
+                $send['debugcode'] = $exception->getCode();
+            }
+            $send['message'] = $message;
+
+            echo json_encode($send);
         }
     }
 }

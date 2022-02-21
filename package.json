@@ -19,6 +19,7 @@
         "sass-loader": "^12.1.0"
     },
     "dependencies": {
+        "conditional-field": "^1.0.2",
         "jquery": "^3.6.0"
     }
 }
