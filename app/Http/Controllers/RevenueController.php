@@ -89,10 +89,13 @@ class RevenueController extends Controller
             switch ($exception->getCode()) {
                 case 23505 : $message = 'This date has already been imported';
             }
-            if (App::environment('production')) {
+//            if (App::environment('production')) {
                 $send['debugcode'] = $exception->getCode();
-            }
+//            }
             $send['message'] = $message;
+
+            var_dump($exception->getMessage());
+            var_dump($exception->getTraceAsString());
 
             echo json_encode($send);
         }
