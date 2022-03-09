@@ -43,6 +43,7 @@
     jQuery(function ($) {
         $('#expensesForm').on('submit', function (e) {
             e.preventDefault();
+            console.log('submit')
             let formdata = new FormData(document.querySelector('#expensesForm'))
             $.ajax({
                 "url": "{{ route('revenues.store') }}",
@@ -53,10 +54,14 @@
                 success: function (response) {
                     let result = JSON.parse(response)
                     $('#expensesForm').append(`<p>${result.message}</p>`);
+                    console.log(result)
+                    alert(result.message)
                 },
                 error: function (response) {
                     let result = JSON.parse(response)
                     $('#expensesForm').append(`<span class="help-block error-help-block">${result.message}</span>`);
+                    console.log(result)
+                    alert(result.message)
                 },
             });
         });

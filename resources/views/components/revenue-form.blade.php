@@ -1,6 +1,7 @@
 <div id="modal-revenue" class="modal d-flex flex-column">
     <span class="modal__title">Revenue</span>
-    <form id="revenueForm" name="revenueForm" class="drag-drop d-flex flex-column" action="{{ route('revenues.val') }}" method="POST"
+    <form id="revenueForm" name="revenueForm" class="drag-drop d-flex flex-column" action="{{ route('revenues.val') }}"
+          method="POST"
           enctype="multipart/form-data">
         @csrf
         <div class="drag-drop__input d-flex flex-column align-items-center form-group">
@@ -40,14 +41,18 @@
                 "type": "POST",
                 "processData": false,
                 "contentType": false,
-                "data" : formdata,
+                "data": formdata,
                 success: function (response) {
                     let result = JSON.parse(response)
                     $('#revenueForm').append(`<p>${result.message}</p>`);
+                    console.log(result)
+                    alert(result.message)
                 },
                 error: function (response) {
                     let result = JSON.parse(response)
                     $('#revenueForm').append(`<span class="help-block error-help-block">${result.message}</span>`);
+                    console.log(result)
+                    alert(result.message)
                 },
             });
         });
