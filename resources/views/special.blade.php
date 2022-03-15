@@ -2,10 +2,7 @@
 
 @section('content')
     <section class="section d-flex flex-column">
-        <div class="tabs-section active">
-            <button>Reporting</button>
-            <button class="active">Analytics</button>
-        </div>
+       <x-reporting-analytics-tabs/>
         <div class="type-analytics mt-20">
             <ul class="d-flex">
                 <li>
@@ -46,10 +43,10 @@
                     <li></li>
                     <li></li>
                     <li></li>
+                    <li class="range-active start"></li>
                     <li class="range-active"></li>
                     <li class="range-active"></li>
-                    <li class="range-active"></li>
-                    <li class="range-active"></li>
+                    <li class="range-active end"></li>
                     <li></li>
                     <li></li>
                     <li></li>

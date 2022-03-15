@@ -19,7 +19,9 @@
         "sass-loader": "^12.1.0"
     },
     "dependencies": {
+        "@babel/register": "^7.17.0",
         "conditional-field": "^1.0.2",
+        "conditional-fields": "^1.0.1",
         "jquery": "^3.6.0"
     }
 }

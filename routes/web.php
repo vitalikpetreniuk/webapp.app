@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReportingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,8 +22,10 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
 });
 
-Route::post('/revenues/val', [\App\Http\Controllers\RevenueController::class, 'val'])->name('revenues.val');
-Route::post('/revenues', [\App\Http\Controllers\RevenueController::class, 'store'])->name('revenues.store');
+Route::controller(RevenueController::class)->group(function () {
+    Route::post('/revenues/val', 'val')->name('revenues.val');
+    Route::post('/revenues', 'store')->name('revenues.store');
+});
 
 Route::controller(UserController::class)->group(function () {
     Route::get('/register', 'create')->name('user.register-create');
@@ -28,6 +33,15 @@ Route::controller(UserController::class)->group(function () {
 
     Route::get('/login', 'userForm')->name('user.login-create');
     Route::post('/login', 'login')->name('user.login');
+});
+
+Route::controller(ExpenseController::class)->group(function () {
+    Route::post('/expenses/val', 'val')->name('expenses.val');
+    Route::post('/expenses', 'store')->name('expenses.store');
+});
+
+Route::controller(ReportingsController::class)->group(function () {
+    Route::get('/reportings', 'index')->name('reportings.get');
 });
 
 Route::get('/special', function () {

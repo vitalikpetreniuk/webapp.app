@@ -56,7 +56,7 @@ class RevenueController extends Controller
     protected function parseUploadedXlsx($path)
     {
         $reader = IOFactory::createReader("Xlsx");
-        $spreadsheet = $reader->load(storage_path("app\public\\" . $path));
+        $spreadsheet = $reader->load(storage_path("app\\" . $path));
         $sheet = $spreadsheet->getActiveSheet()->toArray();
 
         try {
@@ -80,6 +80,7 @@ class RevenueController extends Controller
                     ]
                 );
             }
+            $send['success'] = true;
             echo json_encode([
                 'message' => 'XLSX was successfully imported'
             ]);
@@ -89,13 +90,11 @@ class RevenueController extends Controller
             switch ($exception->getCode()) {
                 case 23505 : $message = 'This date has already been imported';
             }
-//            if (App::environment('production')) {
+            if (App::environment('local')) {
                 $send['debugcode'] = $exception->getCode();
-//            }
+            }
+            $send['success'] = false;
             $send['message'] = $message;
-
-            var_dump($exception->getMessage());
-            var_dump($exception->getTraceAsString());
 
             echo json_encode($send);
         }

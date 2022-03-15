@@ -24,10 +24,10 @@
                     <li></li>
                     <li></li>
                     <li></li>
+                    <li class="range-active start"></li>
                     <li class="range-active"></li>
                     <li class="range-active"></li>
-                    <li class="range-active"></li>
-                    <li class="range-active"></li>
+                    <li class="range-active end"></li>
                     <li></li>
                     <li></li>
                     <li></li>

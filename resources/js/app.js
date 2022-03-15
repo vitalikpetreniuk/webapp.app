@@ -1,4 +1,6 @@
+require("@babel/register")
 require('./bootstrap');
-require('../../public/vendor/jsvalidation/js/jsvalidation.js');
-require('conditional-field/dist/conditional-field');
+require('../../resources/js/jsvalidation.js');
+// require('conditional-fields/public/conditional-fields.browser');
+// import ConditionalFields from 'conditional-fields';
 require('./backend');
