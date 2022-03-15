@@ -18,6 +18,3 @@ mix.sass('resources/scss/app.scss', 'public/css')
 
 mix.sass('resources/scss/custom.scss', 'public/css')
     .sourceMaps();
-
-mix.copy('vendor/proengsoft/laravel-jsvalidation/resources/views', 'resources/views/vendor/jsvalidation')
-    .copy('vendor/proengsoft/laravel-jsvalidation/public', 'public/vendor/jsvalidation');

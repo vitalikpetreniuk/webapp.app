@@ -12,10 +12,13 @@ jQuery(function ($) {
 	const $revenueForm = $('#revenueForm')
 	const $revenueFile = document.querySelector('#revenueFile')
 	const $revenueSelected = document.querySelector('#revenueForm .drag-drop__selected')
+	const $revenueTextLabel = document.querySelector('#revenueForm .drag-drop__selected .filename')
 	
 	const $expensesForm = $('#expensesForm')
 	const $expensesFile = document.querySelector('#expensesFile')
 	const $expensesSelected = document.querySelector('#expensesForm .drag-drop__selected')
+	const $expensesTextLabel = document.querySelector('#expensesForm .drag-drop__selected .filename')
+	
 	const $autoComplete = document.querySelector('.autoComplete')
 
 
@@ -125,7 +128,7 @@ jQuery(function ($) {
 	
 	let droppedFiles = false;
 	
-	function handleChangeFile (form, input, selected) {
+	function handleChangeFile (form, input, selected, textLabel) {
 		form.on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -139,6 +142,18 @@ jQuery(function ($) {
 			.on('drop', function(e) {
 				console.log('drop')
 				droppedFiles = e.originalEvent.dataTransfer.files;
+				
+				if (droppedFiles) {
+					console.log('файл был выбран', droppedFiles[0].name)
+					selected.classList.add('active')
+					textLabel.textContent = droppedFiles[0].name
+				} else {
+					selected.classList.remove('active')
+					console.log('Файл не был выбран')
+				}
+				
+				console.log(droppedFiles.length)
+				console.log(input.files)
 				selected.classList.add('active')
 			});
 		
@@ -150,11 +165,12 @@ jQuery(function ($) {
 			})
 			
 			input.addEventListener('change', function () {
+				let filename = $(this).val().replace(/.*\\/, "");
 				if (this.value) {
-					console.log(this)
-					console.log(this.files)
 					console.log('файл был выбран', this.value)
+					console.log(this.files)
 					selected.classList.add('active')
+					textLabel.textContent = filename
 				} else {
 					selected.classList.remove('active')
 					console.log('Файл не был выбран')
@@ -164,8 +180,8 @@ jQuery(function ($) {
 			
 	}
 
-	handleChangeFile($revenueForm, $revenueFile, $revenueSelected)
-	handleChangeFile($expensesForm, $expensesFile, $expensesSelected)
+	handleChangeFile($revenueForm, $revenueFile, $revenueSelected, $revenueTextLabel)
+	handleChangeFile($expensesForm, $expensesFile, $expensesSelected, $expensesTextLabel)
 
 	
 	
@@ -259,7 +275,7 @@ jQuery(function ($) {
 		$('.select__head').removeClass('open');
 		$(this).parent().fadeOut();
 		$(this).parent().prev().text($(this).text());
-		$(this).parent().prev().prev().val($(this).text());
+		$(this).parent().prev().prev().val($(this)[0].dataset.prop).trigger('change');
 	});
 
 	$(document).click(function (e) {
@@ -282,5 +298,32 @@ jQuery(function ($) {
 			$('html, body').removeClass('_over-hidden')
 		})
 	})
+	
+	// if ($('#listMonths').length) {
+	//	
+	// 	$('#listMonths li').on('click', function () {
+	// 		if (!$(this).hasClass('range-active')) {
+	// 			$(this).addClass('range-active')
+	// 		} else {
+	// 			$(this).removeClass('range-active')
+	// 		}
+	//
+	// 		if (!$('#listMonths li').hasClass('start')) {
+	// 			$(this).addClass('start')
+	// 		}
+	//
+	// 	})
+	//
+	// 	$('#listMonths li').on('click', function () {
+	//		
+	// 		if ($(this).hasClass('start')) {
+	//			
+	// 		}
+	//		
+	// 		$(this).addClass('range-active')
+	// 		$(this).addClass('start')
+	// 	})
+	//	
+	// }
 
 })

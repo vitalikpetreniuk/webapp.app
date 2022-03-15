@@ -2,6 +2,14 @@
     display: none;
 }
 
-.drag-drop__dragndrop, .drag-drop__error, .drag-drop__file, .drag-drop__success, .drag-drop__uploading {
-    display: block;
+.cat1, .cat2 {
+    display: none;
+
+    &.default-shown {
+        display: block;
+    }
 }
+
+//.drag-drop__dragndrop, .drag-drop__error, .drag-drop__file, .drag-drop__success, .drag-drop__uploading {
+//    display: block;
+//}

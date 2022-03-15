@@ -1,7 +1,4 @@
-<div class="tabs-section active">
-    <button>Reporting</button>
-    <button class="active">Analytics</button>
-</div>
+<x-reporting-analytics-tabs />
 <div class="type-analytics mt-20">
     <ul class="d-flex">
         <li>
@@ -11,7 +8,7 @@
             <a href="sweetspot.html">Sweetspot Analytics</a>
         </li>
         <li>
-            <a href="special.html">Specid event Analytics</a>
+            <a href="special.html">Special event Analytics</a>
         </li>
     </ul>
 </div>

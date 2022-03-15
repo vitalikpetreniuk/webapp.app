@@ -1,41 +1,48 @@
 <div id="modal-revenue" class="modal d-flex flex-column">
     <span class="modal__title">Revenue</span>
-    <form id="revenueForm" name="revenueForm" class="drag-drop d-flex flex-column" action="{{ route('revenues.val') }}"
+    <form id="revenueF" action="{{ route('revenues.val') }}"
           method="POST"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          name="revenueF">
         @csrf
-        <div class="drag-drop__input d-flex flex-column align-items-center form-group">
-            <input class="drag-drop__file" type="file" name="files" id="revenueFile"
-                   data-multiple-caption="{count} files selected" accept=".xls, .xlsx"/>
-            <div class="drag-drop__selected d-flex flex-column align-items-center">
-                <div class="drag-drop__close">
-                    <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
+        <div id="revenueForm" class="drag-drop d-flex flex-column">
+            <div class="drag-drop__input d-flex flex-column align-items-center">
+                <input class="drag-drop__file" type="file" name="files" id="revenueFile"
+                       data-multiple-caption="{count} files selected"/>
+                <div class="drag-drop__selected d-flex flex-column align-items-center">
+                    <div class="drag-drop__close">
+                        <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="{{ asset('frontend/images/dist/icons/doc.svg') }}" alt="doc">
+                    </div>
+                    <span class="filename">Document №1.docx</span>
                 </div>
-                <div class="d-flex align-items-center justify-content-center">
-                    <img src="{{ asset('frontend/images/dist/icons/doc.svg') }}" alt="doc">
-                </div>
-                <span>Document №1.docx</span>
+                <label for="revenueFile" class="drag-drop__label d-flex justify-content-center">
+                    <img src="{{ asset('frontend/images/dist/icons/add-doc.svg') }}" alt="add">
+                    <span>Select file</span>
+                </label>
+                <!--			<button class="drag-drop__button" type="submit">Upload</button>-->
             </div>
-            <label for="expensesFile" class="drag-drop__label d-flex justify-content-center">
-                <img src="{{ asset('frontend/images/dist/icons/add-doc.svg') }}" alt="add">
-                <span>Select file</span>
-            </label>
-            <!--			<button class="drag-drop__button" type="submit">Upload</button>-->
+            <div class="drag-drop__success">Successfully sent!</div>
         </div>
-        <input type="submit" value="Отправить">
+        <div class="modal__url d-flex align-items-center">
+            <input disabled class="field-text align-self-end turquoise" type="text" placeholder="or paste URL adress">
+            <button type="submit" href="#" class="turquoise">Submit</button>
+        </div>
+        <a href="{{ asset('xlsx/sample.xlsx') }}" class="btn__modal turquoise mt-30" download>Download Sample</a>
     </form>
-    <a href="{{ asset('xlsx/sample.xlsx') }}" type="download" download="Sample.xlsx" class="btn__modal turquoise mt-30">Download
-        Sample</a>
     <div class="modal__close">
         <img src="{{ asset('frontend/images/dist/icons/x.svg') }}" alt="x">
     </div>
 </div>
-{!! $validator->selector('#revenueForm') !!}
+{!! $validator->selector('#revenueF') !!}
 <script>
     jQuery(function ($) {
-        $('#revenueForm').on('submit', function (e) {
+        $('#revenueF').on('submit', function (e) {
             e.preventDefault();
-            let formdata = new FormData(document.querySelector('#revenueForm'))
+            let form = '#revenueF';
+            let formdata = new FormData(document.querySelector(revenueform))
             $.ajax({
                 "url": "{{ route('revenues.store') }}",
                 "type": "POST",
@@ -44,17 +51,23 @@
                 "data": formdata,
                 success: function (response) {
                     let result = JSON.parse(response)
-                    $('#revenueForm').append(`<p>${result.message}</p>`);
+                    if (!result.success) {
+                        revenueErrorCatch(response)
+                        return;
+                    }
+                    $(form).find('.drag-drop__success').addClass('show');
                     console.log(result)
-                    alert(result.message)
                 },
-                error: function (response) {
-                    let result = JSON.parse(response)
-                    $('#revenueForm').append(`<span class="help-block error-help-block">${result.message}</span>`);
-                    console.log(result)
-                    alert(result.message)
-                },
+                error: revenueErrorCatch,
             });
         });
     })
+
+    function revenueErrorCatch(response) {
+        let result;
+        (typeof response == 'string') ? result = JSON.parse(response) : result = response;
+        $('#revenueForm').append(`<span class="help-block error-help-block">${result.message}</span>`);
+        console.log(result)
+        alert(result.message)
+    }
 </script>

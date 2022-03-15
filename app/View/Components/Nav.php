@@ -3,6 +3,8 @@
 namespace App\View\Components;
 
 use App\Models\Revenue;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\Component;
 
 class Nav extends Component
@@ -29,6 +31,13 @@ class Nav extends Component
      */
     public function render()
     {
-        return view('components.nav');
+        $from = Carbon::now()->subYear();
+        $now = Carbon::now();
+        /* Получение сумы растрат */
+        $request = "SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN '$from' AND '$now' GROUP BY 1, 2";
+//        dd($request);
+        $data = DB::select($request);
+
+        return view('components.nav', compact('data'));
     }
 }

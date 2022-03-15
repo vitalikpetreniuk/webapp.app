@@ -2,6 +2,9 @@
   display: none;
 }
 
-.drag-drop__dragndrop, .drag-drop__error, .drag-drop__file, .drag-drop__success, .drag-drop__uploading {
+.cat1, .cat2 {
+  display: none;
+}
+.cat1.default-shown, .cat2.default-shown {
   display: block;
 }
