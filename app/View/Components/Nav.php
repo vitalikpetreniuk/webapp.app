@@ -4,6 +4,7 @@ namespace App\View\Components;
 
 use App\Models\Revenue;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\Component;
 
@@ -34,9 +35,9 @@ class Nav extends Component
         $from = Carbon::now()->subYear();
         $now = Carbon::now();
         /* Получение сумы растрат */
-        $request = "SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN '$from' AND '$now' GROUP BY 1, 2";
+        $request = "SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ? AND user_id = ? GROUP BY 1, 2";
 //        dd($request);
-        $data = DB::select($request);
+        $data = DB::select($request, [$from, $now, Auth::id()]);
 
         return view('components.nav', compact('data'));
     }
