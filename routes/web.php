@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\RevenueController;
+use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportingsController;
@@ -43,6 +44,8 @@ Route::controller(ExpenseController::class)->group(function () {
 Route::controller(ReportingsController::class)->group(function () {
     Route::get('/reportings', 'index')->name('reportings.get');
 });
+
+Route::get('/sources/', [SourceController::class, 'listSources']);
 
 Route::get('/special', function () {
    return view('special');
