@@ -13,8 +13,8 @@ class ReportingsController extends Controller
     public function index() {
         $from = Carbon::now()->subMonth()->startOfMonth();
         $to = Carbon::now()->subMonth()->endOfMonth();
-        $request = "SELECT net_sales_amount AS sum FROM revenues WHERE date BETWEEN ? AND ? AND user_id = ?";
-        $data = DB::select($request, [$from,  $to, Auth::id()]);
+        $request = "SELECT net_sales_amount AS sum FROM revenues WHERE date BETWEEN ? AND ?";
+        $data = DB::select($request, [$from,  $to]);
         return view('reportings/reportings', compact('data'));
     }
 }

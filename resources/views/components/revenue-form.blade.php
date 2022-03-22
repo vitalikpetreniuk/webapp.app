@@ -8,7 +8,7 @@
         <div id="revenueForm" class="drag-drop d-flex flex-column">
             <div class="drag-drop__input d-flex flex-column align-items-center">
                 <input class="drag-drop__file" type="file" name="files" id="revenueFile"
-                       data-multiple-caption="{count} files selected"/>
+                       data-multiple-caption="{count} files selected" accept=".xls, .xlsx">
                 <div class="drag-drop__selected d-flex flex-column align-items-center">
                     <div class="drag-drop__close">
                         <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
@@ -42,7 +42,7 @@
         $('#revenueF').on('submit', function (e) {
             e.preventDefault();
             let form = '#revenueF';
-            let formdata = new FormData(document.querySelector(revenueform))
+            let formdata = new FormData(document.querySelector('#revenueF'))
             $.ajax({
                 "url": "{{ route('revenues.store') }}",
                 "type": "POST",

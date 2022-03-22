@@ -2,9 +2,10 @@
     <span class="modal__title">Expenses</span>
 
     <form action="{{ route('expenses.val') }}" method="POST" id="expenseF">
+        @csrf
         <div class="modal__select select blue mb-15">
             <input class="select__input" onchange="expenseInputChange(event)" type="hidden" name="expensecategory"
-                   id="expense-category">
+                   id="expense-category" value="1">
             <div class="select__head">Category</div>
             <ul class="select__list" style="display: none;">
                 <li class="select__item" data-prop="1">Category 1</li>
@@ -12,32 +13,31 @@
                 <li class="select__item" data-prop="3">Category 3</li>
             </ul>
         </div>
-        <div class="cat1 cat2">
+
+        <div class="cat2">
             <div class="modal__select select blue mb-15">
-                <input class="select__input" type="hidden" name="">
+                <input class="select__input" type="hidden" name="expensetype" value="2">
                 <div class="select__head">Expenses type</div>
                 <ul class="select__list" style="display: none;">
-                    <li class="select__item" data-prop="1">Summ $ (USD)</li>
-                    <li class="select__item" data-prop="2">% of Ad spend</li>
-                    <li class="select__item" data-prop="3">% of net revenue</li>
+                    <li class="select__item" data-prop="2">Summ $ (USD)</li>
+                    <li class="select__item" data-prop="3">% of Ad spend</li>
+                    <li class="select__item" data-prop="4">% of net revenue</li>
                 </ul>
             </div>
-        </div>
-        <div class="cat2">
             <p class="modal__text">
                 select the date range for which you want to try on data
             </p>
             <div class="datepicker d-flex mb-20">
-                <input id="monthpicker" name="monthpicker"/>
+                <input class="monthpicker" name="monthpicker2"/>
                 <div class="datepicker__icon d-flex align-items-center justify-content-center">
                     <img src="{{ asset('frontend/images/dist/icons/calendar.svg') }}" alt="">
                 </div>
             </div>
 
-            <input class="input-field" type="number" name="sum" step="10" placeholder="Summ">
-            <div class="autoComplete123 mt-15">
+            <input class="input-field" type="number" name="amount" placeholder="Summ">
+            <div class="autoComplete mt-15">
                 <div class="autoComplete_wrapper">
-                    <input id="autoComplete" type="text" tabindex="1">
+                    <input id="autoComplete" type="text" name="source" tabindex="1">
                 </div>
                 <div class="selection"></div>
             </div>
@@ -80,7 +80,7 @@
             <div id="expensesForm" class="drag-drop d-flex flex-column">
                 <div class="drag-drop__input d-flex flex-column align-items-center">
                     <input class="drag-drop__file" type="file" name="files" id="expensesFile"
-                           data-multiple-caption="{count} files selected"/>
+                           data-multiple-caption="{count} files selected" accept=".xls, .xlsx"/>
                     <div class="drag-drop__selected d-flex flex-column align-items-center">
                         <div class="drag-drop__close">
                             <img src="{{ asset('frontend/images/dist/icons/close.svg') }}" alt="close">
@@ -119,20 +119,20 @@
                 select the date range for which you want to try on data
             </p>
             <div class="datepicker d-flex mb-20">
-                <input id="monthpicker" name="monthpicker"/>
+                <input class="monthpicker" name="monthpicker3"/>
                 <div class="datepicker__icon d-flex align-items-center justify-content-center">
                     <img src="{{ asset('frontend/images/dist/icons/calendar.svg') }}" alt="">
                 </div>
             </div>
 
             <div class="cat3_1 default-shown">
-                <input class="input-field" type="text" name="cost-of-good-sold">
+                <input class="input-field" type="number" min="1" max="100" name="cost-of-good-sold">
             </div>
             <div class="cat3_2">
-                <input class="input-field" type="text" name="affiliate-commission">
+                <input class="input-field" type="number" min="1" max="100" name="affiliate-commission">
             </div>
             <div class="cat3_3">
-                <input class="input-field" type="text" name="ad-spend-commission">
+                <input class="input-field" type="number" min="1" max="100" name="ad-spend-commission">
             </div>
 
             <div class="modal__select secondary select alt mt-15">
@@ -166,7 +166,8 @@
             </div>
         </div>
 
-        <a href="#" class="btn__modal blue mt-30" download>Download Sample</a>
+        <button type="submit" class="btn__modal blue mt-30">Submit</button>
+        <a href="{{ asset('xlsx/Day.xlsx') }}" class="btn__modal blue mt-30" download>Download Sample</a>
     </form>
     <div class="modal__close">
         <img src="{{ asset('frontend/images/dist/icons/x.svg') }}" alt="x">

@@ -81,9 +81,8 @@ class RevenueController extends Controller
                 );
             }
             $send['success'] = true;
-            echo json_encode([
-                'message' => 'XLSX was successfully imported'
-            ]);
+            $send['message'] = 'XLSX was successfully imported';
+            echo json_encode($send);
         } catch (\Exception $exception) {
             $send = [];
             $message = 'Failed importing xlsx file';
@@ -92,6 +91,7 @@ class RevenueController extends Controller
             }
             if (App::environment('local')) {
                 $send['debugcode'] = $exception->getCode();
+                $send['debugmessage'] = $exception->getMessage();
             }
             $send['success'] = false;
             $send['message'] = $message;

@@ -35,9 +35,9 @@ class Nav extends Component
         $from = Carbon::now()->subYear();
         $now = Carbon::now();
         /* Получение сумы растрат */
-        $request = "SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ? AND user_id = ? GROUP BY 1, 2";
+        $request = "SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2";
 //        dd($request);
-        $data = DB::select($request, [$from, $now, Auth::id()]);
+        $data = DB::select($request, [$from, $now]);
 
         return view('components.nav', compact('data'));
     }

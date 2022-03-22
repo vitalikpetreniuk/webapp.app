@@ -4,7 +4,7 @@
 import flatpickr from "flatpickr";
 import 'flot';
 import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index.js";
-import autoComplete from "@tarekraafat/autocomplete.js/dist/autoComplete.min.js";
+import autoComplete from "@tarekraafat/autocomplete.js";
 
 jQuery(function ($) {
 
@@ -13,136 +13,101 @@ jQuery(function ($) {
 	const $revenueFile = document.querySelector('#revenueFile')
 	const $revenueSelected = document.querySelector('#revenueForm .drag-drop__selected')
 	const $revenueTextLabel = document.querySelector('#revenueForm .drag-drop__selected .filename')
-	
+
 	const $expensesForm = $('#expensesForm')
 	const $expensesFile = document.querySelector('#expensesFile')
 	const $expensesSelected = document.querySelector('#expensesForm .drag-drop__selected')
 	const $expensesTextLabel = document.querySelector('#expensesForm .drag-drop__selected .filename')
-	
+
 	const $autoComplete = document.querySelector('.autoComplete')
 
 
+	if ($('.autoComplete').length) {
+		fetch('https://webapp.test/sources').then(
+			async (source) => {
+				const data = await source.json();
+				const autoCompleteJS = new autoComplete({
+					data: {
+						src: Object.values(data[0]),
+						cache: true,
+					},
+					placeHolder: "Source",
+					resultsList: {
+						element: (list, data) => {
+							const info = document.createElement("p");
+							if (data.results.length > 0) {
+								info.innerHTML = `Displaying <strong>${data.results.length}</strong> out of <strong>${data.matches.length}</strong> results`;
+							} else {
+								info.innerHTML = `Создать категорию <strong>"${data.query}"</strong>`;
+							}
+							list.prepend(info);
+						},
+						noResults: true,
+						maxResults: 15,
+						tabSelect: true
+					},
+					resultItem: {
+						element: (item, data) => {
+							// Modify Results Item Style
+							item.style = "display: flex; justify-content: space-between;";
+							// Modify Results Item Content
+							item.innerHTML = `
+      <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+        ${data.match}
+      </span>`;
+						},
+						highlight: true
+					},
+					events: {
+						input: {
+							focus: () => {
+								if (autoCompleteJS.input.value.length) autoCompleteJS.start();
+							}
+						}
+					}
+				});
+				autoCompleteJS.input.addEventListener("selection", function (event) {
+					const feedback = event.detail;
+					autoCompleteJS.input.blur();
+					// Prepare User's Selected Value
+					const selection = feedback.selection.value;
+					// Render selected choice to selection div
+					document.querySelector(".selection").innerHTML = selection;
+					// Replace Input value with the selected value
+					autoCompleteJS.input.value = selection;
+					// Console log autoComplete data feedback
+					console.log(feedback);
+				});
+			}
+		)
+	}
 
 
-	// if ($('.autoComplete').length) {
-	// 	const autoCompleteJS = new autoComplete({
-	// 		data: {
-	// 			src: async () => {
-	// 				try {
-	// 					// Loading placeholder text
-	// 					document
-	// 						.getElementById("autoComplete")
-	// 						.setAttribute("placeholder", "Loading...");
-	// 					// Fetch External Data Source
-	// 					const source = await fetch(
-	// 						"https://tarekraafat.github.io/autoComplete.js/demo/db/generic.json"
-	// 					);
-	// 					const data = await source.json();
-	// 					// Post Loading placeholder text
-	// 					document
-	// 						.getElementById("autoComplete")
-	// 						.setAttribute("placeholder", autoCompleteJS.placeHolder);
-	// 					// Returns Fetched data
-	// 					return data;
-	// 				} catch (error) {
-	// 					return error;
-	// 				}
-	// 			},
-	// 			keys: ["food", "cities", "animals"],
-	// 			cache: true,
-	// 			filter: (list) => {
-	// 				// Filter duplicates
-	// 				// incase of multiple data keys usage
-	// 				const filteredResults = Array.from(
-	// 					new Set(list.map((value) => value.match))
-	// 				).map((food) => {
-	// 					return list.find((value) => value.match === food);
-	// 				});
-	//
-	// 				return filteredResults;
-	// 			}
-	// 		},
-	// 		placeHolder: "Source",
-	// 		resultsList: {
-	// 			element: (list, data) => {
-	// 				const info = document.createElement("p");
-	// 				if (data.results.length > 0) {
-	// 					info.innerHTML = `Displaying <strong>${data.results.length}</strong> out of <strong>${data.matches.length}</strong> results`;
-	// 				} else {
-	// 					info.innerHTML = `Создать категорию <strong>"${data.query}"</strong>`;
-	// 				}
-	// 				list.prepend(info);
-	// 			},
-	// 			noResults: true,
-	// 			maxResults: 15,
-	// 			tabSelect: true
-	// 		},
-	// 		resultItem: {
-	// 			element: (item, data) => {
-	// 				// Modify Results Item Style
-	// 				item.style = "display: flex; justify-content: space-between;";
-	// 				// Modify Results Item Content
-	// 				item.innerHTML = `
-  //     <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-  //       ${data.match}
-  //     </span>
-  //     <span style="display: flex; align-items: center; font-size: 13px; font-weight: 100; text-transform: uppercase; color: rgba(0,0,0,.2);">
-  //       ${data.key}
-  //     </span>`;
-	// 			},
-	// 			highlight: true
-	// 		},
-	// 		events: {
-	// 			input: {
-	// 				focus: () => {
-	// 					if (autoCompleteJS.input.value.length) autoCompleteJS.start();
-	// 				}
-	// 			}
-	// 		}
-	// 	});
-	//
-	//
-	//
-	// 	autoCompleteJS.input.addEventListener("selection", function (event) {
-	// 		const feedback = event.detail;
-	// 		autoCompleteJS.input.blur();
-	// 		// Prepare User's Selected Value
-	// 		const selection = feedback.selection.value[feedback.selection.key];
-	// 		// Render selected choice to selection div
-	// 		document.querySelector(".selection").innerHTML = selection;
-	// 		// Replace Input value with the selected value
-	// 		autoCompleteJS.input.value = selection;
-	// 		// Console log autoComplete data feedback
-	// 		console.log(feedback);
-	// 	});
-	// }
-		
-		
 	const months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.',]
 	let $listMonths = document.querySelectorAll('#listMonths li')
-	
+
 	$listMonths.forEach((month, idx) => {
 		month.textContent = months[idx]
 	})
-	
-	
+
+
 	let droppedFiles = false;
-	
-	function handleChangeFile (form, input, selected, textLabel) {
-		form.on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+
+	function handleChangeFile(form, input, selected, textLabel) {
+		form.on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 		})
-			.on('dragover dragenter', function() {
+			.on('dragover dragenter', function () {
 				form.addClass('is-dragover');
 			})
-			.on('dragleave dragend drop', function() {
+			.on('dragleave dragend drop', function () {
 				form.removeClass('is-dragover');
 			})
-			.on('drop', function(e) {
+			.on('drop', function (e) {
 				console.log('drop')
 				droppedFiles = e.originalEvent.dataTransfer.files;
-				
+
 				if (droppedFiles) {
 					console.log('файл был выбран', droppedFiles[0].name)
 					selected.classList.add('active')
@@ -151,19 +116,19 @@ jQuery(function ($) {
 					selected.classList.remove('active')
 					console.log('Файл не был выбран')
 				}
-				
+
 				console.log(droppedFiles.length)
 				console.log(input.files)
 				selected.classList.add('active')
 			});
-		
+
 
 		if (input) {
 			selected.addEventListener('click', function () {
 				input.value = ''
 				selected.classList.remove('active')
 			})
-			
+
 			input.addEventListener('change', function () {
 				let filename = $(this).val().replace(/.*\\/, "");
 				if (this.value) {
@@ -177,15 +142,12 @@ jQuery(function ($) {
 				}
 			})
 		}
-			
+
 	}
 
 	handleChangeFile($revenueForm, $revenueFile, $revenueSelected, $revenueTextLabel)
 	handleChangeFile($expensesForm, $expensesFile, $expensesSelected, $expensesTextLabel)
 
-	
-	
-	
 
 	const datepicker = document.getElementById('datepicker')
 	const datepickerModal = document.getElementById('datepicker-modal')
@@ -198,26 +160,26 @@ jQuery(function ($) {
 			$(this).next().removeClass('active')
 		}
 	})
-	
-	// flatpickr($('#datepicker, #datepicker-modal'), {
-	// 	mode: "range",
-	// 	minDate: "today",
-	// 	dateFormat: "d.m.Y",
-	// 	defaultDate: ["today", "today"],
-	// 	showMonths: 3,
-	// })
-	//
-	// flatpickr($('#monthpicker'), {
-	// 	defaultDate: new Date(),
-	// 	plugins: [
-	// 		new monthSelectPlugin({
-	// 			shorthand: true, //defaults to false
-	// 			dateFormat: "m.y", //defaults to "F Y"
-	// 			altFormat: "F Y", //defaults to "F Y"
-	// 			theme: "dark", // defaults to "light"
-	// 		})
-	// 	]
-	// })
+
+	flatpickr($('#datepicker, #datepicker-modal'), {
+		mode: "range",
+		minDate: "today",
+		dateFormat: "d.m.Y",
+		defaultDate: ["today", "today"],
+		showMonths: 3,
+	})
+
+	flatpickr($('.monthpicker'), {
+		defaultDate: new Date(),
+		plugins: [
+			new monthSelectPlugin({
+				shorthand: true, //defaults to false
+				dateFormat: "m.y", //defaults to "F Y"
+				altFormat: "F Y", //defaults to "F Y"
+				theme: "dark", // defaults to "light"
+			})
+		]
+	})
 
 	// if (datepicker.value.length === 0) {
 	// 	$(`.datepicker .datepicker__icon`).css({
@@ -238,7 +200,7 @@ jQuery(function ($) {
 			datepicker.value = datepicker.value.replace('to', '-')
 		}
 	}
-	
+
 	$('#revenue').click(() => {
 		$('#modal-revenue, .modal-overlay').addClass('active')
 		$('html, body').addClass('_over-hidden')
@@ -247,15 +209,14 @@ jQuery(function ($) {
 		$('#modal-expenses, .modal-overlay').addClass('active')
 		$('html, body').addClass('_over-hidden')
 	})
-	
-	
+
+
 	$('.modal__close, .modal-overlay').click(() => {
 		$('.modal, .modal-overlay').removeClass('active')
 		$('html, body').removeClass('_over-hidden')
 	})
-	
-	
-	
+
+
 	// select
 
 	$('.select').on('click', '.select__head', function () {
@@ -283,7 +244,7 @@ jQuery(function ($) {
 			$('.select__list').fadeOut();
 		}
 	});
-	
+
 	$('.btn__edit').click(function (event) {
 		event.preventDefault()
 		event.stopPropagation()
@@ -297,7 +258,7 @@ jQuery(function ($) {
 			$('html, body').removeClass('_over-hidden')
 		})
 	})
-	
+
 	// if ($('#listMonths').length) {
 	//
 	// 	$('#listMonths li').on('click', function () {
