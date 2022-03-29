@@ -10,33 +10,13 @@ function getCookie(name) {
     return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-function setApiToken(email = 'petreniuk.ua@gmail.com', password = 'lutsk123ns') {
-    if (!getCookie('token')) {
-        instance.post('/auth/login', {
-            email, password
-        }).then(function (response) {
-            let date = new Date((new Date()).getTime() + 3600).toUTCString();
-            document.cookie = `token=${response.data.access_token}; path=/; samesite=lax; expires=${date}`;
-        })
-    }
-}
-
 const getExpense = async (ID) => {
     try {
         const resp = await instance.get(`/expense/${ID}`);
-        return await resp.data
+        return await {...resp.data, expense: true}
     } catch (err) {
         console.error(err);
     }
-}
-
-function expenseErrorCatch(response) {
-    let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
-    console.log(result)
-    $('#modal-expenses').find(`.drag-drop__success`).removeClass('show')
-    $('#modal-expenses').find(`.drag-drop__error`).text(result.message).addClass('show');
-
-    setTimeout(() => $('#modal-expenses').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
 }
 
 async function newExpense(formdata) {
@@ -71,9 +51,36 @@ const updateExpense = async (ID, data) => {
         console.error(err);
     }
 }
-jQuery(function ($) {
-    setApiToken();
 
+const getRevenue = async (ID) => {
+    try {
+        const resp = await instance.get(`/revenue/${ID}`);
+        return await {...resp.data, revenue: true}
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const updateRevenue = async (ID, data) => {
+    try {
+        const resp = await instance.post(`/revenue/${ID}`, {
+            data
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function expenseErrorCatch(response) {
+    let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
+    console.log(result)
+    $('#modal-expenses').find(`.drag-drop__success`).removeClass('show')
+    $('#modal-expenses').find(`.drag-drop__error`).text(result.message).addClass('show');
+
+    setTimeout(() => $('#modal-expenses').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+}
+
+jQuery(function ($) {
     window.expenseInputChange = function (e) {
         console.log($(e.target).val())
         let val = parseInt($(e.target).val());
@@ -221,4 +228,6 @@ jQuery(function ($) {
 
         return false;
     });
+
+    console.log(getExpense(10))
 })

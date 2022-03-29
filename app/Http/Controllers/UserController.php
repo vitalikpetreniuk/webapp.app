@@ -38,7 +38,7 @@ class UserController extends Controller
 
         if (auth()->check()) return redirect()->home();
 
-        $validator = JsValidator::make($this->validationRules);
+        $validator = \JsValidator::make($this->validationRules);
 
         return view('user.login')->with([
             'validator' => $validator,
@@ -65,18 +65,18 @@ class UserController extends Controller
 
     public function login(Request $request) {
 
-        $validation = Validator::make($request->all(), $this->validationRules);
+        $validation = \Validator::make($request->all(), $this->validationRules);
 
         if ($validation->fails()) {
             return redirect()->back()->withErrors($validation->errors());
         }
 
-        if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-        ])) {
-            return redirect()->home();
-        }
+        Auth::attempt([
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+        ]);
+
+        return redirect()->home();
 
     }
 

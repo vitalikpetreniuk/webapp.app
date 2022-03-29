@@ -24,7 +24,6 @@ class CreateExpensesTable extends Migration
             $table->integer('type_of_sum')->nullable()->default(0);
             $table->integer('type_variable')->nullable()->default(0);
             $table->boolean('from_file')->default(false);
-            $table->boolean('expense')->default(true);
             $table->timestamps();
         });
     }

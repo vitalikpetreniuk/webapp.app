@@ -26,7 +26,6 @@ class CreateRevenuesTable extends Migration
             $table->decimal('net_sales_amount');
             $table->decimal('refund_amount')->default(0.00);
             $table->foreignIdFor(User::class);
-            $table->boolean('revenue')->default(true);
             $table->timestamps();
         });
     }

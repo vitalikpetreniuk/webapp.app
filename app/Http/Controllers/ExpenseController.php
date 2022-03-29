@@ -220,7 +220,7 @@ class ExpenseController extends Controller
         return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
-    public function getSingleExpense($id) {
-        return response()->json(Expense::find($id), 200);
+    public function getSingle($id) {
+        return response()->json(Expense::find($id));
     }
 }

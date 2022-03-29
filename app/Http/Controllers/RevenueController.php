@@ -109,4 +109,12 @@ class RevenueController extends Controller
     public static function getAllRevenues($from, $to) {
         return DB::select('SELECT * FROM revenues WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
+
+    public function update(Request $request, $rev_id) {
+        Revenue::find($rev_id)->update($request->all());
+    }
+
+    public function getSingle($id) {
+        return response()->json(Revenue::find($id));
+    }
 }

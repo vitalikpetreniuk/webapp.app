@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +14,6 @@ class SourceController extends Controller
         foreach ($select as $item) {
             $data[$item->id] = $item->name;
         }
-        return '['.json_encode($data).']';
+        return response()->json($data);
     }
 }

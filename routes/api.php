@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SourceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RevenueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,21 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('expense/{id}', [ExpenseController::class, 'getSingleExpense']);
+Route::get('expense/{id}', [ExpenseController::class, 'getSingle']);
 Route::post('expense/{id}', [ExpenseController::class, 'update']);
-
 Route::post('expense', [ExpenseController::class, 'store']);
+Route::get('/sources/', [SourceController::class, 'listSources']);
 
-Route::group([
 
-    'middleware' => 'api',
-    'prefix' => 'auth'
-
-], function ($router) {
-
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'me']);
-
-});
+Route::get('revenue/{id}', [RevenueController::class, 'getSingle']);
+Route::post('revenue/{id}', [RevenueController::class, 'update']);
