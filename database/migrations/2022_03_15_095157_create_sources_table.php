@@ -16,7 +16,7 @@ class CreateSourcesTable extends Migration
         Schema::create('sources', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class);
-            $table->text('name')->unique();
+            $table->text('name');
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@ use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ReportingsController;
+use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,31 +22,31 @@ use Illuminate\Support\Facades\Route;
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
 });
-
+//
 Route::controller(RevenueController::class)->group(function () {
     Route::post('/revenues/val', 'val')->name('revenues.val');
     Route::post('/revenues', 'store')->name('revenues.store');
 });
-
-Route::controller(UserController::class)->group(function () {
-    Route::get('/register', 'create')->name('user.register-create');
-    Route::post('/register', 'store')->name('user.register.store');
-
-    Route::get('/login', 'userForm')->name('user.login-create');
-    Route::post('/login', 'login')->name('user.login');
-});
-
+//
+//Route::controller(UserController::class)->group(function () {
+//    Route::get('/register', 'create')->name('user.register-create');
+//    Route::post('/register', 'store')->name('user.register.store');
+//
+//    Route::get('/login', 'userForm')->name('user.login-create');
+//    Route::post('/login', 'login')->name('user.login');
+//});
+//
 Route::controller(ExpenseController::class)->group(function () {
     Route::post('/expenses/val', 'val')->name('expenses.val');
     Route::post('/expenses', 'store')->name('expenses.store');
 });
-
-Route::controller(ReportingsController::class)->group(function () {
-    Route::get('/reportings', 'index')->name('reportings.get');
+//
+Route::controller(AnalyticsController::class)->group(function () {
+    Route::get('/analytics', 'index')->name('analytics');
 });
-
-Route::get('/sources/', [SourceController::class, 'listSources']);
-
-Route::get('/special', function () {
-   return view('special');
-});
+//
+//Route::get('/sources/', [SourceController::class, 'listSources']);
+//
+//Route::get('/special', function () {
+//   return view('special');
+//});

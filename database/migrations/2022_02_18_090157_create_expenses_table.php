@@ -19,8 +19,12 @@ class CreateExpensesTable extends Migration
             $table->foreignIdFor(\App\Models\ExpenseCategory::class)->nullable();
             $table->foreignIdFor(\App\Models\Source::class)->nullable();
             $table->decimal('amount')->default(0.00);
+            $table->text('comment')->nullable();
             $table->date('date');
-            $table->boolean('fixed')->default(true);
+            $table->integer('type_of_sum')->nullable()->default(0);
+            $table->integer('type_variable')->nullable()->default(0);
+            $table->boolean('from_file')->default(false);
+            $table->boolean('expense')->default(true);
             $table->timestamps();
         });
     }

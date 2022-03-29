@@ -20,7 +20,6 @@
     },
     "dependencies": {
         "@babel/register": "^7.17.0",
-        "@tarekraafat/autocomplete.js": "^10.2.6",
         "conditional-field": "^1.0.2",
         "conditional-fields": "^1.0.1",
         "jquery": "^3.6.0"

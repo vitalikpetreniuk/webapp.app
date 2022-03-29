@@ -2,6 +2,9 @@
 
 namespace App\View\Components;
 
+use App\Http\Controllers\ExpenseCalculationsController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\RevenueController;
 use App\Models\Revenue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -20,11 +23,6 @@ class Nav extends Component
         //
     }
 
-    public function getNavData() {
-        $date = new \DateTime();
-        $year = $date->y;
-    }
-
     /**
      * Get the view / contents that represent the component.
      *
@@ -32,12 +30,19 @@ class Nav extends Component
      */
     public function render()
     {
-        $from = Carbon::now()->subYear();
-        $now = Carbon::now();
+        $from = Carbon::now()->subYear()->format('Y-m-d');
+        $to = Carbon::now()->format('Y-m-d');
         /* Получение сумы растрат */
-        $request = "SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2";
-//        dd($request);
-        $data = DB::select($request, [$from, $now]);
+        $data = RevenueController::getYearNavDate($from, $to);
+
+        foreach ($data as $key => $item) {
+
+            $controller = new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', $item->date), Carbon::createFromFormat('Y-m-d', $item->date));
+
+            $ad_spend = $controller->countMonthAdSpendCosts();
+            $item->total_marketing_costs = $controller->countMonthAdSpendCosts();
+            $item->net_profit = $controller->countMonthNetTotal();
+        }
 
         return view('components.nav', compact('data'));
     }

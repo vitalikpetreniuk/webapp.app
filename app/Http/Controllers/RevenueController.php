@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Illuminate\Http\Request;
@@ -98,5 +99,14 @@ class RevenueController extends Controller
 
             echo json_encode($send);
         }
+    }
+
+    public static function getYearNavDate($from, $to)
+    {
+        return DB::select("SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", MIN(date) as date, SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2", [$from, $to]);
+    }
+
+    public static function getAllRevenues($from, $to) {
+        return DB::select('SELECT * FROM revenues WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 }

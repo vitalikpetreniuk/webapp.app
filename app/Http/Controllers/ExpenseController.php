@@ -4,42 +4,57 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\Revenue;
+use App\Models\Source;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\This;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ExpenseController extends Controller
 {
-    public function val(Request $request)
+    public function val()
     {
-        $validation = \Validator::make($request->all(), $this::validationRules());
+        $validation = \Validator::make($this::validationRules());
 
         $validation->sometimes(['files'], 'required|mimes:xls,xlsx', function ($input) {
             return $input->expensecategory == 1;
         });
 
-        $validation->sometimes(['sum', 'tag'], 'required', function ($input) {
+        $validation->sometimes(['sum', 'tag', 'monthpicker2'], 'required', function ($input) {
             return $input->expensecategory == 2;
+        });
+
+        $validation->sometimes(['monthpicker3'], 'required', function ($input) {
+            return $input->expensecategory == 3;
         });
 
         $validation->sometimes(['cost-of-good-sold'], 'required', function ($input) {
             return $input->cat3input == 1;
         });
 
-        $validation->sometimes(['affiliate-commission'], 'required', function ($input) {
+        $validation->sometimes(['affiliate-commission'], 'required|max:100', function ($input) {
             return $input->cat3input == 2;
         });
 
-        $validation->sometimes(['ad-spend-commission'], 'required', function ($input) {
+        $validation->sometimes(['ad-spend-commission'], 'required|max:100', function ($input) {
             return $input->cat3input == 3;
         });
+
+        //expensetype
+
+        $validation->sometimes(['cost-of-good-sold'], 'required', function ($input) {
+            return $input->cat3input == 1;
+        });
+
 
         if ($validation->fails()) {
             return redirect()->back()->withErrors($validation->errors());
         }
+
+        return $validation;
 
         // do store stuff
     }
@@ -57,6 +72,10 @@ class ExpenseController extends Controller
         } elseif ($request->input('expensecategory') == 3) {
             $this->expenseCategory3($request);
         }
+    }
+
+    public function update(Request $request, $exp_id) {
+        Expense::find($exp_id)->update($request->all());
     }
 
     public static function validationRules()
@@ -89,10 +108,10 @@ class ExpenseController extends Controller
                 Expense::create(
                     [
                         'date' => $date,
-                        'fixed' => true,
                         'user_id' => Auth::id(),
                         'amount' => $row[6],
-                        'expense_category_id' => 1
+                        'expense_category_id' => 1,
+                        'from_file' => true
                     ]
                 );
             }
@@ -120,27 +139,25 @@ class ExpenseController extends Controller
 
     protected function expenseCategory2($request)
     {
-        $date = Carbon::createFromFormat('d.y', $request->input('monthpicker2'));
-        if ($request->input('expensetype') == 2) {
-            $fixed = true;
-        } else {
-            $fixed = false;
-        }
+        $date = Carbon::createFromFormat('m.y', $request->input('monthpicker2'))->firstOfMonth();
 
-        if ($request->input('source')) {
-            $source = DB::table('source')->where('name', $request->input('source'))->value('id');
+        if (!$request->input('source')) {
+            $source = null;
+        } else {
+            $source = Source::firstOrCreate(["name" => $request->input('source')], ["user_id" => Auth::id()])->id;
         }
 
         try {
-            $expense =  [
+            $expense = [
                 'date' => $date,
-                'fixed' => $fixed,
                 'amount' => $request->input('amount'),
                 'user_id' => Auth::id(),
-                'expense_category_id' => $request->input('expensetype'),
+                'source_id' => $source,
+                'comment' => $request->input('comment'),
+                'type_of_sum' => $request->input('expensetype'),
             ];
 
-            $source ? $expense['source_id'] = $source : null;
+            if ($source) $expense['source_id'] = $source;
             Expense::create($expense);
 
             $send['success'] = true;
@@ -149,8 +166,9 @@ class ExpenseController extends Controller
         } catch (\Exception $exception) {
             $send = [];
 
+            $send['code'] = $exception->getCode();
+
             if (App::environment('local')) {
-                $send['debugcode'] = $exception->getCode();
                 $send['debugmessage'] = $exception->getMessage();
             }
 
@@ -164,21 +182,17 @@ class ExpenseController extends Controller
 
     protected function expenseCategory3($request)
     {
-        $date = Carbon::createFromFormat('d.y', $request->input('monthpicker2'));
-        if ($request->input('expensetype') == 2) {
-            $fixed = true;
-        } else {
-            $fixed = false;
-        }
+        $date = Carbon::createFromFormat('m.y', $request->input('monthpicker3'))->firstOfMonth();
+
+        $amount = $request->input('cost-of-good-sold') ?? $request->input('affiliate-commission') ?? $request->input('ad-spend-commission');
 
         try {
             Expense::create(
                 [
                     'date' => $date,
-                    'fixed' => $fixed,
-                    'amount' => $request->input('amount'),
+                    'amount' => $amount,
                     'user_id' => Auth::id(),
-                    'expense_category_id' => $request->input('expensetype')
+                    'type_variable' => $request->input('cat3input')
                 ]
             );
 
@@ -199,5 +213,14 @@ class ExpenseController extends Controller
             echo json_encode($send);
         }
 
+    }
+
+    public static function getAllExpenses($from, $to)
+    {
+        return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
+    }
+
+    public function getSingleExpense($id) {
+        return response()->json(Expense::find($id), 200);
     }
 }
