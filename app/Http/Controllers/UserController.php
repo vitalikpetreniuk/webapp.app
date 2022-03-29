@@ -33,7 +33,7 @@ class UserController extends Controller
 //        $user = User::create([
 //            'name' => 'webapp_admin',
 //            'email' => 'petreniuk.ua@gmail.com',
-//            'password' => Hash::make('2[x}h.PC'),
+//            'password' => Hash::make('lutsk123ns'),
 //        ]);
 
         if (auth()->check()) return redirect()->home();

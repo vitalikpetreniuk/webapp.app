@@ -13,11 +13,11 @@
                 </li>
                 <li class="d-flex align-items-center justify-content-between">
                     <span>Total marketing costs</span>
-                    <span>$<span>250,000.00</span></span>
+                    <span>$<span>{{ number_format($item->total_marketing_costs, 2, '.', ',') }}</span></span>
                 </li>
                 <li class="d-flex align-items-center justify-content-between">
                     <span>Net profit/loss</span>
-                    <span>-$<span>72,500.00</span></span>
+                    <span><?php if ($item->net_profit < 0) echo '-' ?>$<span>{{ number_format(abs($item->net_profit), 2, '.', ',') }}</span></span>
                 </li>
             </ul>
             @endforeach

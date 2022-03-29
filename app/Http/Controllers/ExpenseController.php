@@ -2,41 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
 use App\Models\Revenue;
+use App\Models\Source;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\This;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ExpenseController extends Controller
 {
-    public function val(Request $request)
+    public function val()
     {
-        $validation = \Validator::make($request->all(), $this::validationRules());
+        $validation = \Validator::make($this::validationRules());
 
         $validation->sometimes(['files'], 'required|mimes:xls,xlsx', function ($input) {
             return $input->expensecategory == 1;
         });
 
-        $validation->sometimes(['sum', 'tag'], 'required', function ($input) {
+        $validation->sometimes(['sum', 'tag', 'monthpicker2'], 'required', function ($input) {
             return $input->expensecategory == 2;
+        });
+
+        $validation->sometimes(['monthpicker3'], 'required', function ($input) {
+            return $input->expensecategory == 3;
         });
 
         $validation->sometimes(['cost-of-good-sold'], 'required', function ($input) {
             return $input->cat3input == 1;
         });
 
-        $validation->sometimes(['affiliate-commission'], 'required', function ($input) {
+        $validation->sometimes(['affiliate-commission'], 'required|max:100', function ($input) {
             return $input->cat3input == 2;
         });
 
-        $validation->sometimes(['ad-spend-commission'], 'required', function ($input) {
+        $validation->sometimes(['ad-spend-commission'], 'required|max:100', function ($input) {
             return $input->cat3input == 3;
         });
+
+        //expensetype
+
+        $validation->sometimes(['cost-of-good-sold'], 'required', function ($input) {
+            return $input->cat3input == 1;
+        });
+
 
         if ($validation->fails()) {
             return redirect()->back()->withErrors($validation->errors());
         }
+
+        return $validation;
 
         // do store stuff
     }
@@ -48,8 +66,16 @@ class ExpenseController extends Controller
             $request->file('files');
             $path = $request->file('files')->store('xlsx');
 
-            $this->parseUploadedXlsx($path);
+            $this->expenseCategory1($path);
+        } elseif ($request->input('expensecategory') == 2) {
+            $this->expenseCategory2($request);
+        } elseif ($request->input('expensecategory') == 3) {
+            $this->expenseCategory3($request);
         }
+    }
+
+    public function update(Request $request, $exp_id) {
+        Expense::find($exp_id)->update($request->all());
     }
 
     public static function validationRules()
@@ -67,7 +93,7 @@ class ExpenseController extends Controller
         return true;
     }
 
-    protected function parseUploadedXlsx($path)
+    protected function expenseCategory1($path)
     {
         $reader = IOFactory::createReader("Xlsx");
         $spreadsheet = $reader->load(storage_path("app\\" . $path));
@@ -79,38 +105,122 @@ class ExpenseController extends Controller
                 $date = new \DateTime();
                 $date = $date::createFromFormat('m/j/Y', $row[0]);
                 if (!$date) continue;
-                Revenue::create(
+                Expense::create(
                     [
                         'date' => $date,
-                        'number_of_items_sold' => $row[1],
-                        'number_of_orders' => $row[2],
-                        'average_net_sales_amount' => $row[3],
-                        'coupon_amount' => $row[4],
-                        'shipping_amount' => $row[5],
-                        'gross_sales_amount' => $row[6],
-                        'net_sales_amount' => $row[7],
-                        'refund_amount' => $row[8],
                         'user_id' => Auth::id(),
+                        'amount' => $row[6],
+                        'expense_category_id' => 1,
+                        'from_file' => true
                     ]
                 );
             }
             $send['success'] = true;
-            echo json_encode([
-                'message' => 'XLSX was successfully imported'
-            ]);
+            $send['message'] = 'XLSX was successfully imported';
+            echo json_encode($send);
         } catch (\Exception $exception) {
             $send = [];
             $message = 'Failed importing xlsx file';
             switch ($exception->getCode()) {
-                case 23505 : $message = 'This date has already been imported';
+                case 23505 :
+                    $message = 'This date has already been imported';
             }
             if (App::environment('local')) {
                 $send['debugcode'] = $exception->getCode();
+                $send['debugmessage'] = $exception->getMessage();
             }
+
             $send['success'] = false;
             $send['message'] = $message;
 
             echo json_encode($send);
         }
+    }
+
+    protected function expenseCategory2($request)
+    {
+        $date = Carbon::createFromFormat('m.y', $request->input('monthpicker2'))->firstOfMonth();
+
+        if (!$request->input('source')) {
+            $source = null;
+        } else {
+            $source = Source::firstOrCreate(["name" => $request->input('source')], ["user_id" => Auth::id()])->id;
+        }
+
+        try {
+            $expense = [
+                'date' => $date,
+                'amount' => $request->input('amount'),
+                'user_id' => Auth::id(),
+                'source_id' => $source,
+                'comment' => $request->input('comment'),
+                'type_of_sum' => $request->input('expensetype'),
+            ];
+
+            if ($source) $expense['source_id'] = $source;
+            Expense::create($expense);
+
+            $send['success'] = true;
+            $send['message'] = 'Expense was created';
+            echo json_encode($send);
+        } catch (\Exception $exception) {
+            $send = [];
+
+            $send['code'] = $exception->getCode();
+
+            if (App::environment('local')) {
+                $send['debugmessage'] = $exception->getMessage();
+            }
+
+            $send['success'] = false;
+            $send['message'] = $exception->getMessage();
+
+            echo json_encode($send);
+        }
+
+    }
+
+    protected function expenseCategory3($request)
+    {
+        $date = Carbon::createFromFormat('m.y', $request->input('monthpicker3'))->firstOfMonth();
+
+        $amount = $request->input('cost-of-good-sold') ?? $request->input('affiliate-commission') ?? $request->input('ad-spend-commission');
+
+        try {
+            Expense::create(
+                [
+                    'date' => $date,
+                    'amount' => $amount,
+                    'user_id' => Auth::id(),
+                    'type_variable' => $request->input('cat3input')
+                ]
+            );
+
+            $send['success'] = true;
+            $send['message'] = 'Expense was created';
+            echo json_encode($send);
+        } catch (\Exception $exception) {
+            $send = [];
+
+            if (App::environment('local')) {
+                $send['debugcode'] = $exception->getCode();
+                $send['debugmessage'] = $exception->getMessage();
+            }
+
+            $send['success'] = false;
+            $send['message'] = $exception->getMessage();
+
+            echo json_encode($send);
+        }
+
+    }
+
+    public static function getAllExpenses($from, $to)
+    {
+        return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
+    }
+
+    public function getSingleExpense($id) {
+        return response()->json(Expense::find($id), 200);
     }
 }

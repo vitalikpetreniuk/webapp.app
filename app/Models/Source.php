@@ -11,6 +11,11 @@ class Source extends Model
 {
     use HasFactory;
 
-
     protected $table = 'sources';
+
+    protected $fillable = ['name', 'user_id'];
+
+    public function user_id() {
+        $this->hasOne(User::class);
+    }
 }

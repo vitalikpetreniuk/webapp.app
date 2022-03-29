@@ -8,3 +8,7 @@
 .cat1.default-shown, .cat2.default-shown, .cat3.default-shown, .cat3_1.default-shown, .cat3_2.default-shown, .cat3_3.default-shown {
   display: block;
 }
+
+.type2 {
+  display: none;
+}
