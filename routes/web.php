@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(HomeController::class)->group(function () {
+Route::controller(HomeController::class)->middleware(Authenticate::class)->group(function () {
     Route::get('/', 'index')->name('home');
 });
 //
@@ -48,4 +48,4 @@ Route::controller(AnalyticsController::class)->middleware(Authenticate::class)->
 
 Route::get('/special', function () {
    return view('special');
-});
+})->middleware(Authenticate::class);
