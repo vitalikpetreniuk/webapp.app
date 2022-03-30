@@ -27,6 +27,21 @@ class AnalyticsController extends Controller
         $expenses = ExpenseController::getAllExpenses($from, $to);
         $revenues = RevenueController::getAllRevenues($from, $to);
 
+        foreach ($expenses as &$item) {
+            $item->class = 'minus';
+            if (!isset($item->amount)) {
+                dd($item);
+            }
+            $item->amount = '-$'.$item->amount;
+        }
+
+        foreach ($revenues as &$item) {
+            $item->class = 'plus';
+            $item->amount = '+$'.number_format($item->net_sales_amount, 2, '.', ',');
+            $item->source = 'From file';
+            $item->source_id = 1;
+        }
+
         $merged = array_merge($expenses, $revenues);
 
         function cmp($a, $b) {
@@ -39,15 +54,6 @@ class AnalyticsController extends Controller
 
         foreach ($merged as &$item) {
             $item->source = '';
-            if (isset($item->revenue)) {
-                $item->class = 'plus';
-                $item->amount = '+$'.number_format($item->net_sales_amount, 2, '.', ',');
-                $item->source = 'From file';
-                $item->source_id = 1;
-            }else {
-                $item->class = 'minus';
-                $item->amount = '-$'.$item->amount;
-            }
 
             if (isset($item->source_id) && !isset($item->source)) {
                 $item->source = Source::find((int) $item->source_id)->name;

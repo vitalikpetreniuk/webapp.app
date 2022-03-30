@@ -15,7 +15,10 @@
             </thead>
             <tbody class="editable">
             @foreach($data as $item)
-                <tr data-id="{{ $item->id }}" data-type="@if($item->class == 'plus') revenue @else expense @endif">
+                @php
+                $type = $item->class == 'plus' ? 'revenue' : 'expense'
+                @endphp
+                <tr data-id="{{ $item->id }}" data-type="{{ $type }}">
                     <td>{{ $item->date }}</td>
                     <td class="{{ $item->class }}">
                         <span>{{ $item->amount }}</span>
@@ -40,8 +43,6 @@
         </table>
     </section>
 
-    <x-revenue-form/>
-    <x-expense-form/>
     <x-footer/>
 
 @endsection

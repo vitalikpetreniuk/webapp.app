@@ -1,7 +1,7 @@
 <div id="modal-expenses" class="modal alt d-flex flex-column">
     <span class="modal__title">Expenses</span>
 
-    <form method="POST" id="expenseF" name="expenseF" action="">
+    <form method="POST" id="expenseF" name="expenseF" onsubmit="formSubmit(event)" action="">
         @csrf
         <div class="type1">
             <div class="modal__select select blue mb-15">

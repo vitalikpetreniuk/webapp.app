@@ -45,8 +45,10 @@ async function newExpense(formdata) {
 const updateExpense = async (ID, data) => {
     try {
         const resp = await instance.post(`/expense/${ID}`, {
-            data
+            ...data
         })
+
+        console.log(resp.data)
     } catch (err) {
         console.error(err);
     }
@@ -78,6 +80,19 @@ function expenseErrorCatch(response) {
     $('#modal-expenses').find(`.drag-drop__error`).text(result.message).addClass('show');
 
     setTimeout(() => $('#modal-expenses').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+}
+
+function resetForm(form) {
+    form[0].reset();
+
+    console.log(form.find('.type1'))
+    form.find('.type1').show();
+    form.find('.type2').hide().find('.edited-amount').val('');
+}
+
+function closeModals() {
+    $('.modal, .modal-overlay').removeClass('active')
+    $('html, body').removeClass('_over-hidden')
 }
 
 jQuery(function ($) {
@@ -114,6 +129,39 @@ jQuery(function ($) {
             $('#modal-expenses').find(".cat3_1, .cat3_2").hide();
             $('#modal-expenses').find(".cat3_3").show();
         }
+    }
+
+    window.formSubmit = function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        console.log('expenseFormSubmit', e.target)
+        let formdata = new FormData(e.target);
+        let newamount = formdata.get('edited-amount');
+        const type = $(`tr[data-id=${id}]`).data('type');
+        let form = (type === 'expense') ? $('#expenseF') : $('#revenueF');
+        let id = form.data('id');
+        if (newamount.length) {
+
+            if (type === 'expense') {
+                updateExpense(id, {
+                    amount: Number(newamount).toFixed(2),
+                })
+            }else {
+                updateRevenue(id, {
+                    amount: Number(newamount).toFixed(2),
+                })
+            }
+
+            resetForm(form);
+
+            $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$'+newamount)
+
+            closeModals();
+        } else {
+            newExpense(formdata);
+        }
+
+        return false;
     }
 
     // const $autoComplete = document.querySelector('.autoComplete')
@@ -195,39 +243,28 @@ jQuery(function ($) {
     $('.btn__edit').on('click', async function () {
         const type = $(this).closest('tr').data('type').trim();
         const ID = $(this).closest('tr').data('id');
+        let form = (type === 'expense') ? $('#expenseF') : $('#revenueF');
+        form.attr('data-id', ID);
+        console.log(form)
 
-        $('#expenseF').data('id', ID);
-        console.log(type)
-
-        if (type == 'expense') {
-            let expense = await getExpense(ID);
-
-            console.log(expense)
+        if (type === 'expense') {
+            let item = await getExpense(ID);
 
             $('#modal-expenses, .modal-overlay').addClass('active')
             $('html, body').addClass('_over-hidden')
 
             $('#modal-expenses .type1').hide()
 
-            $('#modal-expenses .type2').show().find('.edited-amount').val(expense.amount);
+            $('#modal-expenses .type2').show().find('.edited-amount').val(item.amount);
+        }else {
+            let item = await getRevenue(ID);
+
+            $('#modal-revenue, .modal-overlay').addClass('active')
+            $('html, body').addClass('_over-hidden')
+
+            $('#modal-revenue .type1').hide()
+
+            $('#modal-revenue .type2').show().find('.edited-amount').val(item.net_sales_amount);
         }
     })
-
-    console.log($('#expenseF'))
-    $('#expenseF').on('submit', function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        // let formdata = new FormData(document.querySelector('#expenseF'));
-        // if(formdata.get('edited-amount').length) {
-        //     updateExpense($('#expenseF').data('id'), {
-        //         amount: formdata.get('edited-amount'),
-        //     })
-        // }else {
-        //     newExpense(formdata);
-        // }
-
-        return false;
-    });
-
-    console.log(getExpense(10))
 })
