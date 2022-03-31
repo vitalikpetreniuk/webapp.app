@@ -199,8 +199,7 @@ jQuery(function ($) {
 
             closeModals();
         } else {
-            console.log(e.target.id)
-            if (e.target.id == '#expenseF') {
+            if (e.target.id === 'expenseF') {
                 newExpense(formdata);
             }else {
                 newRevenue(formdata);
