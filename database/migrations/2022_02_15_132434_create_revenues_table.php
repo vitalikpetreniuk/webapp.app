@@ -23,7 +23,7 @@ class CreateRevenuesTable extends Migration
             $table->decimal('coupon_amount')->default(0.00);
             $table->decimal('shipping_amount')->default(0.00);
             $table->decimal('gross_sales_amount')->default(0.00);
-            $table->decimal('net_sales_amount');
+            $table->decimal('amount');
             $table->decimal('refund_amount')->default(0.00);
             $table->foreignIdFor(User::class);
             $table->timestamps();

@@ -18,11 +18,13 @@ use App\Http\Controllers\RevenueController;
 |
 */
 
-Route::get('expense/{id}', [ExpenseController::class, 'getSingle']);
-Route::post('expense/{id}', [ExpenseController::class, 'update']);
+Route::get('expense/{expense}', [ExpenseController::class, 'getSingle']);
+Route::post('expense/{expense}', [ExpenseController::class, 'update']);
+Route::delete('expense/{expense}', [ExpenseController::class, 'delete']);
 Route::post('expense', [ExpenseController::class, 'store']);
 Route::get('/sources/', [SourceController::class, 'listSources']);
 
 
-Route::get('revenue/{id}', [RevenueController::class, 'getSingle']);
-Route::post('revenue/{id}', [RevenueController::class, 'update']);
+Route::get('revenue/{revenue}', [RevenueController::class, 'getSingle']);
+Route::post('revenue/{revenue}', [RevenueController::class, 'update']);
+Route::delete('revenue/{revenue}', [RevenueController::class, 'delete']);

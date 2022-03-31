@@ -37,7 +37,7 @@ class AnalyticsController extends Controller
 
         foreach ($revenues as &$item) {
             $item->class = 'plus';
-            $item->amount = '+$'.number_format($item->net_sales_amount, 2, '.', ',');
+            $item->amount = '+$'.number_format($item->amount, 2, '.', ',');
             $item->source = 'From file';
             $item->source_id = 1;
         }

@@ -66,8 +66,24 @@ const getRevenue = async (ID) => {
 const updateRevenue = async (ID, data) => {
     try {
         const resp = await instance.post(`/revenue/${ID}`, {
-            data
+            ...data
         })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const deleteRevenue = async (ID) => {
+    try {
+        const resp = await instance.delete(`/revenue/${ID}`)
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const deleteExpense = async (ID) => {
+    try {
+        const resp = await instance.delete(`/expense/${ID}`)
     } catch (err) {
         console.error(err);
     }
@@ -146,7 +162,7 @@ jQuery(function ($) {
                 updateExpense(id, {
                     amount: Number(newamount).toFixed(2),
                 })
-            }else {
+            } else {
                 updateRevenue(id, {
                     amount: Number(newamount).toFixed(2),
                 })
@@ -154,7 +170,7 @@ jQuery(function ($) {
 
             resetForm(form);
 
-            $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$'+newamount)
+            $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$' + newamount)
 
             closeModals();
         } else {
@@ -245,7 +261,6 @@ jQuery(function ($) {
         const ID = $(this).closest('tr').data('id');
         let form = (type === 'expense') ? $('#expenseF') : $('#revenueF');
         form.attr('data-id', ID);
-        console.log(form)
 
         if (type === 'expense') {
             let item = await getExpense(ID);
@@ -256,7 +271,7 @@ jQuery(function ($) {
             $('#modal-expenses .type1').hide()
 
             $('#modal-expenses .type2').show().find('.edited-amount').val(item.amount);
-        }else {
+        } else {
             let item = await getRevenue(ID);
 
             $('#modal-revenue, .modal-overlay').addClass('active')
@@ -264,7 +279,20 @@ jQuery(function ($) {
 
             $('#modal-revenue .type1').hide()
 
-            $('#modal-revenue .type2').show().find('.edited-amount').val(item.net_sales_amount);
+            $('#modal-revenue .type2').show().find('.edited-amount').val(item.amount);
         }
     })
+
+    $('.btn__delete').on('click', async function () {
+        const type = $(this).closest('tr').data('type').trim();
+        const ID = $(this).closest('tr').data('id');
+
+        if (type === 'expense') {
+            deleteExpense(ID);
+        } else {
+            deleteRevenue(ID)
+        }
+
+        $(this).closest('tr').remove();
+    });
 })

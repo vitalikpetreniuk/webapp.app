@@ -19,7 +19,7 @@ class Revenue extends Model
         'coupon_amount',
         'shipping_amount',
         'gross_sales_amount',
-        'net_sales_amount',
+        'amount',
         'refund_amount',
         'user_id'
     ];

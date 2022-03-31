@@ -60,7 +60,7 @@ class ExpenseCalculationsController extends ExpenseController
 
     public function getMonthNetRevenue()
     {
-        $amount = DB::select("SELECT SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
+        $amount = DB::select("SELECT SUM(amount) as sum FROM revenues WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
 
         return isset($amount[0]) ? $amount[0]->sum : 0;
     }

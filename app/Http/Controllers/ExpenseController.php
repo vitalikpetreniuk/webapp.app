@@ -74,8 +74,12 @@ class ExpenseController extends Controller
         }
     }
 
-    public function update(Request $request, $exp_id) {
-        Expense::find($exp_id)->update($request->all());
+    public function update(Request $request, Expense $expense) {
+        $expense->update($request->all());
+    }
+
+    public function delete(Expense $expense) {
+        $expense->delete();
     }
 
     public static function validationRules()
@@ -220,7 +224,7 @@ class ExpenseController extends Controller
         return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
-    public function getSingle($id) {
-        return response()->json(Expense::find($id));
+    public function getSingle(Expense $expense) {
+        return $expense;
     }
 }

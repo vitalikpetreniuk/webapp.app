@@ -75,7 +75,7 @@ class RevenueController extends Controller
                         'coupon_amount' => $row[4],
                         'shipping_amount' => $row[5],
                         'gross_sales_amount' => $row[6],
-                        'net_sales_amount' => $row[7],
+                        'amount' => $row[7],
                         'refund_amount' => $row[8],
                         'user_id' => Auth::id(),
                     ]
@@ -103,18 +103,22 @@ class RevenueController extends Controller
 
     public static function getYearNavDate($from, $to)
     {
-        return DB::select("SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", MIN(date) as date, SUM(net_sales_amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2", [$from, $to]);
+        return DB::select("SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", MIN(date) as date, SUM(amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2", [$from, $to]);
     }
 
     public static function getAllRevenues($from, $to) {
         return DB::select('SELECT * FROM revenues WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
-    public function update(Request $request, $rev_id) {
-        Revenue::find($rev_id)->update($request->all());
+    public function update(Revenue $revenue, Request $request) {
+        $revenue->update($request->all());
     }
 
-    public function getSingle($id) {
-        return response()->json(Revenue::find($id));
+    public function getSingle(Revenue $revenue) {
+        return $revenue;
+    }
+
+    public function delete(Revenue $revenue) {
+        $revenue->delete();
     }
 }
