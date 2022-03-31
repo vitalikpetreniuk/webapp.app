@@ -20,12 +20,12 @@ class ExpenseCalculationsController extends ExpenseController
         return DB::select('SELECT expense_category_id, amount, date, type_of_sum, type_variable FROM expenses WHERE date BETWEEN ? AND ?', [$this->from, $this->to]);
     }
 
-    public function countMonthAdSpendCosts()
+    public function getMonthAdSpendCostsTotal()
     {
         // Получение ad_spend числа за месяц
         $ad_spend = DB::select('SELECT sum(amount) as amount FROM expenses WHERE expense_category_id = ? AND date BETWEEN ? AND ?', [1, $this->from, $this->to]);
 
-        return isset($ad_spend[0]) ? $ad_spend[0]->amount : 0;
+        return isset($ad_spend[0]) ? (int) $ad_spend[0]->amount : 0;
     }
 
     public function countMonthNetTotal()
@@ -36,7 +36,7 @@ class ExpenseCalculationsController extends ExpenseController
 
         $net_total = $net_revenue;
 
-        $ad_spend = $this::countMonthAdSpendCosts();
+        $ad_spend = $this::getMonthAdSpendCostsTotal();
 
         foreach ($expenses as $expense) {
             $amount = $expense->amount;
@@ -63,5 +63,19 @@ class ExpenseCalculationsController extends ExpenseController
         $amount = DB::select("SELECT SUM(amount) as sum FROM revenues WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
 
         return isset($amount[0]) ? $amount[0]->sum : 0;
+    }
+
+    public function getFixedExpensesTotal() {
+        $fixed_costs = DB::select('SELECT SUM(amount) FROM expenses WHERE type_of_sum = ? AND date BETWEEN ? AND ?', [1, $this->from, $this->to]);
+        return $fixed_costs ? (int) $fixed_costs[0]->sum : 0;
+    }
+
+    public function getCogs() {
+        $cogs = DB::select('SELECT amount FROM expenses WHERE type_variable = ? AND date BETWEEN ? AND ?', [1, $this->from, $this->to]);
+        return $cogs ? (int) $cogs[0]->amount : 0;
+    }
+
+    public function getAllExpensesList() {
+        return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 }

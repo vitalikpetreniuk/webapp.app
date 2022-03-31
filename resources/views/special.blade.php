@@ -6,7 +6,7 @@
         <div class="type-analytics mt-20">
             <ul class="d-flex">
                 <li>
-                    <a href="#">P/C Corve model</a>
+                    <a href="#">P/L Corve model</a>
                 </li>
                 <li>
                     <a href="sweetspot.html">Sweetspot Analytics</a>

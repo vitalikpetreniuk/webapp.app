@@ -32,13 +32,32 @@ async function newExpense(formdata) {
                 expenseErrorCatch(response)
                 return;
             }
-            document.querySelector(form).reset();
             $('#modal-expenses').find(`.drag-drop__error`).removeClass('show')
             $('#modal-expenses').find('.drag-drop__success').text(result.message).addClass('show');
 
             setTimeout(() => $('#modal-expenses').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
         },
         error: expenseErrorCatch,
+    });
+}
+
+async function newRevenue(formdata) {
+    await $.ajax({
+        "url": revenueformvars.url,
+        "type": "POST",
+        "processData": false,
+        "contentType": false,
+        "data": formdata,
+        success: function (response) {
+            let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
+            if (!result.success) {
+                revenueErrorCatch(response)
+                return;
+            }
+
+            setTimeout(() => $('#modal-revenue').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+        },
+        error: revenueErrorCatch,
     });
 }
 
@@ -96,6 +115,12 @@ function expenseErrorCatch(response) {
     $('#modal-expenses').find(`.drag-drop__error`).text(result.message).addClass('show');
 
     setTimeout(() => $('#modal-expenses').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+}
+
+function revenueErrorCatch(response) {
+    let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
+    $('#revenueForm').append(`<span class="help-block error-help-block">${result.message}</span>`);
+    setTimeout(() => $('#modal-revenue').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
 }
 
 function resetForm(form) {
@@ -174,7 +199,13 @@ jQuery(function ($) {
 
             closeModals();
         } else {
-            newExpense(formdata);
+            console.log(e.target.id)
+            if (e.target.id == '#expenseF') {
+                newExpense(formdata);
+            }else {
+                newRevenue(formdata);
+            }
+            resetForm(form);
         }
 
         return false;

@@ -57,39 +57,7 @@
 </div>
 {!! $validator->selector('#revenueF') !!}
 <script>
-    jQuery(function ($) {
-        let form = '#revenueF';
-        $(form).on('submit', function (e) {
-            e.preventDefault();
-            let form = '#revenueF';
-            let formdata = new FormData(document.querySelector(form))
-            $.ajax({
-                "url": "{{ route('revenues.store') }}",
-                "type": "POST",
-                "processData": false,
-                "contentType": false,
-                "data": formdata,
-                success: function (response) {
-                    let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
-                    if (!result.success) {
-                        revenueErrorCatch(response)
-                        return;
-                    }
-                    document.querySelector(form).reset();
-
-                    $('#modal-revenue').find(`.drag-drop__error`).removeClass('show')
-                    $('#modal-revenue').find('.drag-drop__success').text(result.message).addClass('show');
-
-                    setTimeout(() => $('#modal-revenue').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
-                },
-                error: revenueErrorCatch,
-            });
-        });
-    })
-
-    function revenueErrorCatch(response) {
-        let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
-        $('#revenueForm').append(`<span class="help-block error-help-block">${result.message}</span>`);
-        setTimeout(() => $('#modal-revenue').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+    var revenueformvars = {
+        url: {{ route('revenues.store') }}
     }
 </script>
