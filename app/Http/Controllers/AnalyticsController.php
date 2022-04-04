@@ -32,7 +32,12 @@ class AnalyticsController extends Controller
             if (!isset($item->amount)) {
                 dd($item);
             }
-            $item->amount = '-$'.$item->amount;
+
+            if (ExpenseController::isPercent($item)) {
+                $item->amount .= '%';
+            }else {
+                $item->amount = '-$'.$item->amount;
+            }
         }
 
         foreach ($revenues as &$item) {

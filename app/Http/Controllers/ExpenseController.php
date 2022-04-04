@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\FutureExpense;
 use App\Models\Revenue;
 use App\Models\Source;
 use Carbon\Carbon;
@@ -162,11 +163,10 @@ class ExpenseController extends Controller
             ];
 
             if ($source) $expense['source_id'] = $source;
-            Expense::create($expense);
+            $created = Expense::create($expense);
 
             $send['success'] = true;
             $send['message'] = 'Expense was created';
-            echo json_encode($send);
         } catch (\Exception $exception) {
             $send = [];
 
@@ -179,9 +179,20 @@ class ExpenseController extends Controller
             $send['success'] = false;
             $send['message'] = $exception->getMessage();
 
-            echo json_encode($send);
         }
 
+        if ($request->input('repeated2')) {
+            $arr = [
+                'expense_id' => $created->id,
+                'period' => $request->input('repeated2'),
+                'user_id' => Auth::id()
+            ];
+
+            FutureExpense::insert($arr);
+
+        }
+
+        echo json_encode($send);
     }
 
     protected function expenseCategory3($request)
@@ -226,5 +237,12 @@ class ExpenseController extends Controller
 
     public function getSingle(Expense $expense) {
         return $expense;
+    }
+
+    public static function isPercent($expense) {
+        $percent_from_ad_spend = in_array($expense->type_of_sum, [2]) || in_array($expense->type_variable, [1, 2]);
+        $percent_from_net_revenue = in_array($expense->type_of_sum, [3]) || in_array($expense->type_variable, [3]);
+
+        return $percent_from_ad_spend || $percent_from_net_revenue;
     }
 }

@@ -7,8 +7,6 @@
 @section('content')
     <section class="section d-flex flex-column">
         <x-top-tabs/>
-        <x-home-months/>
-        <x-chart-pl/>
     </section>
 
     </div>

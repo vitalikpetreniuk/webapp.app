@@ -23,7 +23,11 @@ class chartPl extends Component
         $controller = new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-02'));
         $fixed_costs = $controller->getFixedExpensesTotal();
         $marketing_costs = $controller->getMonthAdSpendCostsTotal();
-        $cogs = $controller->getCogs();
+        $cogs = $controller->getCogs() / 100;
+
+        $y = $fixed_costs / ((1 - $cogs) - $marketing_costs);
+
+        $x = $marketing_costs;
 
         return ['fixed_costs' => $fixed_costs, 'marketing_costs' => $marketing_costs, 'cogs' => $cogs];
     }

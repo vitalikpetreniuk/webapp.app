@@ -46,6 +46,10 @@ Route::controller(AnalyticsController::class)->middleware(Authenticate::class)->
     Route::get('/analytics', 'index')->name('analytics');
 });
 
+Route::get('/sweetspot', function () {
+   return view('reportings/sweetspot');
+})->middleware(Authenticate::class)->name('sweetspot');
+
 Route::get('/special', function () {
-   return view('special');
-})->middleware(Authenticate::class);
+   return view('reportings/special');
+})->middleware(Authenticate::class)->name('special');

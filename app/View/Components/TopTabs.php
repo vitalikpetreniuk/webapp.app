@@ -2,7 +2,9 @@
 
 namespace App\View\Components;
 
+use http\Env\Request;
 use Illuminate\View\Component;
+use Illuminate\Support\Facades\Route;
 
 class TopTabs extends Component
 {
@@ -16,6 +18,28 @@ class TopTabs extends Component
         //
     }
 
+    public function tabsData()
+    {
+       $name = Route::currentRouteName();
+
+        $tabs = [
+            'P/L Corve model' => [
+                'url' => route('home'),
+                'active' => $name == 'home' ?: false,
+            ],
+            'Sweetspot Analytics' => [
+                'url' => route('sweetspot'),
+                'active' => $name == 'sweetspot' ?: false,
+            ],
+            'Special event Analytics' => [
+                'url' => route('special'),
+                'active' => $name == 'special' ?: false,
+            ],
+        ];
+
+        return $tabs;
+    }
+
     /**
      * Get the view / contents that represent the component.
      *
@@ -23,6 +47,7 @@ class TopTabs extends Component
      */
     public function render()
     {
-        return view('components.top-tabs');
+
+        return view('components.top-tabs')->with(['tabs' => $this->tabsData()]);
     }
 }
