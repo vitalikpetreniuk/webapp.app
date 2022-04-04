@@ -1,6 +1,3 @@
-<?php
-var_dump($cogs);
-?>
 <div id="chartdiv" class="mt-20"></div>
 <script>
     am5.ready(function() {
