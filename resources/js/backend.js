@@ -176,11 +176,12 @@ jQuery(function ($) {
         e.preventDefault();
         e.stopImmediatePropagation();
         console.log('expenseFormSubmit', e.target)
+        let form = $(e.target);
         let formdata = new FormData(e.target);
+        let id = form.attr('data-id');
+        const type = $(`tr[data-id=${id}]`).attr('data-type');
         let newamount = formdata.get('edited-amount');
-        const type = $(`tr[data-id=${id}]`).data('type');
-        let form = (type === 'expense') ? $('#expenseF') : $('#revenueF');
-        let id = form.data('id');
+        console.log(form, type, id)
         if (newamount.length) {
 
             if (type === 'expense') {

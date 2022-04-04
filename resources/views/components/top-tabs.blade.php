@@ -1,15 +1,11 @@
 <x-reporting-analytics-tabs />
 <div class="type-analytics mt-20">
     <ul class="d-flex">
-        <li>
-            <a href="#">P/L Corve model</a>
+        @foreach($tabs as $name => $value)
+        <li class="@if($value['active']) active @endif">
+            <a href="{{ $value['url'] }}">{{ $name }}</a>
         </li>
-        <li>
-            <a href="sweetspot.html">Sweetspot Analytics</a>
-        </li>
-        <li>
-            <a href="special.html">Special event Analytics</a>
-        </li>
+        @endforeach
     </ul>
 </div>
 <div class="datepicker d-flex mt-20">
@@ -17,8 +13,4 @@
     <div class="datepicker__icon d-flex align-items-center justify-content-center">
         <img src="{{ asset('frontend/images/dist/icons/calendar.svg') }}" alt="">
     </div>
-</div>
-<div class="tabs-section alt active mt-24">
-    <button>Data range</button>
-    <button class="active">Month range</button>
 </div>

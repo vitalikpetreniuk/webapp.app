@@ -16,8 +16,8 @@ class AnalyticsController extends Controller
     {
 //        $from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
 //        $to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-        $from = '2022-01-01';
-        $to = '2022-01-31';
+        $from = '2022-03-01';
+        $to = '2022-03-31';
         $expenses = ExpenseController::getAllExpenses($from, $to);
         $revenues = RevenueController::getAllRevenues($from, $to);
         return view('reportings/reportings', ['data' => $this->prepareAnalyticsData($from, $to)]);
@@ -32,7 +32,12 @@ class AnalyticsController extends Controller
             if (!isset($item->amount)) {
                 dd($item);
             }
-            $item->amount = '-$'.$item->amount;
+
+            if (ExpenseController::isPercent($item)) {
+                $item->amount .= '%';
+            }else {
+                $item->amount = '-$'.$item->amount;
+            }
         }
 
         foreach ($revenues as &$item) {
