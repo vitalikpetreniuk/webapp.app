@@ -120,7 +120,7 @@
                 yAxis,
                 snapToSeries: [series0, series]
             }));
-            <?php if (isset($current_bullet)) ?>
+            <?php if (isset($current_bullet)) : ?>
                 series0.data.setAll(<?= $current_bullet ?>);
                 series0.appear(1000);
             <?php endif; ?>
