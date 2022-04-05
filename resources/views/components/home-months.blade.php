@@ -4,7 +4,7 @@
         <button class="picker-month__prev">
             <img src="{{ asset('frontend/images/dist/icons/arrow-picker.svg') }}" alt="arrow-picker">
         </button>
-        <span>2021</span>
+        <span>2022</span>
         <button class="picker-month__next inactive">
             <img src="{{ asset('frontend/images/dist/icons/arrow-picker.svg')  }}" alt="arrow-picker">
         </button>

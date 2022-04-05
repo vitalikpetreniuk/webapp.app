@@ -16,7 +16,7 @@ class AnalyticsController extends Controller
     {
 //        $from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
 //        $to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-        $from = '2022-03-01';
+        $from = '2021-01-01';
         $to = '2022-03-31';
         $expenses = ExpenseController::getAllExpenses($from, $to);
         $revenues = RevenueController::getAllRevenues($from, $to);

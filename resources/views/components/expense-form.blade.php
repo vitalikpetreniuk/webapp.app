@@ -51,38 +51,38 @@
                     <textarea class="input-field textarea mt-15" name="comment" placeholder="Comment"></textarea>
                 </div>
 
-                <div class="modal__select secondary select alt mt-15">
-                    <input class="select__input" value="1" type="hidden" name="repeated2">
-                    <div class="select__head open">
-                        <div class="repeat d-flex align-items-center">
-                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">
-                            <span>Don't repeat in future</span>
-                        </div>
-                    </div>
-                    <ul class="select__list" style="display: block;">
-                        <li data-prop="0" class="select__item">
-                            <div class="repeat d-flex align-items-center">
-                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"
-                                     alt="repeat">
-                                <span>Don't repeat in future</span>
-                            </div>
-                        </li>
-                        <li data-prop="1" class="select__item">
-                            <div class="repeat alt d-flex align-items-center">
-                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"
-                                     alt="repeat">
-                                <span>Weekly</span>
-                            </div>
-                        </li>
-                        <li data-prop="2" class="select__item">
-                            <div class="repeat d-flex align-items-center">
-                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"
-                                     alt="repeat">
-                                <span>Repeat monthly</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+{{--                <div class="modal__select secondary select alt mt-15">--}}
+{{--                    <input class="select__input" value="1" type="hidden" name="repeated2">--}}
+{{--                    <div class="select__head open">--}}
+{{--                        <div class="repeat d-flex align-items-center">--}}
+{{--                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">--}}
+{{--                            <span>Don't repeat in future</span>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <ul class="select__list" style="display: block;">--}}
+{{--                        <li data-prop="0" class="select__item">--}}
+{{--                            <div class="repeat d-flex align-items-center">--}}
+{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+{{--                                     alt="repeat">--}}
+{{--                                <span>Don't repeat in future</span>--}}
+{{--                            </div>--}}
+{{--                        </li>--}}
+{{--                        <li data-prop="1" class="select__item">--}}
+{{--                            <div class="repeat alt d-flex align-items-center">--}}
+{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"--}}
+{{--                                     alt="repeat">--}}
+{{--                                <span>Weekly</span>--}}
+{{--                            </div>--}}
+{{--                        </li>--}}
+{{--                        <li data-prop="2" class="select__item">--}}
+{{--                            <div class="repeat d-flex align-items-center">--}}
+{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+{{--                                     alt="repeat">--}}
+{{--                                <span>Repeat monthly</span>--}}
+{{--                            </div>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
             </div>
 
             <div class="cat1 default-shown">
@@ -149,38 +149,38 @@
                     </div>
                 </div>
 
-                <div class="modal__select secondary select alt mt-15">
-                    <input class="select__input" value="1" type="hidden" name="repeated3">
-                    <div class="select__head open">
-                        <div class="repeat d-flex align-items-center">
-                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">
-                            <span>Don't repeat in future</span>
-                        </div>
-                    </div>
-                    <ul class="select__list" style="display: block;">
-                        <li data-prop="0" class="select__item">
-                            <div class="repeat d-flex align-items-center">
-                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"
-                                     alt="repeat">
-                                <span>Don't repeat in future</span>
-                            </div>
-                        </li>
-                        <li data-prop="1" class="select__item">
-                            <div class="repeat alt d-flex align-items-center">
-                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"
-                                     alt="repeat">
-                                <span>Weekly</span>
-                            </div>
-                        </li>
-                        <li data-prop="2" class="select__item">
-                            <div class="repeat d-flex align-items-center">
-                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"
-                                     alt="repeat">
-                                <span>Repeat monthly</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+{{--                <div class="modal__select secondary select alt mt-15">--}}
+{{--                    <input class="select__input" value="1" type="hidden" name="repeated3">--}}
+{{--                    <div class="select__head open">--}}
+{{--                        <div class="repeat d-flex align-items-center">--}}
+{{--                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">--}}
+{{--                            <span>Don't repeat in future</span>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <ul class="select__list" style="display: block;">--}}
+{{--                        <li data-prop="0" class="select__item">--}}
+{{--                            <div class="repeat d-flex align-items-center">--}}
+{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+{{--                                     alt="repeat">--}}
+{{--                                <span>Don't repeat in future</span>--}}
+{{--                            </div>--}}
+{{--                        </li>--}}
+{{--                        <li data-prop="1" class="select__item">--}}
+{{--                            <div class="repeat alt d-flex align-items-center">--}}
+{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"--}}
+{{--                                     alt="repeat">--}}
+{{--                                <span>Weekly</span>--}}
+{{--                            </div>--}}
+{{--                        </li>--}}
+{{--                        <li data-prop="2" class="select__item">--}}
+{{--                            <div class="repeat d-flex align-items-center">--}}
+{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+{{--                                     alt="repeat">--}}
+{{--                                <span>Repeat monthly</span>--}}
+{{--                            </div>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
             </div>
         </div>
 

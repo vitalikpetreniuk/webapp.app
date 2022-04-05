@@ -19,17 +19,49 @@ class chartPl extends Component
         //
     }
 
-    public function chartPL() {
-        $controller = new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-02'));
+    protected function getController()
+    {
+        return new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-01'));
+    }
+
+    public function chartData($controller)
+    {
         $fixed_costs = $controller->getFixedExpensesTotal();
-        $marketing_costs = $controller->getMonthAdSpendCostsTotal();
-        $cogs = $controller->getCogs() / 100;
+        $globalcogs = $controller->getCogs() / 100;
 
-        $y = $fixed_costs / ((1 - $cogs) - $marketing_costs);
+        $returned = [];
 
-        $x = $marketing_costs;
+        foreach (range(0.01, 0.42, 0.05) as $cogs) {
+            $y = $fixed_costs / ((1 - $globalcogs) - $cogs);
+            $returned[] = array(
+                'x' => round($cogs, 2),
+                'y' => round($y, 2)
+            );
+        }
 
-        return ['fixed_costs' => $fixed_costs, 'marketing_costs' => $marketing_costs, 'cogs' => $cogs];
+        return json_encode($returned);
+    }
+
+    public function currentBullet($controller)
+    {
+        $returned = [];
+
+        $returned[] = [
+            "x" => $controller->getCogs() / 100,
+            "y" => $controller->getFixedExpensesTotal(),
+        ];
+
+        return json_encode($returned);
+    }
+
+    public function getData()
+    {
+        $controller = $this->getController();
+
+        return [
+            'current_bullet' => $this->currentBullet($controller),
+            'chart_data' => $this->chartData($controller),
+        ];
     }
 
     /**
@@ -39,6 +71,6 @@ class chartPl extends Component
      */
     public function render()
     {
-        return view('components.chart-pl')->with($this->chartPL());
+        return view('components.chart-pl', $this->getData());
     }
 }

@@ -1,11 +1,10 @@
 <div id="chartdiv" class="mt-20"></div>
 <script>
-    am5.ready(function() {
+    am5.ready(function () {
 
 // Create root element
 // https://www.amcharts.com/docs/v5/getting-started/#Root_element
         var root = am5.Root.new("chartdiv");
-
 
 // Set themes
 // https://www.amcharts.com/docs/v5/concepts/themes/
@@ -13,51 +12,67 @@
             am5themes_Animated.new(root)
         ]);
 
-
 // Create chart
 // https://www.amcharts.com/docs/v5/charts/xy-chart/
         var chart = root.container.children.push(am5xy.XYChart.new(root, {
             panX: true,
             panY: true,
-            wheelX: "panX",
-            wheelY: "zoomX"
+            wheelY: "zoomXY",
+            pinchZoomX: true,
+            pinchZoomY: true
         }));
 
-        chart.get("colors").set("step", 3);
-
-
-// Add cursor
-// https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
-        var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-        cursor.lineY.set("visible", false);
-
+        chart.get("colors").set("step", 2);
 
 // Create axes
 // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-        var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
-            maxDeviation: 0.3,
-            baseInterval: {
-                timeUnit: "day",
-                count: 1
-            },
+        var xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
             renderer: am5xy.AxisRendererX.new(root, {}),
-            tooltip: am5.Tooltip.new(root, {})
+            maxDeviation: 0.3,
         }));
 
         var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+            renderer: am5xy.AxisRendererY.new(root, {}),
             maxDeviation: 0.3,
-            renderer: am5xy.AxisRendererY.new(root, {})
         }));
 
+        var tooltip = am5.Tooltip.new(root, {
+            labelText: "MCaPos: {valueY}\nRN: ${valueY}",
+            getFillFromSprite: false,
+            getStrokeFromSprite: false,
+            autoTextColor: false,
+            getLabelFillFromSprite: false,
+        });
+
+        tooltip.get('background').setAll({
+            fill: am5.color('#ffffff'),
+            strokeWidth: 0,
+        })
+
+        tooltip.label.setAll({
+            fill: am5.color('#000000')
+        });
+
+        console.log(tooltip)
 
 // Create series
 // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-        var series = chart.series.push(am5xy.LineSeries.new(root, {
-            name: "Series 1",
+        var series0 = chart.series.push(am5xy.LineSeries.new(root, {
+            calculateAggregates: true,
             xAxis: xAxis,
             yAxis: yAxis,
-            valueYField: "value",
-            valueXField: "date",
+            valueYField: "y",
+            valueXField: "x",
+            valueField: "value",
+            tooltip,
+        }));
+
+        // Create series
+// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+        var series = chart.series.push(am5xy.LineSeries.new(root, {
+            name: "Series 1", xAxis, yAxis,
+            valueYField: "y",
+            valueXField: "x",
             tooltip: am5.Tooltip.new(root, {
                 labelText: "{valueY}"
             })
@@ -67,72 +82,50 @@
             strokeDasharray: [3, 3]
         });
 
-// Create animating bullet by adding two circles in a bullet container and
-// animating radius and opacity of one of them.
-        series.bullets.push(function(root, series, dataItem) {
-            if (dataItem.dataContext.bullet) {
-                var container = am5.Container.new(root, {});
-                var circle0 = container.children.push(am5.Circle.new(root, {
-                    radius: 5,
-                    fill: am5.color(0xff0000)
-                }));
-                var circle1 = container.children.push(am5.Circle.new(root, {
-                    radius: 5,
-                    fill: am5.color(0xff0000)
-                }));
+        series.data.setAll(<?= $chart_data ?>);
 
-                circle1.animate({
-                    key: "radius",
-                    to: 20,
-                    duration: 1000,
-                    easing: am5.ease.out(am5.ease.cubic),
-                    loops: Infinity
-                });
-                circle1.animate({
-                    key: "opacity",
-                    to: 0,
-                    from: 1,
-                    duration: 1000,
-                    easing: am5.ease.out(am5.ease.cubic),
-                    loops: Infinity
-                });
+        var circleTemplate = am5.Template.new({});
 
-                return am5.Bullet.new(root, {
-                    sprite: container
-                })
-            }
-        })
+        series0.bullets.push(function () {
+            var graphics = am5.Circle.new(root, {
+                fill: am5.color('#31DB42'),
+            }, circleTemplate);
+            return am5.Bullet.new(root, {
+                sprite: graphics,
+                radius: 1
+            });
+        });
 
-// Set data
-        var data = [{
-            date: new Date(2022, 1, 1).getTime(),
-            value: 0
-        }, {
-            date: new Date(2022, 1, 3).getTime(),
-            value: 5
-        }, {
-            date: new Date(2022, 1, 5).getTime(),
-            value: 20
-        }, {
-            date: new Date(2022, 1, 7).getTime(),
-            value: 40
-        }, {
-            date: new Date(2022, 1, 9).getTime(),
-            value: 80
-        }, {
-            date: new Date(2022, 1, 11).getTime(),
-            value: 160
-        }, {
-            date: new Date(2022, 1, 14).getTime(),
-            value: 360,
-            bullet: true
-        }]
+// Add heat rule
+// https://www.amcharts.com/docs/v5/concepts/settings/heat-rules/
+        series0.set("heatRules", [{
+            target: circleTemplate,
+            min: 3,
+            max: 35,
+            dataField: "value",
+            key: "radius"
+        }]);
 
-        series.data.setAll(data);
+// Add bullet
+// https://www.amcharts.com/docs/v5/charts/xy-chart/series/#Bullets
+        var starTemplate = am5.Template.new({});
+
+        series0.strokes.template.set("strokeOpacity", 0);
+
+// Add cursor
+// https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+        chart.set("cursor", am5xy.XYCursor.new(root, {
+            xAxis,
+            yAxis,
+            snapToSeries: [series0, series]
+        }));
+
+        series0.data.setAll(<?= $current_bullet ?>);
 
 
 // Make stuff animate on load
 // https://www.amcharts.com/docs/v5/concepts/animations/
+        series0.appear(1000);
         series.appear(1000);
         chart.appear(1000, 100);
 

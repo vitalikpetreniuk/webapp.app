@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
-use App\Models\FutureExpense;
 use App\Models\Revenue;
 use App\Models\Source;
 use Carbon\Carbon;
@@ -181,16 +180,16 @@ class ExpenseController extends Controller
 
         }
 
-        if ($request->input('repeated2')) {
-            $arr = [
-                'expense_id' => $created->id,
-                'period' => $request->input('repeated2'),
-                'user_id' => Auth::id()
-            ];
-
-            FutureExpense::insert($arr);
-
-        }
+//        if ($request->input('repeated2')) {
+//            $arr = [
+//                'expense_id' => $created->id,
+//                'period' => $request->input('repeated2'),
+//                'user_id' => Auth::id()
+//            ];
+//
+//            FutureExpense::insert($arr);
+//
+//        }
 
         echo json_encode($send);
     }

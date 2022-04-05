@@ -1,4 +1,5 @@
 <div class="tabs-section active">
-    <a href="#" class="active">Reporting</a>
-    <a href="{{ route('analytics') }}">Analytics</a>
+    @foreach($tabs as $name => $value)
+        <a href="{{ $value['url'] }}" class="@if($value['active']) active @endif">{{ $name }}</a>
+    @endforeach
 </div>
