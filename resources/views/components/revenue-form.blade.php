@@ -58,6 +58,6 @@
 {!! $validator->selector('#revenueF') !!}
 <script>
     var revenueformvars = {
-        url: {{ route('revenues.store') }}
+        url: "{{ route('revenues.store') }}"
     }
 </script>
