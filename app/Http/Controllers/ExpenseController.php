@@ -100,7 +100,8 @@ class ExpenseController extends Controller
     protected function expenseCategory1($path)
     {
         $reader = IOFactory::createReader("Xlsx");
-        $spreadsheet = $reader->load(storage_path("app\\" . $path));
+        /* TODO: fix bug with slashes */
+        $spreadsheet = $reader->load(storage_path("app/" . $path));
         $sheet = $spreadsheet->getActiveSheet()->toArray();
 
         try {
