@@ -64,7 +64,7 @@ class RevenueController extends Controller
             foreach ($sheet as $row) {
                 if ($this->containsOnlyNull($row)) break;
                 $date = new \DateTime();
-                $date = $date::createFromFormat('m/j/Y', $row[0]);
+                $date = $date::createFromFormat('m.j.Y', $row[0]);
                 if (!$date) continue;
                 Revenue::create(
                     [
