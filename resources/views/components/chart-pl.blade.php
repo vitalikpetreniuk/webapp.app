@@ -1,5 +1,5 @@
 <div id="chartdiv" class="mt-20"></div>
-@if($chart_data)
+<?php if (isset($chart_data)) ?>
     <script>
         am5.ready(function () {
 
@@ -120,7 +120,7 @@
                 yAxis,
                 snapToSeries: [series0, series]
             }));
-            <?php if ($current_bullet) ?>
+            <?php if (isset($current_bullet)) ?>
                 series0.data.setAll(<?= $current_bullet ?>);
                 series0.appear(1000);
             <?php endif; ?>
@@ -132,4 +132,4 @@
 
         }); // end am5.ready()
     </script>
-@endif
+<?php } ?>
