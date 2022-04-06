@@ -133,6 +133,3 @@
         }); // end am5.ready()
     </script>
 @endif
-<?php
-var_dump(DIRECTORY_SEPARATOR);
-?>
