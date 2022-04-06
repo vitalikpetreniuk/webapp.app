@@ -101,17 +101,17 @@ class ExpenseController extends Controller
 
     private function parseUserFileInputDate($stringdate)
     {
-        if (strpos($stringdate, '/') > 0 ) {
+        if (strpos($stringdate, '/') > 0) {
             $sep = '/';
-        }elseif (strpos($stringdate, '-') > 0) {
+        } elseif (strpos($stringdate, '-') > 0) {
             $sep = '-';
-        }elseif (strpos($stringdate, '.') > 0) {
+        } elseif (strpos($stringdate, '.') > 0) {
             $sep = '.';
-        }else {
+        } else {
             return false;
         }
 
-        return Carbon::createFromFormat("n".$sep."j".$sep."Y", $stringdate);
+        return Carbon::createFromFormat("n" . $sep . "j" . $sep . "Y", $stringdate);
     }
 
     protected function expenseCategory1($path)
@@ -125,7 +125,6 @@ class ExpenseController extends Controller
             foreach ($sheet as $row) {
                 if ($this->containsOnlyNull($row)) break;
                 $date = $this->parseUserFileInputDate($row[0]);
-                var_dump($date);
                 if (!$date) continue;
                 Expense::create(
                     [
@@ -147,10 +146,9 @@ class ExpenseController extends Controller
                 case 23505 :
                     $message = 'This date has already been imported';
             }
-            if (App::environment('local')) {
-                $send['debugcode'] = $exception->getCode();
-                $send['debugmessage'] = $exception->getMessage();
-            }
+
+            $send['debugcode'] = $exception->getCode();
+            $send['debugmessage'] = $exception->getMessage();
 
             $send['success'] = false;
             $send['message'] = $message;
