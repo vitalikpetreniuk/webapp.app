@@ -111,6 +111,9 @@ class ExpenseController extends Controller
             return false;
         }
 
+        var_dump($stringdate);
+        var_dump($sep);
+
         return Carbon::createFromFormat("n" . $sep . "j" . $sep . "Y", $stringdate);
     }
 
