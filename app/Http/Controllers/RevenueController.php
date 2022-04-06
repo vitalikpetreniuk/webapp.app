@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Revenue;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,21 @@ class RevenueController extends Controller
         return true;
     }
 
+    private function parseUserFileInputDate($stringdate)
+    {
+        if (strpos($stringdate, '/') > 0 ) {
+            $sep = '/';
+        }elseif (strpos($stringdate, '-') > 0) {
+            $sep = '-';
+        }elseif (strpos($stringdate, '.') > 0) {
+            $sep = '.';
+        }else {
+            return false;
+        }
+
+        return Carbon::createFromFormat("n".$sep."j".$sep."Y", $stringdate);
+    }
+
     protected function parseUploadedXlsx($path)
     {
         $reader = IOFactory::createReader("Xlsx");
@@ -63,8 +79,7 @@ class RevenueController extends Controller
         try {
             foreach ($sheet as $row) {
                 if ($this->containsOnlyNull($row)) break;
-                $date = new \DateTime();
-                $date = $date::createFromFormat('m.j.Y', $row[0]);
+                $date = $this->parseUserFileInputDate($row[0]);
                 if (!$date) continue;
                 Revenue::create(
                     [

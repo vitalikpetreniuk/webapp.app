@@ -74,11 +74,13 @@ class ExpenseController extends Controller
         }
     }
 
-    public function update(Request $request, Expense $expense) {
+    public function update(Request $request, Expense $expense)
+    {
         $expense->update($request->all());
     }
 
-    public function delete(Expense $expense) {
+    public function delete(Expense $expense)
+    {
         $expense->delete();
     }
 
@@ -97,18 +99,33 @@ class ExpenseController extends Controller
         return true;
     }
 
+    private function parseUserFileInputDate($stringdate)
+    {
+        if (strpos($stringdate, '/') > 0 ) {
+            $sep = '/';
+        }elseif (strpos($stringdate, '-') > 0) {
+            $sep = '-';
+        }elseif (strpos($stringdate, '.') > 0) {
+            $sep = '.';
+        }else {
+            return false;
+        }
+
+        return Carbon::createFromFormat("n".$sep."j".$sep."Y", $stringdate);
+    }
+
     protected function expenseCategory1($path)
     {
         $reader = IOFactory::createReader("Xlsx");
         /* TODO: fix bug with slashes */
-        $spreadsheet = $reader->load(storage_path("app/" . $path));
+        $spreadsheet = $reader->load(storage_path("app" . DIRECTORY_SEPARATOR . $path));
         $sheet = $spreadsheet->getActiveSheet()->toArray();
 
         try {
             foreach ($sheet as $row) {
                 if ($this->containsOnlyNull($row)) break;
-                $date = new \DateTime();
-                $date = $date::createFromFormat('m.j.Y', $row[0]);
+                $date = $this->parseUserFileInputDate($row[0]);
+                var_dump($date);
                 if (!$date) continue;
                 Expense::create(
                     [
@@ -235,11 +252,13 @@ class ExpenseController extends Controller
         return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
-    public function getSingle(Expense $expense) {
+    public function getSingle(Expense $expense)
+    {
         return $expense;
     }
 
-    public static function isPercent($expense) {
+    public static function isPercent($expense)
+    {
         $percent_from_ad_spend = in_array($expense->type_of_sum, [2]) || in_array($expense->type_variable, [1, 2]);
         $percent_from_net_revenue = in_array($expense->type_of_sum, [3]) || in_array($expense->type_variable, [3]);
 

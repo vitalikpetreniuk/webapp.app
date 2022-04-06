@@ -55,6 +55,8 @@ async function newRevenue(formdata) {
                 return;
             }
 
+            $('#modal-revenue').find('.drag-drop__success').addClass('show').text(result.message)
+
             setTimeout(() => $('#modal-revenue').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
         },
         error: revenueErrorCatch,

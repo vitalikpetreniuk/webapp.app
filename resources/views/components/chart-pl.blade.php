@@ -1,5 +1,5 @@
 <div id="chartdiv" class="mt-20"></div>
-<?php if (isset($chart_data)) { ?>
+@if($chart_data)
     <script>
         am5.ready(function () {
 
@@ -132,4 +132,8 @@
 
         }); // end am5.ready()
     </script>
-<?php } ?>
+@endif
+
+<?php
+var_dump(DIRECTORY_SEPARATOR);
+?>
