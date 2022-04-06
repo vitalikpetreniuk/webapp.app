@@ -73,7 +73,7 @@ class RevenueController extends Controller
     protected function parseUploadedXlsx($path)
     {
         $reader = IOFactory::createReader("Xlsx");
-        $spreadsheet = $reader->load(storage_path("app\\" . $path));
+        $spreadsheet = $reader->load(storage_path("app" . DIRECTORY_SEPARATOR . $path));
         $sheet = $spreadsheet->getActiveSheet()->toArray();
 
         try {
