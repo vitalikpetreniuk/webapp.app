@@ -18,11 +18,12 @@
             <div class="cat2">
                 <div class="modal__select select blue mb-15">
                     <input class="select__input" type="hidden" name="expensetype" value="1">
-                    <div class="select__head">Expenses type</div>
+{{--                    <div class="select__head">Expenses type</div>--}}
+                    <div class="select__head">Summ $ (USD)</div>
                     <ul class="select__list" style="display: none;">
                         <li class="select__item" data-prop="1">Summ $ (USD)</li>
-                        <li class="select__item" data-prop="2">% of Ad spend</li>
-                        <li class="select__item" data-prop="3">% of net revenue</li>
+{{--                        <li class="select__item" data-prop="2">% of Ad spend</li>--}}
+{{--                        <li class="select__item" data-prop="3">% of net revenue</li>--}}
                     </ul>
                 </div>
                 <p class="modal__text">
