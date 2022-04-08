@@ -1,3 +1,8 @@
+<form action="" method="get">
+    <input type="text" name="from">
+    <input type="text" name="to">
+    <input type="submit" value="Поиск">
+</form>
 <table id="sweetpost" class="table mt-20">
     <thead>
     <tr>
@@ -8,11 +13,13 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>0.1</td>
-        <td>$1,771,429</td>
-        <td class="bold">0,00%</td>
-        <td>$171,141</td>
-    </tr>
+    @foreach($data as $item)
+        <tr>
+            <td>{{ $item['marketing_cost'] }}</td>
+            <td>${{ number_format($item['revenue_needed'], 0, '.', ',') }}</td>
+            <td class="bold">@if(isset($item['optimal_coefficient'])){{$item['optimal_coefficient']}}%@endif</td>
+            <td>${{ number_format($item['allowable_marketing_cost'], 0, '.', ',') }}</td>
+        </tr>
+    @endforeach
     </tbody>
 </table>
