@@ -14,16 +14,25 @@ class AnalyticsController extends Controller
 {
     public function index()
     {
-//        $from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
-//        $to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-        $from = '1990-01-01';
-        $to = '2022-03-31';
-        $expenses = ExpenseController::getAllExpenses($from, $to);
-        $revenues = RevenueController::getAllRevenues($from, $to);
+        if (isset($_GET['from'])) {
+            $from = Carbon::createFromFormat('m.Y', $_GET['from']);
+        } else {
+            $from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
+        }
+
+        if (isset($_GET['to'])) {
+            $to = Carbon::createFromFormat('m.Y', $_GET['from']);
+        } else {
+//            $to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
+            $to = Carbon::now()->format('Y-m-d');
+        }
+
+
         return view('reportings/reportings', ['data' => $this->prepareAnalyticsData($from, $to)]);
     }
 
-    public function prepareAnalyticsData($from, $to) {
+    public function prepareAnalyticsData($from, $to)
+    {
         $expenses = ExpenseController::getAllExpenses($from, $to);
         $revenues = RevenueController::getAllRevenues($from, $to);
 
@@ -34,22 +43,23 @@ class AnalyticsController extends Controller
             }
 
             if (ExpenseController::isPercent($item)) {
-                $item->amount .= '%';
-            }else {
-                $item->amount = '-$'.$item->amount;
+                $item->amount = number_format($item->amount, 2, '.', ',') . '%';
+            } else {
+                $item->amount = '-$' . number_format($item->amount, 2, '.', ',');
             }
         }
 
         foreach ($revenues as &$item) {
             $item->class = 'plus';
-            $item->amount = '+$'.number_format($item->amount, 2, '.', ',');
+            $item->amount = '+$' . number_format($item->amount, 2, '.', ',');
             $item->source = 'From file';
             $item->source_id = 1;
         }
 
         $merged = array_merge($expenses, $revenues);
 
-        function cmp($a, $b) {
+        function cmp($a, $b)
+        {
             return strcmp($a->date, $b->date);
         }
 
@@ -61,7 +71,7 @@ class AnalyticsController extends Controller
             $item->source = '';
 
             if (isset($item->source_id) && !isset($item->source)) {
-                $item->source = Source::find((int) $item->source_id)->name;
+                $item->source = Source::find((int)$item->source_id)->name;
             }
 
             $item->date = date_format(new \DateTime($item->date), 'd.m.Y');

@@ -21,7 +21,7 @@ class chartPl extends Component
 
     protected function getController()
     {
-        return new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-01'));
+        return new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-03'));
     }
 
     public function chartData($controller)
@@ -44,11 +44,14 @@ class chartPl extends Component
 
     public function currentBullet($controller)
     {
+        /* @var ExpenseCalculationsController $controller */
         $returned = [];
 
+        $revenue = $controller->getMonthNetRevenue();
+
         $returned[] = [
-            "x" => $controller->getCogs() / 100,
-            "y" => $controller->getFixedExpensesTotal(),
+            "x" => 1 - $controller->getCogs() / 100,
+            "y" => $revenue,
         ];
 
         return json_encode($returned);
@@ -57,6 +60,8 @@ class chartPl extends Component
     public function getData()
     {
         $controller = $this->getController();
+
+        $fixed_costs = $controller->getFixedExpensesTotal();
 
         return [
             'current_bullet' => $this->currentBullet($controller),
