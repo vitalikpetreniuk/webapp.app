@@ -61,8 +61,6 @@ class chartPl extends Component
     {
         $controller = $this->getController();
 
-        $fixed_costs = $controller->getFixedExpensesTotal();
-
         return [
             'current_bullet' => $this->currentBullet($controller),
             'chart_data' => $this->chartData($controller),

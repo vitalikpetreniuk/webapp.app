@@ -22,7 +22,7 @@
                     <ul class="select__list" style="display: none;">
                         <li class="select__item" data-prop="1">Summ $ (USD)</li>
                         <li class="select__item" data-prop="2">% of Ad spend</li>
-                        <li class="select__item" data-prop="3">% of net revenue</li>
+{{--                        <li class="select__item" data-prop="3">% of net revenue</li>--}}
                     </ul>
                 </div>
                 <p class="modal__text">
@@ -120,7 +120,7 @@
                     <ul class="select__list" style="display: none;">
                         <li class="select__item" data-prop="1">Cost of good Sold</li>
                         <li class="select__item" data-prop="2">Affiliate comission</li>
-                        <li class="select__item" data-prop="3">Ad spend commission</li>
+{{--                        <li class="select__item" data-prop="3">Ad spend commission</li>--}}
                     </ul>
                 </div>
                 <p class="modal__text">

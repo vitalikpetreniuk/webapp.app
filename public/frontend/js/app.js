@@ -18,16 +18,19 @@ jQuery(function ($) {
 	const $expensesFile = document.querySelector('#expensesFile')
 	const $expensesSelected = document.querySelector('#expensesForm .drag-drop__selected')
 	const $expensesTextLabel = document.querySelector('#expensesForm .drag-drop__selected .filename')
-
-	const $autoComplete = document.querySelector('.autoComplete')
-
+	
 	if ($('.autoComplete').length) {
 		fetch('https://webapp.test/api/sources').then(
 			async (source) => {
-				const data = await source.json();
+				let data;
+				try {
+					data = Object.values(await source.json());
+				}catch (e) {
+					data = {}
+				}
 				const autoCompleteJS = new autoComplete({
 					data: {
-						src: Object.values(data),
+						src: data,
 						cache: true,
 					},
 					placeHolder: "Source",
