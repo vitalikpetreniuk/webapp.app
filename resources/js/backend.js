@@ -198,7 +198,7 @@ jQuery(function ($) {
 
             resetForm(form);
 
-            $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$' + newamount)
+            $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$' + newamount.toLocaleString('en-US', {minimumFractionDigits: 2}))
 
             closeModals();
         } else {
