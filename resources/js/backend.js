@@ -1,4 +1,4 @@
-var instance = axios.create({
+window.instance = axios.create({
     withCredentials: true,
     baseURL: `${window.location.origin}/api`
 })
@@ -20,8 +20,8 @@ const getExpense = async (ID) => {
 }
 
 async function newExpense(formdata) {
-    await $.ajax({
-        "url": expenseformvars.url,
+    return await $.ajax({
+        "url": apivars.expenseurl,
         "type": "POST",
         "processData": false,
         "contentType": false,
@@ -36,14 +36,18 @@ async function newExpense(formdata) {
             $('#modal-expenses').find('.drag-drop__success').text(result.message).addClass('show');
 
             setTimeout(() => $('#modal-expenses').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+            return true;
         },
-        error: expenseErrorCatch,
+        error: (error) => {
+            expenseErrorCatch(error);
+            return false;
+        },
     });
 }
 
 async function newRevenue(formdata) {
-    await $.ajax({
-        "url": revenueformvars.url,
+    return await $.ajax({
+        "url": apivars.revenueurl,
         "type": "POST",
         "processData": false,
         "contentType": false,
@@ -58,8 +62,13 @@ async function newRevenue(formdata) {
             $('#modal-revenue').find('.drag-drop__success').addClass('show').text(result.message)
 
             setTimeout(() => $('#modal-revenue').find(`.drag-drop__success, .drag-drop__error`).removeClass('show'), 5000);
+            return true;
         },
-        error: revenueErrorCatch,
+        error: (error) => {
+            revenueErrorCatch(error);
+
+            return false;
+        },
     });
 }
 
@@ -112,7 +121,6 @@ const deleteExpense = async (ID) => {
 
 function expenseErrorCatch(response) {
     let result = response.responseJSON ? response.responseJSON : JSON.parse(response);
-    console.log(result)
     $('#modal-expenses').find(`.drag-drop__success`).removeClass('show')
     $('#modal-expenses').find(`.drag-drop__error`).text(result.message).addClass('show');
 
@@ -174,7 +182,7 @@ jQuery(function ($) {
         }
     }
 
-    window.formSubmit = function (e) {
+    window.formSubmit = async function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         console.log('expenseFormSubmit', e.target)
@@ -183,7 +191,8 @@ jQuery(function ($) {
         let id = form.attr('data-id');
         const type = $(`tr[data-id=${id}]`).attr('data-type');
         let newamount = formdata.get('edited-amount');
-        console.log(form, type, id)
+        let oldvalue = $(`tr[data-id=${id}] .minus span`).text();
+        let ispercent = !!oldvalue.includes('%');
         if (newamount.length) {
 
             if (type === 'expense') {
@@ -198,96 +207,26 @@ jQuery(function ($) {
 
             resetForm(form);
 
-            $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$' + newamount.toLocaleString('en-US', {minimumFractionDigits: 2}))
+            if (ispercent) {
+                $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text(newamount.toLocaleString('en-US', {minimumFractionDigits: 2}) + '%')
+            } else {
+                $(`tr[data-id=${form.data('id')}]`).find('.plus span, .minus span').text('-$' + newamount.toLocaleString('en-US', {minimumFractionDigits: 2}))
+            }
 
             closeModals();
         } else {
+            let res;
             if (e.target.id === 'expenseF') {
-                newExpense(formdata);
-            }else {
-                newRevenue(formdata);
+                res = await newExpense(formdata);
+            } else {
+                res = await newRevenue(formdata);
             }
-            resetForm(form);
+            console.log(res)
+            if (res) resetForm(form);
         }
 
         return false;
     }
-
-    // const $autoComplete = document.querySelector('.autoComplete')
-    //
-    // if ($('.autoComplete').length) {
-    //     //https://tarekraafat.github.io/autoComplete.js/demo/db/generic.json
-    //     //https://webapp.test/sources?user_id=1
-    //     fetch(
-    //         backendvars.autocompleteroute
-    //     ).then(async (source) => {
-    //         const fetched = await source.json();
-    //         const autoCompleteJS = new autoComplete({
-    //             data: {
-    //                 src: async () => {
-    //                     let arr = [];
-    //                     for (let key in fetched[0]) {
-    //                         console.warn(key)
-    //                         arr.push(fetched[0][key]);
-    //                     }
-    //                     console.log(arr)
-    //                     return arr;
-    //                 },
-    //                 cache: true,
-    //             },
-    //             placeHolder: "Source",
-    //             resultsList: {
-    //                 element: (list, data) => {
-    //                     const info = document.createElement("p");
-    //                     if (data.results.length > 0) {
-    //                         info.innerHTML = `Displaying <strong>${data.results.length}</strong> out of <strong>${data.matches.length}</strong> results`;
-    //                     } else {
-    //                         // info.innerHTML = `Создать категорию <strong>"${data.query}"</strong>`;
-    //                     }
-    //                     list.prepend(info);
-    //                 },
-    //                 noResults: true,
-    //                 maxResults: 15,
-    //                 tabSelect: true
-    //             },
-    //             resultItem: {
-    //                 element: (item, data) => {
-    //                     // Modify Results Item Style
-    //                     item.style = "display: flex; justify-content: space-between;";
-    //                     // Modify Results Item Content
-    //                     item.innerHTML = `
-    //   <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-    //     ${data.match}
-    //   </span>
-    //   <span style="display: flex; align-items: center; font-size: 13px; font-weight: 100; text-transform: uppercase; color: rgba(0,0,0,.2);">
-    //     ${data.value}
-    //   </span>`;
-    //                 },
-    //                 highlight: true
-    //             },
-    //             events: {
-    //                 input: {
-    //                     focus: () => {
-    //                         if (autoCompleteJS.input.value.length) autoCompleteJS.start();
-    //                     }
-    //                 }
-    //             }
-    //         });
-    //         autoCompleteJS.input.addEventListener("selection", function (event) {
-    //             const feedback = event.detail;
-    //             autoCompleteJS.input.blur();
-    //             // Prepare User's Selected Value
-    //             const selection = feedback.selection.value;
-    //             console.log(feedback.selection.value)
-    //             // Render selected choice to selection div
-    //             document.querySelector(".selection").innerHTML = selection;
-    //             // Replace Input value with the selected value
-    //             autoCompleteJS.input.value = selection;
-    //             // Console log autoComplete data feedback
-    //             console.log(feedback);
-    //         });
-    //     });
-    // }
 
     $('.btn__edit').on('click', async function () {
         const type = $(this).closest('tr').data('type').trim();

@@ -46,7 +46,8 @@
                     <div class="selection"></div>
                 </div>
                 <div class="form-group">
-                    <input class="input-field mt-15" type="text" placeholder="Tag" name="tag">
+                    <label for="tags" class="mt-15">Tags</label>
+                    <input id="tags" name="tags" class="input-field mt-15" type="text" placeholder="Tag">
                 </div>
                 <div class="form-group">
                     <textarea class="input-field textarea mt-15" name="comment" placeholder="Comment"></textarea>
@@ -190,7 +191,7 @@
 
         <div class="type2">
             <div class="form-group">
-                <input class="input-field edited-amount" type="number" name="edited-amount">
+                <input step="0.01" class="input-field edited-amount" type="number" name="edited-amount">
             </div>
         </div>
 
@@ -247,8 +248,3 @@
 {{--    });--}}
 {{--</script>--}}
 {{--{!! $validator->selector('#expenseF') !!}--}}
-<script>
-    var expenseformvars = {
-        url: "{{ route('expenses.store') }}",
-    };
-</script>

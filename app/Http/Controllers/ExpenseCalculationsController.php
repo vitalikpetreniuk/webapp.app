@@ -17,12 +17,11 @@ class ExpenseCalculationsController extends ExpenseController
         $this->revenues_table = 'revenues';
     }
 
-    public function countMonthExpensesTotal()
-    {
-        return DB::select("SELECT expense_category_id, amount, date, type_of_sum, type_variable FROM $this->expenses_table WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
-    }
-
-    public function getMonthAdSpendCosts()
+    /**
+     * Возращает расходы на маркетинг
+     * @return float|int - расходы на маркетинг
+     */
+    public function getMonthMarketingCosts()
     {
         // Получение ad_spend числа за месяц
         $ad_spend = DB::select("SELECT sum(amount) as amount FROM $this->expenses_table WHERE expense_category_id = ? AND date BETWEEN ? AND ?", [1, $this->from, $this->to]);
@@ -30,81 +29,103 @@ class ExpenseCalculationsController extends ExpenseController
         return isset($ad_spend[0]) ? (int)$ad_spend[0]->amount : 0;
     }
 
-    public function countMonthNetTotal()
+    /**
+     * Считает суму net_profit
+     * @param $net_revenue - net_revenue
+     * @param $marketing_costs - расходы на рекламу
+     * @return float|int - число-сума
+     */
+    public function countMonthNetTotal($net_revenue, $marketing_costs)
     {
-        $expenses = $this::countMonthExpensesTotal();
-
-        $net_revenue = $this::getMonthNetRevenue();
-
-        $net_total = $net_revenue;
-
-        $ad_spend = $this::getMonthAdSpendCosts();
-
-        foreach ($expenses as $expense) {
-            $amount = $expense->amount;
-
-            $percent_from_ad_spend = in_array($expense->type_of_sum, [2]) || in_array($expense->type_variable, [1, 2]);
-            $percent_from_net_revenue = in_array($expense->type_of_sum, [3]) || in_array($expense->type_variable, [3]);
-
-            if ($percent_from_ad_spend) {
-                $net_total = $net_total - ($amount * $ad_spend / 100);
-            } elseif ($percent_from_net_revenue) {
-                $net_total = $net_total - ($amount * $net_revenue / 100);
-            } else {
-                $net_total = $net_total - $amount;
-            }
-        }
-
-        $net_total = $net_total - $ad_spend;
-
-        return $net_total;
+        return $net_revenue * (1 - $this->getMonthAffiliateCost()) - $this->getFixedExpensesTotal() -($this->getCogs() * $net_revenue)-$marketing_costs * 1.05;
     }
 
+    /**
+     * Считает net_revenue за период
+     * @return int|float - revenue
+     */
     public function getMonthNetRevenue()
     {
-        $amount = DB::select("SELECT SUM(amount) as sum FROM $this->revenues_table WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
+        $amount = DB::select("SELECT SUM(amount) as amount FROM $this->revenues_table WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
 
-        return isset($amount[0]) ? $amount[0]->sum : 0;
+        return isset($amount[0]) ? $amount[0]->amount : 0;
     }
 
+    /**
+     * Синоним к % of net revenue
+     * @return float|int - % of net revenue
+     */
+    public function getMonthAffiliateCost() {
+        return $this->getMonthPercentOfRevenue();
+    }
+
+    /**
+     * Получает суму фиксированных расходов
+     * @return int|float - сума расходов
+     */
     public function getFixedExpensesTotal()
     {
-        $fixed_costs = DB::select("SELECT SUM(amount) FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [1, $this->from, $this->to]);
-        return $fixed_costs ? (int)$fixed_costs[0]->sum : 0;
+        $fixed_costs = DB::select("SELECT SUM(amount) as amount FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [1, $this->from, $this->to]);
+        return $fixed_costs ? (int)$fixed_costs[0]->amount : 0;
     }
 
+    /**
+     * Получить массив expenses которые введены вручную (фиксированные расходы)
+     * @return array массив объектов
+     */
+    public function getFixedExpensesStatements()
+    {
+        $fixed_statements = DB::select("SELECT * FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [1, $this->from, $this->to]);
+        return $fixed_statements ?: [];
+    }
+
+    /**
+     * Получает Cost of Good Sold - себестоимость
+     * @return float|int cost of good sold или ноль если не записано
+     */
     public function getCogs()
     {
         $cogs = DB::select("SELECT amount FROM $this->expenses_table WHERE type_variable = ? AND date BETWEEN ? AND ?", [1, $this->from, $this->to]);
-        return $cogs ? (int)$cogs[0]->amount : 0;
+        return $cogs ? (int)$cogs[0]->amount / 100 : 0;
     }
 
 
+    /**
+     * Получить % of ad spend
+     * @return float|int % of ad spend
+     */
     public function getMonthPercentOfAdSpend()
     {
-        return DB::select("SELECT amount FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [3, $this->from, $this->to]);
+        $percent_of_ad_spend = DB::select("SELECT amount FROM $this->expenses_table WHERE type_variable = ? AND date BETWEEN ? AND ?", [3, $this->from, $this->to]);
+        return isset($percent_of_ad_spend[0]) ? $percent_of_ad_spend[0]->amount / 100 : 0;
     }
 
+    /**
+     * Получить % of net revenue
+     * @return float|int % of net revenue
+     */
     public function getMonthPercentOfRevenue()
     {
-        return DB::select("SELECT amount FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [2, $this->from, $this->to]);
+        $percent_of_revenue = DB::select("SELECT amount FROM $this->expenses_table WHERE type_variable = ? AND date BETWEEN ? AND ?", [2, $this->from, $this->to]);
+        if (!isset($percent_of_revenue[0])) return 0;
+        if ($percent_of_revenue[0]->amount >= 1) {
+            return $percent_of_revenue[0]->amount / 100;
+        }else {
+            return $percent_of_revenue[0]->amount / 10;
+        }
     }
 
+    /**
+     * Подсчёт сумы расходов на маркетинг
+     * @return float|int - сума расходов на маркетинг
+     */
     public function countMonthTotalMarketingCosts()
     {
-        $ad_spend = $this->getMonthAdSpendCosts();
+        $ad_spend = $this->getMonthMarketingCosts();
+
+//        dd($ad_spend);
         $percent_of_ad_spend = $this->getMonthPercentOfAdSpend();
-        if (isset($percent_of_ad_spend[0])) {
-            $percent_of_ad_spend = $percent_of_ad_spend[0]->amount;
-        }else {
-            $percent_of_ad_spend = 0;
-        }
         $percent_of_revenue = $this->getMonthPercentOfRevenue();
-        if (isset($percent_of_revenue[0])) {
-            $percent_of_revenue = $percent_of_revenue[0]->amount;
-        }else {
-            $percent_of_revenue = 0;
-        }
 
         return $ad_spend + ($ad_spend * $percent_of_ad_spend) + ($ad_spend * $percent_of_revenue);
     }

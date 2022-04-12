@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\Source;
+use App\Models\Tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -59,6 +60,11 @@ class ExpenseController extends Controller
         // do store stuff
     }
 
+    /**
+     * Стартовая обработка отправленной формы
+     * @param Request $request объект запроса
+     * @return void
+     */
     public function store(Request $request)
     {
         /* TODO: валидация формата файла */
@@ -74,11 +80,22 @@ class ExpenseController extends Controller
         }
     }
 
+    /**
+     * обновление expense по api
+     * @param Request $request объект запроса
+     * @param Expense $expense - объект expense для обновления
+     * @return void
+     */
     public function update(Request $request, Expense $expense)
     {
         $expense->update($request->all());
     }
 
+    /**
+     * удаление expense по api
+     * @param Expense $expense - объект expense для обновления
+     * @return void
+     */
     public function delete(Expense $expense)
     {
         $expense->delete();
@@ -89,6 +106,11 @@ class ExpenseController extends Controller
         return [];
     }
 
+    /**
+     * Технический метод чтобы проверить что все елементы массива пустые
+     * @param array $array массив для проверки
+     * @return bool результат проверки
+     */
     private function containsOnlyNull(array $array): bool
     {
         foreach ($array as $value) {
@@ -99,6 +121,11 @@ class ExpenseController extends Controller
         return true;
     }
 
+    /**
+     * Проверка на формат даты
+     * @param string $stringdate строка даты
+     * @return Carbon|false объект даты
+     */
     private function parseUserFileInputDate($stringdate)
     {
         if (strpos($stringdate, '/') > 0) {
@@ -114,6 +141,12 @@ class ExpenseController extends Controller
         return Carbon::createFromFormat("n" . $sep . "j" . $sep . "Y", $stringdate);
     }
 
+    /**
+     * Если форма expense отправлена с 1 категорией (с файлом для импортирования)
+     * @param string $path путь к файлу
+     * @return void
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
     protected function expenseCategory1($path)
     {
         $reader = IOFactory::createReader("Xlsx");
@@ -140,23 +173,15 @@ class ExpenseController extends Controller
             $send['message'] = 'XLSX was successfully imported';
             echo json_encode($send);
         } catch (\Exception $exception) {
-            $send = [];
-            $message = 'Failed importing xlsx file';
-            switch ($exception->getCode()) {
-                case 23505 :
-                    $message = 'This date has already been imported';
-            }
-
-            $send['debugcode'] = $exception->getCode();
-            $send['debugmessage'] = $exception->getMessage();
-
-            $send['success'] = false;
-            $send['message'] = $message;
-
-            echo json_encode($send);
+            $send = $this->userUnderstandableError($exception, true);
         }
     }
 
+    /**
+     * Если форма expense отправлена с 2 категорией
+     * @param Request $request объект запроса
+     * @return void
+     */
     protected function expenseCategory2($request)
     {
         $date = Carbon::createFromFormat('m.y', $request->input('monthpicker2'))->firstOfMonth();
@@ -180,20 +205,25 @@ class ExpenseController extends Controller
             if ($source) $expense['source_id'] = $source;
             $created = Expense::create($expense);
 
+            if ($request->input('tags')) {
+                $tags = explode(',', $request->input('tags'));
+
+                foreach ($tags as $name) {
+                    $tag = Tag::firstOrCreate([
+                        'name' => $name,
+                    ], ['user_id' => Auth::id()]);
+
+                    DB::table('tags_expenses')->insert([
+                        'expense_id' => $created->id,
+                        'tag_id' => $tag->id,
+                    ]);
+                }
+            }
+
             $send['success'] = true;
             $send['message'] = 'Expense was created';
         } catch (\Exception $exception) {
-            $send = [];
-
-            $send['code'] = $exception->getCode();
-
-            if (App::environment('local')) {
-                $send['debugmessage'] = $exception->getMessage();
-            }
-
-            $send['success'] = false;
-            $send['message'] = $exception->getMessage();
-
+            $send = $this->userUnderstandableError($exception);
         }
 
 //        if ($request->input('repeated2')) {
@@ -210,6 +240,11 @@ class ExpenseController extends Controller
         echo json_encode($send);
     }
 
+    /**
+     * Если форма expense отправлена с 3 категорией
+     * @param Request $request объект запроса
+     * @return void
+     */
     protected function expenseCategory3($request)
     {
         $date = Carbon::createFromFormat('m.y', $request->input('monthpicker3'))->firstOfMonth();
@@ -230,36 +265,75 @@ class ExpenseController extends Controller
             $send['message'] = 'Expense was created';
             echo json_encode($send);
         } catch (\Exception $exception) {
-            $send = [];
-
-            if (App::environment('local')) {
-                $send['debugcode'] = $exception->getCode();
-                $send['debugmessage'] = $exception->getMessage();
-            }
-
-            $send['success'] = false;
-            $send['message'] = $exception->getMessage();
-
-            echo json_encode($send);
+            echo json_encode($this->userUnderstandableError($exception));
         }
 
     }
 
+    /**
+     * Получить все expense за период
+     * @param string $from - дата начала
+     * @param string $to - дата конца
+     * @return array - массив объектов expense
+     */
     public static function getAllExpenses($from, $to)
     {
         return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
+    /**
+     * Получение айтема expense для api
+     * @param Expense $expense
+     * @return Expense
+     */
     public function getSingle(Expense $expense)
     {
         return $expense;
     }
 
+    /**
+     * Является ли число в этой категории процентом?
+     * @param $expense - объект expense
+     * @return bool true если значение есть процентом
+     */
     public static function isPercent($expense)
     {
         $percent_from_ad_spend = in_array($expense->type_of_sum, [2]) || in_array($expense->type_variable, [1, 2]);
         $percent_from_net_revenue = in_array($expense->type_of_sum, [3]) || in_array($expense->type_variable, [3]);
 
         return $percent_from_ad_spend || $percent_from_net_revenue;
+    }
+
+    /**
+     * Генерация ошибки для отправки для юзера
+     * @param $exception - объект ошибки
+     * @param $isfileimport - отобразить ли ошибку что файл не загружен
+     * @return array - массив с данными ошибки
+     */
+    public function userUnderstandableError($exception, $isfileimport = false): array
+    {
+        $send = [];
+        switch ($exception->getCode()) {
+            case 23505 :
+                $message = 'This date has already been imported';
+                break;
+            case 23502 :
+                $message = 'Amount is missing';
+                break;
+        }
+
+        if (!$message && $isfileimport) {
+            $message = 'Failed importing xlsx file';
+        } elseif (!$message && !$isfileimport) {
+            $message = 'Failed to execute';
+        }
+
+        $send['debugcode'] = $exception->getCode();
+        $send['debugmessage'] = $exception->getMessage();
+
+        $send['success'] = false;
+        $send['message'] = $message;
+
+        return $send;
     }
 }

@@ -29,7 +29,7 @@ class SweetspotTable extends Component
 
         $fixed_costs = $controller->getFixedExpensesTotal();
 
-        $globalcogs = 1 - $controller->getCogs() / 100;
+        $globalcogs = 1 - $controller->getCogs();
 
         $returned = [];
 

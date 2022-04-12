@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\User;
 use Carbon\Carbon;
@@ -27,6 +28,11 @@ class RevenueController extends Controller
         // do store stuff
     }
 
+    /**
+     * Сохранение файла импорта
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         /* TODO: валидация формата файла */
@@ -45,6 +51,12 @@ class RevenueController extends Controller
         ];
     }
 
+    /**
+     * Если форма expense отправлена с 1 категорией (с файлом для импортирования)
+     * @param string $path путь к файлу
+     * @return bool
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
     private function containsOnlyNull(array $array): bool
     {
         foreach ($array as $value) {
@@ -55,6 +67,11 @@ class RevenueController extends Controller
         return true;
     }
 
+    /**
+     * Проверка на формат даты
+     * @param string $stringdate строка даты
+     * @return Carbon|false объект даты
+     */
     private function parseUserFileInputDate($stringdate)
     {
         if (strpos($stringdate, '/') > 0 ) {
@@ -70,6 +87,12 @@ class RevenueController extends Controller
         return Carbon::createFromFormat("n".$sep."j".$sep."Y", $stringdate);
     }
 
+    /**
+     * Импортирование файла revenue в б.д
+     * @param string $path путь к файлу
+     * @return void
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
     protected function parseUploadedXlsx($path)
     {
         $reader = IOFactory::createReader("Xlsx");
@@ -116,23 +139,51 @@ class RevenueController extends Controller
         }
     }
 
+    /**
+     * Стартовое получение данных для сайдбара
+     * @param string $from дата начала периода
+     * @param string $to дата конца периода
+     * @return array - массив результатов
+     */
     public static function getYearNavDate($from, $to)
     {
         return DB::select("SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", MIN(date) as date, SUM(amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2", [$from, $to]);
     }
 
+    /**
+     * Получить все revenues за период
+     * @param string $from - дата начала
+     * @param string $to - дата конца
+     * @return array - массив объектов expense
+     */
     public static function getAllRevenues($from, $to) {
         return DB::select('SELECT * FROM revenues WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
+    /**
+     * обновление revenue по api
+     * @param Request $request объект запроса
+     * @param Revenue $revenue - объект revenue для обновления
+     * @return void
+     */
     public function update(Revenue $revenue, Request $request) {
         $revenue->update($request->all());
     }
 
+    /**
+     * Получение айтема expense для api
+     * @param Revenue $revenue
+     * @return Revenue
+     */
     public function getSingle(Revenue $revenue) {
         return $revenue;
     }
 
+    /**
+     * удаление expense по api
+     * @param Revenue $revenue - объект expense для обновления
+     * @return void
+     */
     public function delete(Revenue $revenue) {
         $revenue->delete();
     }

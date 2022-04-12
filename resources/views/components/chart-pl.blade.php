@@ -3,7 +3,6 @@
     <input type="text" name="to">
     <input type="submit" value="Поиск">
 </form>
-<?php var_dump($chart_data); ?>
 <div id="chartdiv" class="mt-20"></div>
 @if(isset($chart_data))
     <script>

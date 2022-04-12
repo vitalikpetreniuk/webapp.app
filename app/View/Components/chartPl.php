@@ -27,7 +27,7 @@ class chartPl extends Component
     public function chartData($controller)
     {
         $fixed_costs = $controller->getFixedExpensesTotal();
-        $globalcogs = $controller->getCogs() / 100;
+        $globalcogs = $controller->getCogs();
 
         $returned = [];
 
@@ -47,11 +47,12 @@ class chartPl extends Component
         /* @var ExpenseCalculationsController $controller */
         $returned = [];
 
-        $revenue = $controller->getMonthNetRevenue();
+        $net_revenue = (int) $controller->getMonthNetRevenue();
+        $marketing_costs = $controller->getMonthMarketingCosts();
 
         $returned[] = [
-            "x" => 1 - $controller->getCogs() / 100,
-            "y" => $revenue,
+            "x" => $marketing_costs / $net_revenue,
+            "y" => $net_revenue,
         ];
 
         return json_encode($returned);
