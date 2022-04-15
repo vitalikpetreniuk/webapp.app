@@ -26,7 +26,6 @@ jQuery(function ($) {
 				}catch (e) {
 					data = {}
 				}
-				console.log(data)
 				const autoCompleteJS = new autoComplete({
 					data: {
 						src: data,
