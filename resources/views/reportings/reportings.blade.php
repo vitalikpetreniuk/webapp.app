@@ -6,7 +6,7 @@
         <table id="analytics-table" class="table mt-20">
             <thead>
             <tr>
-                <th>Date</th>
+                <th>Type</th>
                 <th>Summ</th>
                 <th>Source</th>
                 <th>Tag</th>
@@ -14,27 +14,32 @@
             </tr>
             </thead>
             <tbody class="editable">
+            <?php //dd($data) ?>
             @foreach($data as $item)
                 @php
-                $type = $item->class == 'plus' ? 'revenue' : 'expense'
+                    $type = $item->class == 'plus' ? 'revenue' : 'expense'
                 @endphp
-                <tr data-id="{{ $item->id }}" data-type="{{ $type }}">
-                    <td>{{ $item->date }}</td>
+                <tr @if($item->editable) data-id="{{ $item->id }}" @endif data-type="{{ $type }}">
+                    <td>{{ $item->type }}</td>
                     <td class="{{ $item->class }}">
                         <span>{{ $item->amount }}</span>
-                        <div class="edit-block d-flex justify-content-center align-items-center">
-                            <button class="btn__done d-flex align-items-center justify-content-center">
-                                <img src="{{ asset('frontend/images/dist/icons/done.svg') }}" alt="done">
-                            </button>
-                            <button class="btn__delete d-flex align-items-center justify-content-center">
-                                <img src="{{ asset('frontend/images/dist/icons/cross.svg') }}" alt="cross">
-                            </button>
-                            <button rel="pop-2" class="btn__edit d-flex align-items-center justify-content-center">
-                                <img src="{{ asset('frontend/images/dist/icons/pencil.svg') }}" alt="pencil">
-                            </button>
-                        </div>
+                        @if($item->editable)
+                            <div class="edit-block d-flex justify-content-center align-items-center">
+                                @if(false)
+                                    <button class="btn__done d-flex align-items-center justify-content-center">
+                                        <img src="{{ asset('frontend/images/dist/icons/done.svg') }}" alt="done">
+                                    </button>
+                                @endif
+                                <button class="btn__delete d-flex align-items-center justify-content-center">
+                                    <img src="{{ asset('frontend/images/dist/icons/cross.svg') }}" alt="cross">
+                                </button>
+                                <button rel="pop-2" class="btn__edit d-flex align-items-center justify-content-center">
+                                    <img src="{{ asset('frontend/images/dist/icons/pencil.svg') }}" alt="pencil">
+                                </button>
+                            </div>
+                        @endif
                     </td>
-                    <td>{{ $item->source }}</td>
+                    <td>@if(isset($item->source)){{ $item->source }}@endif</td>
                     <td></td>
                     <td></td>
                 </tr>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SourceController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RevenueController;
@@ -22,7 +23,8 @@ Route::get('expense/{expense}', [ExpenseController::class, 'getSingle']);
 Route::post('expense/{expense}', [ExpenseController::class, 'update']);
 Route::delete('expense/{expense}', [ExpenseController::class, 'delete']);
 Route::post('expense', [ExpenseController::class, 'store']);
-Route::get('/sources/', [SourceController::class, 'listSources']);
+Route::get('sources', [SourceController::class, 'list']);
+Route::get('tags', [TagController::class, 'list']);
 
 
 Route::get('revenue/{revenue}', [RevenueController::class, 'getSingle']);

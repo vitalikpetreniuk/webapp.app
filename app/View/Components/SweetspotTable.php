@@ -15,27 +15,23 @@ class SweetspotTable extends Component
      */
     public function __construct()
     {
-        //
-    }
+        $startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('M Y', $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
+        $endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('M Y', $_GET['endDate']) : Carbon::now()->subMonth()->lastOfMonth();
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
 
-    protected function getController()
-    {
-        return new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-01'));
+        $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
+        $this->fixed_costs = $controller->getFixedExpensesTotal();
+        $this->globalcogs = 1 - $controller->getCogs();
     }
 
     public function getData()
     {
-        $controller = $this->getController();
-
-        $fixed_costs = $controller->getFixedExpensesTotal();
-
-        $globalcogs = 1 - $controller->getCogs() / 100;
-
         $returned = [];
 
         foreach (range(0.1, 0.45, 0.01) as $marketing_cost) {
-            $revenue_needed = round($fixed_costs / ($globalcogs - $marketing_cost));
-            $derivative = $fixed_costs / pow(($globalcogs - $marketing_cost), 2);
+            $revenue_needed = round($this->fixed_costs / ($this->globalcogs - $marketing_cost));
+            $derivative = $this->fixed_costs / pow(($this->globalcogs - $marketing_cost), 2);
             $allowable_marketing_cost = $revenue_needed * $marketing_cost;
             $returned[] = compact('marketing_cost', 'revenue_needed', 'derivative', 'allowable_marketing_cost');
         }

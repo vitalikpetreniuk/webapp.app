@@ -18,10 +18,11 @@
             <div class="cat2">
                 <div class="modal__select select blue mb-15">
                     <input class="select__input" type="hidden" name="expensetype" value="1">
-                    <div class="select__head">Expenses type</div>
+{{--                    <div class="select__head">Expenses type</div>--}}
+                    <div class="select__head">Summ $ (USD)</div>
                     <ul class="select__list" style="display: none;">
                         <li class="select__item" data-prop="1">Summ $ (USD)</li>
-                        <li class="select__item" data-prop="2">% of Ad spend</li>
+{{--                        <li class="select__item" data-prop="2">% of Ad spend</li>--}}
 {{--                        <li class="select__item" data-prop="3">% of net revenue</li>--}}
                     </ul>
                 </div>
@@ -45,7 +46,8 @@
                     <div class="selection"></div>
                 </div>
                 <div class="form-group">
-                    <input class="input-field mt-15" type="text" placeholder="Tag" name="tag">
+                    <label for="tags" class="mt-15">Tags</label>
+                    <input id="tags" name="tags" class="input-field mt-15" type="text" placeholder="Tag">
                 </div>
                 <div class="form-group">
                     <textarea class="input-field textarea mt-15" name="comment" placeholder="Comment"></textarea>
@@ -120,7 +122,7 @@
                     <ul class="select__list" style="display: none;">
                         <li class="select__item" data-prop="1">Cost of good Sold</li>
                         <li class="select__item" data-prop="2">Affiliate comission</li>
-{{--                        <li class="select__item" data-prop="3">Ad spend commission</li>--}}
+                        <li class="select__item" data-prop="3">Ad spend commission</li>
                     </ul>
                 </div>
                 <p class="modal__text">
@@ -189,7 +191,7 @@
 
         <div class="type2">
             <div class="form-group">
-                <input class="input-field edited-amount" type="number" name="edited-amount">
+                <input step="0.01" class="input-field edited-amount" type="number" name="edited-amount">
             </div>
         </div>
 
@@ -246,8 +248,3 @@
 {{--    });--}}
 {{--</script>--}}
 {{--{!! $validator->selector('#expenseF') !!}--}}
-<script>
-    var expenseformvars = {
-        url: "{{ route('expenses.store') }}",
-    };
-</script>

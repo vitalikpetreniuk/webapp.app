@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use App\Models\Revenue;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,73 +15,125 @@ use App\Models\Source;
 
 class AnalyticsController extends Controller
 {
-    public function index()
+    public function __construct()
     {
         if (isset($_GET['from'])) {
-            $from = Carbon::createFromFormat('m.Y', $_GET['from']);
+            $this->from = Carbon::createFromFormat('m.Y', $_GET['from']);
         } else {
-            $from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
+            $this->from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
         }
 
         if (isset($_GET['to'])) {
-            $to = Carbon::createFromFormat('m.Y', $_GET['from']);
+            $this->to = Carbon::createFromFormat('m.Y', $_GET['from']);
         } else {
 //            $to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-            $to = Carbon::now()->format('Y-m-d');
+            $this->to = Carbon::now()->format('Y-m-d');
         }
-
-
-        return view('reportings/reportings', ['data' => $this->prepareAnalyticsData($from, $to)]);
     }
 
-    public function prepareAnalyticsData($from, $to)
+
+    /**
+     * Темплейт страницы аналитики
+     * @return Application|Factory|View
+     */
+    public function index()
     {
-        $expenses = ExpenseController::getAllExpenses($from, $to);
-        $revenues = RevenueController::getAllRevenues($from, $to);
+        return view('reportings/reportings', ['data' => $this->prepareAnalyticsData()]);
+    }
 
-        foreach ($expenses as &$item) {
-            $item->class = 'minus';
-            if (!isset($item->amount)) {
-                dd($item);
-            }
 
-            if (ExpenseController::isPercent($item)) {
-                $item->amount = number_format($item->amount, 2, '.', ',') . '%';
-            } else {
-                $item->amount = '-$' . number_format($item->amount, 2, '.', ',');
-            }
+    /**
+     * Генерация данных для страницы аналитики
+     * @return array - массив expenses и revenues
+     */
+    public function prepareAnalyticsData()
+    {
+        return [...$this->getAllExpenses(), ...$this->getAllRevenues()];
+    }
+
+    /**
+     * Получить массив expense которые введены вручную
+     * @return array - массив
+     */
+    public function getManualStatements()
+    {
+        return DB::select('SELECT * FROM expenses WHERE from_file = false AND date BETWEEN ? AND ?', [$this->from, $this->to]);
+    }
+
+    /**
+     * Подготовить expense для отображения
+     * @param $item - raw массив с б.д
+     * @return object - готовый expense
+     * @throws \Exception
+     */
+    public function beautifyExpense($item): object
+    {
+        if (isset($item->source_id) && !isset($item->source)) {
+            $item->source = Source::find((int)$item->source_id)->name;
         }
 
-        foreach ($revenues as &$item) {
-            $item->class = 'plus';
-            $item->amount = '+$' . number_format($item->amount, 2, '.', ',');
-            $item->source = 'From file';
-            $item->source_id = 1;
+        if (ExpenseController::isPercent($item)) {
+            $item->amount = number_format($item->amount, 2, '.', ',') . '%';
+        } else {
+            $item->amount = '-$' . number_format($item->amount, 2, '.', ',');
         }
 
-        $merged = array_merge($expenses, $revenues);
+        $item->type = '';
 
-        function cmp($a, $b)
-        {
-            return strcmp($a->date, $b->date);
+        $item->editable = true;
+
+        if ($item->type_of_sum === 1) {
+            $item->type = 'Fixed costs';
+        }else if ($item->type_variable === 1) {
+            $item->type = 'Cost of good sold';
+        }else if ($item->type_variable === 2) {
+            $item->type = 'Affiliate commission';
+        }else if ($item->type_variable === 3) {
+            $item->type = 'Ad spend commission';
         }
 
-        usort($merged, function ($a, $b) {
-            return strcmp($a->date, $b->date);
-        });
+        $item->class = 'minus';
 
-        foreach ($merged as &$item) {
-            $item->source = '';
+        $item->date = date_format(new \DateTime($item->date), 'd.m.Y');
 
-            if (isset($item->source_id) && !isset($item->source)) {
-                $item->source = Source::find((int)$item->source_id)->name;
-            }
+        return $item;
+    }
 
-            $item->date = date_format(new \DateTime($item->date), 'd.m.Y');
+    /**
+     * Подготовить revenue для отображения
+     * @param $item - raw revenue
+     * @return object - готовый revenue
+     */
+    public function beautifyRevenue($item): object
+    {
+        $item->type = 'Revenue';
+        $item->class = 'plus';
+        $item->editable = false;
+
+        return $item;
+    }
+
+    /**
+     * Получить все expenses
+     * @return array - массив всех expenses
+     * @throws \Exception
+     */
+    public function getAllExpenses() {
+        $manuals = $this->getManualStatements();
+
+        foreach ($manuals as &$item) {
+            $item = $this->beautifyExpense($item);
         }
 
-//        dd($merged);
+        return $manuals;
+    }
 
-        return $merged;
+    /**
+     * Получить все expenses
+     * @return array[]|false - массив или если нету то false
+     */
+    public function getAllRevenues() {
+        $revenues = DB::select("SELECT sum(amount) as amount FROM revenues WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
+        return isset($revenues[0]) ? [$this->beautifyRevenue($revenues[0])] : false;
     }
 }

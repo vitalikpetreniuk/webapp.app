@@ -7,7 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 class SourceController extends Controller
 {
-    public function listSources() {
+
+    /**
+     * Получение массива sources для api
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function list() {
         $user_id = Auth::id() ?? $_GET['user_id'] ?? 1;
         $select = DB::select("SELECT name, id FROM sources", );
         $data = [];

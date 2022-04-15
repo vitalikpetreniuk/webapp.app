@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExpenseCategoriesTable extends Migration
+class CreateTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateExpenseCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('expenses_categories', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class);
             $table->text('name')->unique();
-            $table->bigInteger('parent')->nullable()->default(0);
+            $table->foreignIdFor(\App\Models\User::class);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateExpenseCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expenses_categories');
+        Schema::dropIfExists('tags');
     }
 }

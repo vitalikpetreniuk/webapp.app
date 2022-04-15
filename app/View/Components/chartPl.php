@@ -16,42 +16,40 @@ class chartPl extends Component
      */
     public function __construct()
     {
-        //
+        $startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('M Y', $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
+        $endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('M Y', $_GET['endDate']) : Carbon::now()->subMonth()->lastOfMonth();
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+
+        $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
+        $this->fixed_costs = $controller->getFixedExpensesTotal();
+        $this->globalcogs = $controller->getCogs();
+        $this->net_revenue = (int)$controller->getNetRevenue();
+        $this->marketing_costs = $controller->getMarketingCosts();
     }
 
-    protected function getController()
+    public function chartData()
     {
-        return new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', '2022-01-01'), Carbon::createFromFormat('Y-m-d', '2022-31-03'));
-    }
-
-    public function chartData($controller)
-    {
-        $fixed_costs = $controller->getFixedExpensesTotal();
-        $globalcogs = $controller->getCogs() / 100;
-
         $returned = [];
 
         foreach (range(0.01, 0.42, 0.05) as $cogs) {
-            $y = $fixed_costs / ((1 - $globalcogs) - $cogs);
+            $y = $this->fixed_costs / ((1 - $this->globalcogs) - $cogs);
             $returned[] = array(
-                'x' => round($cogs, 2),
-                'y' => round($y, 2)
+                'x' => round($cogs, 2) ?: 1,
+                'y' => (round($y, 2) >= 0) ? round($y, 2) : 1
             );
         }
 
         return json_encode($returned);
     }
 
-    public function currentBullet($controller)
+    public function currentBullet()
     {
-        /* @var ExpenseCalculationsController $controller */
         $returned = [];
 
-        $revenue = $controller->getMonthNetRevenue();
-
         $returned[] = [
-            "x" => 1 - $controller->getCogs() / 100,
-            "y" => $revenue,
+            "x" => $this->marketing_costs / $this->net_revenue,
+            "y" => $this->net_revenue,
         ];
 
         return json_encode($returned);
@@ -59,11 +57,9 @@ class chartPl extends Component
 
     public function getData()
     {
-        $controller = $this->getController();
-
         return [
-            'current_bullet' => $this->currentBullet($controller),
-            'chart_data' => $this->chartData($controller),
+            'current_bullet' => $this->currentBullet(),
+            'chart_data' => $this->chartData(),
         ];
     }
 
