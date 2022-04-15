@@ -1,9 +1,7 @@
 // // Import vendor jQuery plugin example
 // import '~/app/libs/mmenu/dist/mmenu.js'
 
-import flatpickr from "flatpickr";
 import 'flot';
-import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index.js";
 import autoComplete from "@tarekraafat/autocomplete.js/dist/autoComplete.min.js";
 
 jQuery(function ($) {
@@ -18,7 +16,7 @@ jQuery(function ($) {
 	const $expensesFile = document.querySelector('#expensesFile')
 	const $expensesSelected = document.querySelector('#expensesForm .drag-drop__selected')
 	const $expensesTextLabel = document.querySelector('#expensesForm .drag-drop__selected .filename')
-	
+
 	if ($('.autoComplete').length) {
 		fetch(window.location.origin + '/api/sources').then(
 			async (source) => {
@@ -84,7 +82,7 @@ jQuery(function ($) {
 			}
 		)
 	}
-	
+
 	const months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.',]
 	let $listMonths = document.querySelectorAll('#listMonths li')
 	
@@ -166,25 +164,9 @@ jQuery(function ($) {
 		}
 	})
 	
-	flatpickr($('#datepicker, #datepicker-modal'), {
-		mode: "range",
-		minDate: "today",
-		dateFormat: "d.m.Y",
-		defaultDate: ["today", "today"],
-		showMonths: 3,
-	})
 	
-	flatpickr($('.monthpicker'), {
-		defaultDate: new Date(),
-		plugins: [
-			new monthSelectPlugin({
-				shorthand: true, //defaults to false
-				dateFormat: "m.y", //defaults to "F Y"
-				altFormat: "F Y", //defaults to "F Y"
-				theme: "dark", // defaults to "light"
-			})
-		]
-	})
+	
+	
 
 	// if (datepicker.value.length === 0) {
 	// 	$(`.datepicker .datepicker__icon`).css({
@@ -265,49 +247,10 @@ jQuery(function ($) {
 		})
 	})
 	
-	$('#formForExpenses').on('submit', function (e) {
+	$('form').on('submit', function (e) {
 		e.preventDefault()
 	})
 	
-	// if ($('#listMonths').length) {
-	//
-	// 	$('#listMonths li').on('click', function () {
-	//
-	// 		$(this).addClass('range-active')
-	//		
-	// 		if (!$('#listMonths li').hasClass('start')) {
-	// 			// $(this).addClass('start')
-	//
-	// 			$(this).on('click', function () {
-	// 				$(this).addClass('end')
-	// 			})
-	//			
-	// 		}
-	//		
-	//
-	//		
-	// 		if (!$(this).hasClass('range-active')) {
-	// 			$(this).addClass('range-active')
-	// 		} else {
-	// 			$(this).removeClass('range-active')
-	// 		}
-	//
-	// 		if (!$('#listMonths li').hasClass('start')) {
-	// 			$(this).addClass('start')
-	// 		}
-	//
-	// 	})
-	//
-	// 	$('#listMonths li').on('click', function () {
-	//
-	// 		if ($(this).hasClass('start')) {
-	//
-	// 		}
-	//
-	// 		$(this).addClass('range-active')
-	// 		$(this).addClass('start')
-	// 	})
-	//
-	// }
+	
 
 })

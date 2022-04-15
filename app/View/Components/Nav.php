@@ -39,7 +39,7 @@ class Nav extends Component
 
             $controller = new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', $item->date), Carbon::createFromFormat('Y-m-d', $item->date));
 
-            $item->total_marketing_costs = $controller->countMonthTotalMarketingCosts();
+            $item->total_marketing_costs = $controller->countTotalMarketingCosts();
             $item->net_profit = $controller->countMonthNetTotal($item->sum, $item->total_marketing_costs);
         }
 

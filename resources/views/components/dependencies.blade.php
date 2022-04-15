@@ -9,15 +9,13 @@
                 minLength: 1,
                 max: 15,
                 autocomplete: {
-                    values: data.data
+                    values: ['dollar', 'euro', 'some', 'tag']
                 },
                 errors: {
-                    empty:'Attention, vous ne pouvez pas ajouter un tag vide.',
-                    minLength:'Attention, votre tag doit avoir au minimum %s caractères.',
-                    maxLength:'Attention, votre tag ne doit pas dépasser %s caractères.',
-                    max:'Attention, le nombre de tags ne doit pas dépasser %s.',
-                    exists:'Attention, ce tag existe déjà !',
-                    autocomplete_only:'Attention, vous devez sélectionner une valeur dans la liste.',
+                    empty:'Please note that you cannot add an empty tag.',
+                    minLength:`Attention, your tag must have at least ${this.minLength} characters.`,
+                    max:`Attention, the number of tags must not exceed ${this.max}.`,
+                    exists:'Warning, this tag already exists!',
                     timeout: 8000
                 }
             });

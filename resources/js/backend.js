@@ -268,3 +268,11 @@ jQuery(function ($) {
         $(this).closest('tr').remove();
     });
 })
+
+window.onDatepickerPopoverClose = function (startDate, endDate) {
+    var url = new URL(window.location);
+    url.searchParams.set('startDate', $('.mrp-lowerMonth').text());
+    url.searchParams.set('endDate', $('.mrp-upperMonth').text());
+    window.history.pushState({}, '', url);
+    window.location.reload();
+}

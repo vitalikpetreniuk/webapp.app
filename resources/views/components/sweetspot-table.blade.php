@@ -1,8 +1,4 @@
-<form action="" method="get">
-    <input type="text" name="from">
-    <input type="text" name="to">
-    <input type="submit" value="Поиск">
-</form>
+<x-datepicker/>
 <table id="sweetpost" class="table mt-20">
     <thead>
     <tr>
