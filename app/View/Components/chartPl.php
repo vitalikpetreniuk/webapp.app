@@ -71,6 +71,6 @@ class chartPl extends Component
     public function render()
     {
         dd($this->getData());
-        return view('components.chart-pl', $this->getData());
+//        return view('components.chart-pl', $this->getData());
     }
 }
