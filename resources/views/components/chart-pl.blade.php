@@ -1,5 +1,5 @@
 <div id="chartdiv" class="mt-20"></div>
-<?php dd($current_bullet) ?>
+<?php dd($chart_data) ?>
 @if(isset($chart_data))
     <script>
         am5.ready(function () {
