@@ -2,7 +2,7 @@
 <table id="sweetpost" class="table mt-20">
     <thead>
     <tr>
-        <th>Marketing cost (as percentage of salea)</th>
+        <th>Marketing cost (as percentage of sales)</th>
         <th>Revenue needed</th>
         <th class="bold">3rd change in difference</th>
         <th>Allowable marrketing costs</th>

@@ -20,7 +20,7 @@
                     $type = $item->class == 'plus' ? 'revenue' : 'expense'
                 @endphp
                 <tr @if($item->editable) data-id="{{ $item->id }}" @endif data-type="{{ $type }}">
-                    <td>{{ $item->type }}</td>
+                    <td>{!! $item->type !!}</td>
                     <td class="{{ $item->class }}">
                         <span>{{ $item->amount }}</span>
                         @if($item->editable)

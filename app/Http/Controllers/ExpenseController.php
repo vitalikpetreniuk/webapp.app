@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ExpenseRevenueTrate;
 use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\Source;
@@ -16,6 +17,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ExpenseController extends Controller
 {
+    use ExpenseRevenueTrate;
+
+    protected $dateFormat = 'Y-m-d H:i:sO';
+
     public function val()
     {
         $validation = \Validator::make($this::validationRules());
@@ -104,41 +109,6 @@ class ExpenseController extends Controller
     public static function validationRules()
     {
         return [];
-    }
-
-    /**
-     * Технический метод чтобы проверить что все елементы массива пустые
-     * @param array $array массив для проверки
-     * @return bool результат проверки
-     */
-    private function containsOnlyNull(array $array): bool
-    {
-        foreach ($array as $value) {
-            if ($value !== null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Проверка на формат даты
-     * @param string $stringdate строка даты
-     * @return Carbon|false объект даты
-     */
-    private function parseUserFileInputDate($stringdate)
-    {
-        if (strpos($stringdate, '/') > 0) {
-            $sep = '/';
-        } elseif (strpos($stringdate, '-') > 0) {
-            $sep = '-';
-        } elseif (strpos($stringdate, '.') > 0) {
-            $sep = '.';
-        } else {
-            return false;
-        }
-
-        return Carbon::createFromFormat("n" . $sep . "j" . $sep . "Y", $stringdate);
     }
 
     /**

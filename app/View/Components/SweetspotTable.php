@@ -21,11 +21,18 @@ class SweetspotTable extends Component
         $this->endDate = $endDate;
 
         $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
-        $this->fixed_costs = $controller->getFixedExpensesTotal();
-        $this->globalcogs = 1 - $controller->getCogs();
+        $this->fixed_costs = $controller->getFixedExpensesTotal(); //уже среднее значение
+
+        $this->globalcogs = 1 - $controller->getCogs(); //уже среднее значение
+
+        if ($this->endDate->year - $this->startDate->year == 0) {
+            $this->duration = $this->endDate->month - $this->startDate->month + 1 ?: 1;
+        } else {
+            $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
+        }
     }
 
-    public function getData()
+    private function _getData()
     {
         $returned = [];
 
@@ -44,16 +51,17 @@ class SweetspotTable extends Component
             $old_revenue_needed = $prev['revenue_needed'];
             $current['derivative_rate_of_change'] = $derivative_rate_of_change = round(($derivative / $old_derivative - 1) * 100, 2);
             $current['rev_rate_of_change_needed'] = $rev_rate_of_change_needed = round(($revenue_needed / $old_revenue_needed - 1) * 100, 2);
+
             if (isset($prev['derivative_rate_of_change'])) {
                 $current['old_derivative_rate_of_change'] = $old_derivative_rate_of_change = $prev['derivative_rate_of_change'];
                 $current['difference_per_step'] = $difference_per_step = $derivative_rate_of_change - $old_derivative_rate_of_change;
             }
+
             if (isset($difference_per_step, $prev['difference_per_step'])) {
                 $old_difference_per_step = $prev['difference_per_step'];
                 $current['change_in_difference'] = $change_in_difference = round($difference_per_step - $old_difference_per_step, 2);
-//                var_dump($marketing_cost, $difference_per_step - $old_difference_per_step);
-//                echo '<hr>';
             }
+
             if (isset($prev['change_in_difference'])) {
                 $old_change_in_difference = $prev['change_in_difference'];
 //
@@ -66,6 +74,41 @@ class SweetspotTable extends Component
         }
 
         return $returned;
+    }
+
+    public function getData()
+    {
+        return $this->_getData();
+    }
+
+    /**
+     * Подсчёт среднего значения за период
+     * @param string $callback название метода
+     * @return float|int - результат
+     */
+    private function loopSumAverage($callback)
+    {
+        $value = [];
+        // делаем клоны чтобы не перезаписать дату в construct
+        $obj1 = clone $this->startDate;
+        $obj2 = clone $this->endDate;
+
+        foreach (range(1, $this->duration) as $i) {
+            if ($i == 1) {
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            } else {
+                $obj1->addMonths();
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            }
+
+            $value[] = call_user_func(array(__NAMESPACE__ . '\SweetspotTable', $callback), $startdate, $enddate);
+        }
+
+        dd($value);
     }
 
     /**
