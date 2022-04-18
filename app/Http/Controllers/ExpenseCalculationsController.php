@@ -18,7 +18,7 @@ class ExpenseCalculationsController extends ExpenseController
         $this->expenses_table = 'expenses';
         $this->revenues_table = 'revenues';
         if ($this->to->year - $this->from->year == 0) {
-            $this->duration = $this->to->month - $this->from->month ?: 1;
+            $this->duration = $this->to->month - $this->from->month + 1 ?: 1;
         } else {
             $this->duration = ($this->to->month - $this->from->month <= 1 ? $this->to->month - $this->from->month + 1 : 1) + ($this->to->year - $this->from->year) * 12;
         }
@@ -102,7 +102,6 @@ class ExpenseCalculationsController extends ExpenseController
         $from = $from ?: $this->fromstring;
         $to = $to ?: $this->tostring;
         $fixed_costs = DB::select("SELECT SUM(amount) as amount FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [1, $from, $to]);
-
         return $fixed_costs ? (int)$fixed_costs[0]->amount : 0;
     }
 
@@ -236,7 +235,7 @@ class ExpenseCalculationsController extends ExpenseController
                 $obj3 = clone $obj1;
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             } else {
-                $ob1 = $obj1->addMonths(1);
+                $obj1->addMonths(1);
                 $startdate = $obj1->format('Y-m-d');
                 $obj3 = clone $obj1;
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
@@ -244,11 +243,6 @@ class ExpenseCalculationsController extends ExpenseController
 
             $value[] = call_user_func(array(__NAMESPACE__ . '\ExpenseCalculationsController', $callback), $startdate, $enddate);
         }
-
-//        if ($callback == '_getNetRevenue') {
-//            dd($this->duration);
-//            dd(array_sum($value) / $this->duration);
-//        }
 
         return (array_sum($value) / $this->duration) ?: 1;
     }

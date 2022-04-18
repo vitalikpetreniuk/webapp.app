@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ExpenseRevenueTrate;
 use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\User;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 
 class RevenueController extends Controller
 {
+    use ExpenseRevenueTrate;
 
     public function val(Request $request)
     {
@@ -49,42 +51,6 @@ class RevenueController extends Controller
         return [
             'files' => 'required|mimes:xls,xlsx',
         ];
-    }
-
-    /**
-     * Если форма expense отправлена с 1 категорией (с файлом для импортирования)
-     * @param string $path путь к файлу
-     * @return bool
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
-     */
-    private function containsOnlyNull(array $array): bool
-    {
-        foreach ($array as $value) {
-            if ($value !== null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Проверка на формат даты
-     * @param string $stringdate строка даты
-     * @return Carbon|false объект даты
-     */
-    private function parseUserFileInputDate($stringdate)
-    {
-        if (strpos($stringdate, '/') > 0 ) {
-            $sep = '/';
-        }elseif (strpos($stringdate, '-') > 0) {
-            $sep = '-';
-        }elseif (strpos($stringdate, '.') > 0) {
-            $sep = '.';
-        }else {
-            return false;
-        }
-
-        return Carbon::createFromFormat("n".$sep."j".$sep."Y", $stringdate);
     }
 
     /**

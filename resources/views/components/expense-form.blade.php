@@ -142,7 +142,7 @@
                 </div>
                 <div class="cat3_2">
                     <div class="form-group">
-                        <input class="input-field" type="number" min="1" max="100" name="affiliate-commission">
+                        <input class="input-field" type="number" min="0.001" max="100" name="affiliate-commission">
                     </div>
                 </div>
                 <div class="cat3_3">

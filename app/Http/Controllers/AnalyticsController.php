@@ -17,18 +17,10 @@ class AnalyticsController extends Controller
 {
     public function __construct()
     {
-        if (isset($_GET['from'])) {
-            $this->from = Carbon::createFromFormat('m.Y', $_GET['from']);
-        } else {
-            $this->from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
-        }
-
-        if (isset($_GET['to'])) {
-            $this->to = Carbon::createFromFormat('m.Y', $_GET['from']);
-        } else {
-//            $to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-            $this->to = Carbon::now()->format('Y-m-d');
-        }
+        $startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('M Y', $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
+        $endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('M Y', $_GET['endDate']) : Carbon::now()->subMonth()->lastOfMonth();
+        $this->from = $startDate;
+        $this->to = $endDate;
     }
 
 
@@ -44,20 +36,20 @@ class AnalyticsController extends Controller
 
     /**
      * Генерация данных для страницы аналитики
-     * @return array - массив expenses и revenues
+     * @return array массив expenses и revenues
      */
     public function prepareAnalyticsData()
     {
-        return [...$this->getAllExpenses(), ...$this->getAllRevenues()];
+        return [...$this->getAllExpenses(), ...$this->getRevenues()];
     }
 
     /**
      * Получить массив expense которые введены вручную
-     * @return array - массив
+     * @return array массив данных
      */
     public function getManualStatements()
     {
-        return DB::select('SELECT * FROM expenses WHERE from_file = false AND date BETWEEN ? AND ?', [$this->from, $this->to]);
+        return DB::select("SELECT expenses.*, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM expenses WHERE from_file = false AND date BETWEEN ? AND ?", [$this->from, $this->to]);
     }
 
     /**
@@ -80,17 +72,23 @@ class AnalyticsController extends Controller
 
         $item->type = '';
 
+//        if(!isset($_GET['startDate'], $_GET['endDate']) || $_GET['startDate'] === $_GET['endDate']) {
         $item->editable = true;
+//        }else {
+//            $item->editable = false;
+//        }
 
         if ($item->type_of_sum === 1) {
             $item->type = 'Fixed costs';
-        }else if ($item->type_variable === 1) {
+        } else if ($item->type_variable === 1) {
             $item->type = 'Cost of good sold';
-        }else if ($item->type_variable === 2) {
+        } else if ($item->type_variable === 2) {
             $item->type = 'Affiliate commission';
-        }else if ($item->type_variable === 3) {
+        } else if ($item->type_variable === 3) {
             $item->type = 'Ad spend commission';
         }
+
+        $item->type .= '<br> ('.trim($item->month).')';
 
         $item->class = 'minus';
 
@@ -118,7 +116,8 @@ class AnalyticsController extends Controller
      * @return array - массив всех expenses
      * @throws \Exception
      */
-    public function getAllExpenses() {
+    public function getAllExpenses()
+    {
         $manuals = $this->getManualStatements();
 
         foreach ($manuals as &$item) {
@@ -128,12 +127,18 @@ class AnalyticsController extends Controller
         return $manuals;
     }
 
+    private function _getRevenues() {
+        $revenues = DB::select("SELECT sum(amount) as amount, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM revenues WHERE date BETWEEN ? AND ? GROUP BY date", [$this->from, $this->to]);
+        return isset($revenues[0]) ? [$this->beautifyRevenue($revenues[0])] : false;
+    }
+
     /**
      * Получить все expenses
      * @return array[]|false - массив или если нету то false
      */
-    public function getAllRevenues() {
-        $revenues = DB::select("SELECT sum(amount) as amount FROM revenues WHERE date BETWEEN ? AND ?", [$this->from, $this->to]);
+    public function getRevenues()
+    {
+        $revenues = DB::select("SELECT sum(amount) as amount, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM revenues WHERE date BETWEEN ? AND ? GROUP BY date", [$this->from, $this->to]);
         return isset($revenues[0]) ? [$this->beautifyRevenue($revenues[0])] : false;
     }
 }
