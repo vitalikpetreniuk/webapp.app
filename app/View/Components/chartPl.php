@@ -32,13 +32,16 @@ class chartPl extends Component
     {
         $returned = [];
 
-        foreach (range(0.01, 0.42, 0.05) as $cogs) {
-            $y = $this->fixed_costs / ((1 - $this->globalcogs) - $cogs);
+        foreach (range(0.01, 0.42, 0.05) as $marketing_costs) {
+            $y = $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
+            var_dump($marketing_costs, $y);
             $returned[] = array(
-                'x' => round($cogs, 2) ?: 1,
+                'x' => round($marketing_costs, 2) ?: 1,
                 'y' => (round($y, 2) >= 0) ? round($y, 2) : 1
             );
         }
+
+        var_dump($returned);
 
         return json_encode($returned);
     }
