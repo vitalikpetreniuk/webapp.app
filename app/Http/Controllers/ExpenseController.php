@@ -283,6 +283,7 @@ class ExpenseController extends Controller
     public function userUnderstandableError($exception, $isfileimport = false): array
     {
         $send = [];
+        $message = '';
         switch ($exception->getCode()) {
             case 23505 :
                 $message = 'This date has already been imported';

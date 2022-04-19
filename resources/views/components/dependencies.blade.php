@@ -9,7 +9,7 @@
                 minLength: 1,
                 max: 15,
                 autocomplete: {
-                    values: ['dollar', 'euro', 'some', 'tag']
+                    values: data.data || []
                 },
                 errors: {
                     empty:'Please note that you cannot add an empty tag.',
