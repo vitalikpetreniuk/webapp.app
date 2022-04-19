@@ -61,6 +61,10 @@ class chartPl extends Component
         return [
             'current_bullet' => $this->currentBullet(),
             'chart_data' => $this->chartData(),
+            'marketing_costs' => $this->marketing_costs,
+            'fixed_costs' => $this->fixed_costs,
+            'globalcogs' => $this->globalcogs,
+            'net_revenue' => $this->net_revenue,
         ];
     }
 

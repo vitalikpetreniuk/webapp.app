@@ -57,7 +57,7 @@ class ExpenseCalculationsController extends ExpenseController
     public function countMonthNetTotal($net_revenue, $marketing_costs)
     {
         if (!$marketing_costs) return 0;
-        if ($this->getFixedExpensesTotal() == 1 || $this->getFixedExpensesTotal() ==1 || $this->getCogs() == 1 || $marketing_costs == 1) return 0;
+        if (in_array(1, [$this->getFixedExpensesTotal(), $this->getFixedExpensesTotal(), $this->getCogs(), $marketing_costs], true)) return 0;
         return $net_revenue * (1 - $this->getMonthAffiliateCost()) - $this->getFixedExpensesTotal() - ($this->getCogs() * $net_revenue) - $marketing_costs * 1.05;
     }
 
