@@ -56,18 +56,6 @@ class chartPl extends Component
         return json_encode($returned);
     }
 
-    public function getData()
-    {
-        return [
-            'current_bullet' => $this->currentBullet(),
-            'chart_data' => $this->chartData(),
-            'marketing_costs' => $this->marketing_costs,
-            'fixed_costs' => $this->fixed_costs,
-            'globalcogs' => $this->globalcogs,
-            'net_revenue' => $this->net_revenue,
-        ];
-    }
-
     /**
      * Get the view / contents that represent the component.
      *
@@ -75,6 +63,6 @@ class chartPl extends Component
      */
     public function render()
     {
-        return view('components.chart-pl', $this->getData());
+        return view('components.chart-pl', ['current_bullet' => $this->currentBullet(), 'chart_data'=>$this->chartData()]);
     }
 }
