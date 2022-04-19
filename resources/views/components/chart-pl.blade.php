@@ -1,4 +1,5 @@
 <div id="chartdiv" class="mt-20"></div>
+chartdiv
 @if(isset($chart_data))
     <script>
         am5.ready(function () {
