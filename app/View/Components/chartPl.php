@@ -71,8 +71,8 @@ class chartPl extends Component
      *
      * @return \Illuminate\Contracts\View\View|\Closure|string
      */
-    public function render()
-    {
-        return view('components.chart-pl', $this->getData());
-    }
+//    public function render()
+//    {
+//        return view('components.chart-pl', $this->getData());
+//    }
 }
