@@ -1,9 +1,4 @@
 <div id="chartdiv" class="mt-20"></div>
-chartdiv
-<?php var_dump($fixed_costs); ?>
-<?php var_dump($globalcogs); ?>
-<?php var_dump($net_revenue); ?>
-<?php var_dump($marketing_costs); ?>
 @if(isset($chart_data))
     <script>
         am5.ready(function () {
