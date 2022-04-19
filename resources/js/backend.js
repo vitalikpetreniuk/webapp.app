@@ -185,7 +185,6 @@ jQuery(function ($) {
     window.formSubmit = async function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
-        console.log('expenseFormSubmit', e.target)
         let form = $(e.target);
         let formdata = new FormData(e.target);
         let id = form.attr('data-id');
