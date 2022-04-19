@@ -29,10 +29,10 @@
                 <p class="modal__text">
                     select the date range for which you want to try on data
                 </p>
-                <div class="datepicker d-flex mb-20 form-group">
-                    <input class="monthpicker" name="monthpicker2"/>
-                    <div class="datepicker__icon d-flex align-items-center justify-content-center">
-                        <img src="{{ asset('frontend/images/dist/icons/calendar.svg') }}" alt="">
+                <div class="datepicker d-flex mb-20">
+                    <div class="d-flex align-items-center">
+                        <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i class="fa fa-calendar"></i></span>
+                        <input class="monthpicker" name="monthpicker2" placeholder="Choose a date" />
                     </div>
                 </div>
 
@@ -128,26 +128,27 @@
                 <p class="modal__text">
                     select the date range for which you want to try on data
                 </p>
-                <div class="datepicker d-flex mb-20 form-group">
-                    <input class="monthpicker" name="monthpicker3"/>
-                    <div class="datepicker__icon d-flex align-items-center justify-content-center">
-                        <img src="{{ asset('frontend/images/dist/icons/calendar.svg') }}" alt="">
+                <div class="datepicker d-flex mb-20">
+                    <div class="d-flex align-items-center">
+                        <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i class="fa fa-calendar"></i></span>
+                        <input class="monthpicker" name="monthpicker3" placeholder="Choose a date" />
                     </div>
                 </div>
 
                 <div class="cat3_1 default-shown">
                     <div class="form-group">
-                        <input class="input-field" type="number" min="1" max="100" name="cost-of-good-sold">
+                        <input class="input-field" type="number" min="1" step="0.01" max="100" name="cost-of-good-sold">
                     </div>
                 </div>
                 <div class="cat3_2">
                     <div class="form-group">
-                        <input class="input-field" type="number" min="0.001" max="100" name="affiliate-commission">
+                        <input class="input-field" type="number" min="0.01"
+                               step="0.01" max="100" name="affiliate-commission">
                     </div>
                 </div>
                 <div class="cat3_3">
                     <div class="form-group">
-                        <input class="input-field" type="number" min="1" max="100" name="ad-spend-commission">
+                        <input class="input-field" type="number" min="1"  max="100" name="ad-spend-commission">
                     </div>
                 </div>
 
