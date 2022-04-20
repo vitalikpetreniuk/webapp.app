@@ -8,7 +8,7 @@
     <section class="section d-flex flex-column">
         <x-top-tabs/>
         <x-datepicker/>
-        <x-chart-pl/>
+        <x-plchart/>
     </section>
 
     </div>
