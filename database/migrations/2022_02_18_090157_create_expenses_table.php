@@ -16,7 +16,6 @@ class CreateExpensesTable extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class);
-            $table->foreignIdFor(\App\Models\ExpenseCategory::class)->nullable();
             $table->foreignIdFor(\App\Models\Source::class)->nullable();
             $table->decimal('amount')->default(0.00);
             $table->text('comment')->nullable();

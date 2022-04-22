@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\CogsTrait;
 use App\Http\Traits\ExpenseRevenueTrate;
 use App\Models\Expense;
 use App\Models\Revenue;

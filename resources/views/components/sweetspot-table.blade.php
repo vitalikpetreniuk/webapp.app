@@ -13,7 +13,7 @@
         <tr>
             <td>{{ $item['marketing_cost'] }}</td>
             <td>${{ number_format($item['revenue_needed'], 0, '.', ',') }}</td>
-            <td class="bold">@if(isset($item['optimal_coefficient'])){{$item['optimal_coefficient']}}%@endif</td>
+            <td class="bold">@if(isset($item['optimal_coefficient'])){{ number_format($item['optimal_coefficient'], 2) }}%@endif</td>
             <td>${{ number_format($item['allowable_marketing_cost'], 0, '.', ',') }}</td>
         </tr>
     @endforeach

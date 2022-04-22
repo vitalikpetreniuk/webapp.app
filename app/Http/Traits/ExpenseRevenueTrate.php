@@ -2,6 +2,7 @@
 namespace App\Http\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 trait ExpenseRevenueTrate {
     /**

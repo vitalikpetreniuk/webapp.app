@@ -21,6 +21,12 @@ class AnalyticsController extends Controller
         $endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('M Y', $_GET['endDate']) : Carbon::now()->subMonth()->lastOfMonth();
         $this->from = $startDate;
         $this->to = $endDate;
+
+        if ($endDate->year - $startDate->year == 0) {
+            $this->duration = $endDate->month - $startDate->month + 1 ?: 1;
+        } else {
+            $this->duration = ($endDate->month - $startDate->month <= 1 ? $endDate->month - $startDate->month + 1 : 1) + ($endDate->year - $startDate->year) * 12;
+        }
     }
 
 
@@ -88,23 +94,34 @@ class AnalyticsController extends Controller
             $item->type = 'Ad spend commission';
         }
 
-        $item->type .= '<br> ('.trim($item->month).')';
+        $item->type .= '<br> (' . trim($item->month) . ')';
 
         $item->class = 'minus';
+
+        $tags = $this->getExpenseTag($item->id);
+        if ($tags) {
+            $item->tags = implode(', ', $tags->toArray());
+        }
 
         $item->date = date_format(new \DateTime($item->date), 'd.m.Y');
 
         return $item;
     }
 
+    public function getExpenseTag($expense_id)
+    {
+        $tags = DB::select('SELECT DISTINCT tags.name FROM tags_expenses INNER JOIN tags ON tags_expenses.tag_id = tags.id WHERE tags_expenses.expense_id = ?', [$expense_id]);
+        return isset($tags[0]) ? collect($tags)->pluck('name') : false;
+    }
+
     /**
      * Подготовить revenue для отображения
      * @param $item - raw revenue
-     * @return object - готовый revenue
+     * @return object|false - готовый revenue
      */
-    public function beautifyRevenue($item): object
+    public function beautifyRevenue($item, $month): object
     {
-        $item->type = 'Revenue';
+        $item->type = "Revenue ($month)";
         $item->class = 'plus';
         $item->editable = false;
 
@@ -113,7 +130,7 @@ class AnalyticsController extends Controller
 
     /**
      * Получить все expenses
-     * @return array - массив всех expenses
+     * @return array массив всех expenses
      * @throws \Exception
      */
     public function getAllExpenses()
@@ -127,9 +144,35 @@ class AnalyticsController extends Controller
         return $manuals;
     }
 
-    private function _getRevenues() {
-        $revenues = DB::select("SELECT sum(amount) as amount, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM revenues WHERE date BETWEEN ? AND ? GROUP BY date", [$this->from, $this->to]);
-        return isset($revenues[0]) ? [$this->beautifyRevenue($revenues[0])] : false;
+    /**
+     * Получить все revenues
+     * @return array[] массив revenues
+     */
+    private function _getRevenues()
+    {
+        $value = [];
+        // делаем клоны чтобы не перезаписать дату в construct
+        $obj1 = clone $this->from;
+        $obj2 = clone $this->to;
+        foreach (range(1, $this->duration) as $i) {
+            if ($i == 1) {
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            } else {
+                $obj1->addMonths(1);
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            }
+
+            $revenues = DB::select("SELECT sum(amount) as amount FROM revenues WHERE date BETWEEN ? AND ?", [$startdate, $enddate]);
+            if ((isset($revenues[0]->amount))) {
+                $value[] = $this->beautifyRevenue($revenues[0], $obj1->format('F'));
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -138,7 +181,6 @@ class AnalyticsController extends Controller
      */
     public function getRevenues()
     {
-        $revenues = DB::select("SELECT sum(amount) as amount, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM revenues WHERE date BETWEEN ? AND ? GROUP BY date", [$this->from, $this->to]);
-        return isset($revenues[0]) ? [$this->beautifyRevenue($revenues[0])] : false;
+        return $this->_getRevenues();
     }
 }

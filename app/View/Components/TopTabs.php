@@ -18,6 +18,10 @@ class TopTabs extends Component
         //
     }
 
+    /**
+     * Генерация массива табов на странице
+     * @return array[] массив названия и ссылки табов
+     */
     public function tabsData()
     {
        $name = Route::currentRouteName();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\CogsTrait;
 use App\Http\Traits\ExpenseRevenueTrate;
 use App\Models\Expense;
 use App\Models\Revenue;
@@ -18,7 +19,6 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class ExpenseController extends Controller
 {
     use ExpenseRevenueTrate;
-
     protected $dateFormat = 'Y-m-d H:i:sO';
 
     public function val()
@@ -134,7 +134,7 @@ class ExpenseController extends Controller
                         'date' => $date,
                         'user_id' => Auth::id(),
                         'amount' => $row[6],
-                        'expense_category_id' => 1,
+                        'type_of_sum' => 2,
                         'from_file' => true
                     ]
                 );

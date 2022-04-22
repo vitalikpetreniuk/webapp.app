@@ -17,6 +17,10 @@ class ReportingAnalyticsTabs extends Component
         //
     }
 
+    /**
+     * Генерация массива табов на странице
+     * @return array[] массив названия и ссылки табов
+     */
     public function tabsData()
     {
         $name = Route::currentRouteName();
@@ -24,7 +28,7 @@ class ReportingAnalyticsTabs extends Component
         $tabs = [
             'Reporting' => [
                 'url' => route('home'),
-                'active' => $name == 'home' ?: false,
+                'active' => in_array($name, ['home', 'sweetspot', 'special']) ?: false,
             ],
             'Analytics' => [
                 'url' => route('analytics'),

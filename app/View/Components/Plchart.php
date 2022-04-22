@@ -27,9 +27,15 @@ class Plchart extends Component
         $this->marketing_costs = $controller->getMarketingCosts();
     }
 
+    /**
+     * Точки графика
+     * @return false|string json точек графика
+     */
     public function chartData()
     {
         $returned = [];
+
+        if (!isset($this->globalcogs) || $this->fixed_costs == 1) return false;
 
         foreach (range(0.01, 0.42, 0.05) as $marketing_costs) {
             $y = $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
@@ -43,6 +49,10 @@ class Plchart extends Component
         return json_encode($returned);
     }
 
+    /**
+     * Положение точки на графике
+     * @return false|string json точки на графике
+     */
     public function currentBullet()
     {
         $returned = [];

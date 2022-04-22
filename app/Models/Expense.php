@@ -12,5 +12,5 @@ class Expense extends Model
 
     protected $table = 'expenses';
 
-    protected $fillable = ['date', 'user_id', 'amount', 'expense_category_id', 'source_id', 'comment', 'type_of_sum', 'type_variable', 'from_file'];
+    protected $fillable = ['date', 'user_id', 'amount', 'source_id', 'comment', 'type_of_sum', 'type_variable', 'from_file'];
 }
