@@ -29,7 +29,6 @@ class AnalyticsController extends Controller
         }
     }
 
-
     /**
      * Темплейт страницы аналитики
      * @return Application|Factory|View
@@ -39,14 +38,13 @@ class AnalyticsController extends Controller
         return view('reportings/reportings', ['data' => $this->prepareAnalyticsData()]);
     }
 
-
     /**
      * Генерация данных для страницы аналитики
      * @return array массив expenses и revenues
      */
     public function prepareAnalyticsData()
     {
-        return [...$this->getAllExpenses(), ...$this->getRevenues()];
+        return [...$this->getAllExpenses(), ...$this->getAllRevenues()];
     }
 
     /**
@@ -55,7 +53,23 @@ class AnalyticsController extends Controller
      */
     public function getManualStatements()
     {
-        return DB::select("SELECT expenses.*, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM expenses WHERE from_file = false AND date BETWEEN ? AND ?", [$this->from, $this->to]);
+        $manuals = DB::select("SELECT expenses.*, TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\" FROM expenses WHERE from_file = false AND date BETWEEN ? AND ?", [$this->from, $this->to]);
+        foreach ($manuals as &$item) {
+            $item = $this->beautifyExpense($item);
+        }
+
+        return $manuals;
+    }
+
+    /**
+     * Получить название тегов
+     * @param int $expense_id id expense, теги которого получаем
+     * @return array массив названий тегов
+     */
+    public function getExpenseTag($expense_id)
+    {
+        $tags = DB::select('SELECT DISTINCT tags.name FROM tags_expenses INNER JOIN tags ON tags_expenses.tag_id = tags.id WHERE tags_expenses.expense_id = ?', [$expense_id]);
+        return isset($tags[0]) ? collect($tags)->pluck('name')->toArray() : false;
     }
 
     /**
@@ -100,7 +114,7 @@ class AnalyticsController extends Controller
 
         $tags = $this->getExpenseTag($item->id);
         if ($tags) {
-            $item->tags = implode(', ', $tags->toArray());
+            $item->tags = implode(', ', $tags);
         }
 
         $item->date = date_format(new \DateTime($item->date), 'd.m.Y');
@@ -108,10 +122,20 @@ class AnalyticsController extends Controller
         return $item;
     }
 
-    public function getExpenseTag($expense_id)
+    /**
+     * Подготовить expense для отображения
+     * @param $item - raw массив с б.д
+     * @return object - готовый expense
+     * @throws \Exception
+     */
+    public function beautifyImportedExpense($item, $month): object
     {
-        $tags = DB::select('SELECT DISTINCT tags.name FROM tags_expenses INNER JOIN tags ON tags_expenses.tag_id = tags.id WHERE tags_expenses.expense_id = ?', [$expense_id]);
-        return isset($tags[0]) ? collect($tags)->pluck('name') : false;
+        $item->type = "Expense ($month)";
+        $item->class = 'minus';
+        $item->editable = false;
+        $item->source = 'Imported';
+
+        return $item;
     }
 
     /**
@@ -119,11 +143,12 @@ class AnalyticsController extends Controller
      * @param $item - raw revenue
      * @return object|false - готовый revenue
      */
-    public function beautifyRevenue($item, $month): object
+    public function beautifyImportedRevenue($item, $month): object
     {
         $item->type = "Revenue ($month)";
         $item->class = 'plus';
         $item->editable = false;
+        $item->source = 'Imported';
 
         return $item;
     }
@@ -135,20 +160,24 @@ class AnalyticsController extends Controller
      */
     public function getAllExpenses()
     {
-        $manuals = $this->getManualStatements();
-
-        foreach ($manuals as &$item) {
-            $item = $this->beautifyExpense($item);
-        }
-
-        return $manuals;
+        return [...$this->getManualStatements(), ...$this->getImportedExpenses()];
     }
 
     /**
-     * Получить все revenues
-     * @return array[] массив revenues
+     * Получить все expenses
+     * @return array массив всех expenses
+     * @throws \Exception
      */
-    private function _getRevenues()
+    public function getAllRevenues()
+    {
+       return $this->getImportedRevenues();
+    }
+
+    /**
+     * Получить все expenses
+     * @return array[]|false - массив или если нету то false
+     */
+    public function getImportedRevenues()
     {
         $value = [];
         // делаем клоны чтобы не перезаписать дату в construct
@@ -168,7 +197,7 @@ class AnalyticsController extends Controller
 
             $revenues = DB::select("SELECT sum(amount) as amount FROM revenues WHERE date BETWEEN ? AND ?", [$startdate, $enddate]);
             if ((isset($revenues[0]->amount))) {
-                $value[] = $this->beautifyRevenue($revenues[0], $obj1->format('F'));
+                $value[] = $this->beautifyImportedRevenue($revenues[0], $obj1->format('F'));
             }
         }
 
@@ -176,11 +205,33 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * Получить все expenses
-     * @return array[]|false - массив или если нету то false
+     * Получить импортированые через файл expenses
+     * @return array массив expenses
+     * @throws \Exception
      */
-    public function getRevenues()
-    {
-        return $this->_getRevenues();
+    public function getImportedExpenses() {
+        $value = [];
+        // делаем клоны чтобы не перезаписать дату в construct
+        $obj1 = clone $this->from;
+        $obj2 = clone $this->to;
+        foreach (range(1, $this->duration) as $i) {
+            if ($i == 1) {
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            } else {
+                $obj1->addMonths(1);
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            }
+
+            $revenues = DB::select("SELECT sum(amount) as amount FROM expenses WHERE date BETWEEN ? AND ?", [$startdate, $enddate]);
+            if ((isset($revenues[0]->amount))) {
+                $value[] = $this->beautifyImportedExpense($revenues[0], $obj1->format('F'));
+            }
+        }
+
+        return $value;
     }
 }

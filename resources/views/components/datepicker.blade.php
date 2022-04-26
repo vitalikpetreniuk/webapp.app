@@ -14,15 +14,17 @@
     // monthpicker
     var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    const currentDate = new Date()
+    const currentDate = new Date();
+    let monthAgo = new Date();
+    monthAgo.setMonth(monthAgo.getMonth() - 1);
 
     let url = new URL(window.location.href);
-    if(url.searchParams.get("startDate")) {
+    if (url.searchParams.get("startDate")) {
         $('.mrp-lowerMonth').text(url.searchParams.get("startDate"))
         $('.mrp-upperMonth').text(url.searchParams.get("endDate"))
-    }else {
-        $('.mrp-lowerMonth').text(`${currentDate.toLocaleString('eng', {month: 'short'})} ${currentDate.getFullYear()}`)
-        $('.mrp-upperMonth').text(`${currentDate.toLocaleString('eng', {month: 'short'})} ${currentDate.getFullYear()}`)
+    } else {
+        $('.mrp-lowerMonth').text(`${monthAgo.toLocaleString('eng', {month: 'short'})} ${monthAgo.getFullYear()}`)
+        $('.mrp-upperMonth').text(`${monthAgo.toLocaleString('eng', {month: 'short'})} ${monthAgo.getFullYear()}`)
     }
 
     let startMonth,
@@ -41,14 +43,14 @@
         cDate
 
     $(function () {
-        if(url.searchParams.get("startDate")) {
+        if (url.searchParams.get("startDate")) {
             startMonth = MONTHS.indexOf(url.searchParams.get("startDate").slice(0, 3));
-            if(startMonth == 0) startMonth = 1;
+            if (startMonth == 0) startMonth = 1;
             startYear = Number(url.searchParams.get("startDate").slice(4, 8));
             endMonth = MONTHS.indexOf(url.searchParams.get("endDate").slice(0, 3)) + 1;
-            if(endMonth == 0) endMonth = 1;
+            if (endMonth == 0) endMonth = 1;
             endYear = Number(url.searchParams.get("endDate").slice(4, 8));
-        }else {
+        } else {
             startMonth = currentDate.getMonth();
             startYear = currentDate.getFullYear();
             endMonth = currentDate.getMonth();
