@@ -169,7 +169,7 @@ class ExpenseCalculationsController extends ExpenseController
      */
     public function getMonthPercentOfAdSpend()
     {
-        return $this->loopSumAverage('_getMonthPercentOfAdSpend');
+        return $this->_getMonthPercentOfAdSpend();
     }
 
     /**
@@ -196,7 +196,7 @@ class ExpenseCalculationsController extends ExpenseController
      */
     public function getMonthPercentOfRevenue()
     {
-        return $this->loopSumAverage('_getMonthPercentOfRevenue');
+        return $this->_getMonthPercentOfRevenue();
     }
 
     /**

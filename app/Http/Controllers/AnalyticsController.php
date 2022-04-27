@@ -84,12 +84,6 @@ class AnalyticsController extends Controller
             $item->source = Source::find((int)$item->source_id)->name;
         }
 
-        if (ExpenseController::isPercent($item)) {
-            $item->amount = number_format($item->amount, 2, '.', ',') . '%';
-        } else {
-            $item->amount = '-$' . number_format($item->amount, 2, '.', ',');
-        }
-
         $item->type = '';
 
 //        if(!isset($_GET['startDate'], $_GET['endDate']) || $_GET['startDate'] === $_GET['endDate']) {
@@ -119,6 +113,8 @@ class AnalyticsController extends Controller
 
         $item->date = date_format(new \DateTime($item->date), 'd.m.Y');
 
+        $item = $this->sumPrepare($item);
+
         return $item;
     }
 
@@ -128,12 +124,14 @@ class AnalyticsController extends Controller
      * @return object - готовый expense
      * @throws \Exception
      */
-    public function beautifyImportedExpense($item, $month): object
+    public function beautifyImportedExpense($item, $obj1): object
     {
-        $item->type = "Expense ($month)";
+        $item->type = "Expense (".$obj1->format('F').")";
         $item->class = 'minus';
         $item->editable = false;
         $item->source = 'Imported';
+        $item = $this->sumPrepare($item);
+        $item->from_file = $obj1->format('m.Y');
 
         return $item;
     }
@@ -143,13 +141,14 @@ class AnalyticsController extends Controller
      * @param $item - raw revenue
      * @return object|false - готовый revenue
      */
-    public function beautifyImportedRevenue($item, $month): object
+    public function beautifyImportedRevenue($item, $obj1): object
     {
-        $item->type = "Revenue ($month)";
+        $item->type = "Revenue (".$obj1->format('F').")";
         $item->class = 'plus';
         $item->editable = false;
         $item->source = 'Imported';
-
+        $item = $this->sumPrepare($item);
+        $item->from_file = $obj1->format('m.Y');
         return $item;
     }
 
@@ -170,7 +169,7 @@ class AnalyticsController extends Controller
      */
     public function getAllRevenues()
     {
-       return $this->getImportedRevenues();
+        return $this->getImportedRevenues();
     }
 
     /**
@@ -197,7 +196,7 @@ class AnalyticsController extends Controller
 
             $revenues = DB::select("SELECT sum(amount) as amount FROM revenues WHERE date BETWEEN ? AND ?", [$startdate, $enddate]);
             if ((isset($revenues[0]->amount))) {
-                $value[] = $this->beautifyImportedRevenue($revenues[0], $obj1->format('F'));
+                $value[] = $this->beautifyImportedRevenue($revenues[0], $obj1);
             }
         }
 
@@ -209,7 +208,8 @@ class AnalyticsController extends Controller
      * @return array массив expenses
      * @throws \Exception
      */
-    public function getImportedExpenses() {
+    public function getImportedExpenses()
+    {
         $value = [];
         // делаем клоны чтобы не перезаписать дату в construct
         $obj1 = clone $this->from;
@@ -228,10 +228,21 @@ class AnalyticsController extends Controller
 
             $revenues = DB::select("SELECT sum(amount) as amount FROM expenses WHERE date BETWEEN ? AND ?", [$startdate, $enddate]);
             if ((isset($revenues[0]->amount))) {
-                $value[] = $this->beautifyImportedExpense($revenues[0], $obj1->format('F'));
+                $value[] = $this->beautifyImportedExpense($revenues[0], $obj1);
             }
         }
 
         return $value;
+    }
+
+    private function sumPrepare($item)
+    {
+        if (ExpenseController::isPercent($item)) {
+            $item->amount = number_format($item->amount, 2, '.', ',') . '%';
+        } else {
+            $item->amount = '-$' . number_format($item->amount, 2, '.', ',');
+        }
+
+        return $item;
     }
 }

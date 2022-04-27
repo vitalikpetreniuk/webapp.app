@@ -103,17 +103,25 @@ const updateRevenue = async (ID, data) => {
     }
 }
 
-const deleteRevenue = async (ID) => {
+const deleteRevenue = async (ID, date = false) => {
     try {
-        const resp = await instance.delete(`/revenue/${ID}`)
+        if (ID) {
+            await instance.delete(`/revenue/${ID}`)
+        } else {
+            await instance.delete(`/revenue/${date}`)
+        }
     } catch (err) {
         console.error(err);
     }
 }
 
-const deleteExpense = async (ID) => {
+const deleteExpense = async (ID, date = false) => {
     try {
-        const resp = await instance.delete(`/expense/${ID}`)
+        if (ID) {
+            await instance.delete(`/expense/${ID}`);
+        } else {
+            await instance.delete(`/expense/${date}`);
+        }
     } catch (err) {
         console.error(err);
     }
@@ -256,12 +264,13 @@ jQuery(function ($) {
 
     $('.btn__delete').on('click', async function () {
         const type = $(this).closest('tr').data('type').trim();
-        const ID = $(this).closest('tr').data('id');
+        let ID = $(this).closest('tr').data('id');
+        const date = $(this).closest('tr').data('date');
 
         if (type === 'expense') {
-            deleteExpense(ID);
+            deleteExpense(ID, date);
         } else {
-            deleteRevenue(ID)
+            deleteRevenue(ID, date)
         }
 
         $(this).closest('tr').remove();
@@ -270,6 +279,8 @@ jQuery(function ($) {
 
 window.onDatepickerPopoverClose = function (startDate, endDate) {
     var url = new URL(window.location);
+    console.log($('.mrp-lowerMonth').text(), $('.mrp-upperMonth').text());
+    $('#sla-data-range').css('pointer-events', 'none');
     url.searchParams.set('startDate', $('.mrp-lowerMonth').text());
     url.searchParams.set('endDate', $('.mrp-upperMonth').text());
     window.history.pushState({}, '', url);

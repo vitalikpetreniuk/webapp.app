@@ -20,6 +20,8 @@ class RevenueController extends Controller
 {
     use ExpenseRevenueTrate;
 
+    public $table = 'revenues';
+
     public function val(Request $request)
     {
         $validation = \Validator::make($request->all(), $this::validationRules());
@@ -82,6 +84,7 @@ class RevenueController extends Controller
                         'gross_sales_amount' => $row[6],
                         'amount' => $row[7],
                         'refund_amount' => $row[8],
+                        'from_file' => true,
                         'user_id' => Auth::id(),
                     ]
                 );
@@ -93,7 +96,8 @@ class RevenueController extends Controller
             $send = [];
             $message = 'Failed importing xlsx file';
             switch ($exception->getCode()) {
-                case 23505 : $message = 'This date has already been imported';
+                case 23505 :
+                    $message = 'This date has already been imported';
             }
             if (App::environment('local')) {
                 $send['debugcode'] = $exception->getCode();
@@ -123,7 +127,8 @@ class RevenueController extends Controller
      * @param string $to - дата конца
      * @return array - массив объектов expense
      */
-    public static function getAllRevenues($from, $to) {
+    public static function getAllRevenues($from, $to)
+    {
         return DB::select('SELECT * FROM revenues WHERE date BETWEEN ? AND ?', [$from, $to]);
     }
 
@@ -133,7 +138,8 @@ class RevenueController extends Controller
      * @param Revenue $revenue - объект revenue для обновления
      * @return void
      */
-    public function update(Revenue $revenue, Request $request) {
+    public function update(Revenue $revenue, Request $request)
+    {
         $revenue->update($request->all());
     }
 
@@ -142,7 +148,8 @@ class RevenueController extends Controller
      * @param Revenue $revenue
      * @return Revenue
      */
-    public function getSingle(Revenue $revenue) {
+    public function getSingle(Revenue $revenue)
+    {
         return $revenue;
     }
 
@@ -151,7 +158,8 @@ class RevenueController extends Controller
      * @param Revenue $revenue - объект expense для обновления
      * @return void
      */
-    public function delete(Revenue $revenue) {
+    public function delete(Revenue $revenue)
+    {
         $revenue->delete();
     }
 }

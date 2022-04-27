@@ -9,9 +9,9 @@
                        id="expense-category" value="1">
                 <div class="select__head">Category</div>
                 <ul class="select__list" style="display: none;">
-                    <li class="select__item" data-prop="1">Category 1</li>
-                    <li class="select__item" data-prop="2">Category 2</li>
-                    <li class="select__item" data-prop="3">Category 3</li>
+                    <li class="select__item" data-prop="1">Ad Spend</li>
+                    <li class="select__item" data-prop="2">Fixed</li>
+                    <li class="select__item" data-prop="3">Variable</li>
                 </ul>
             </div>
 
@@ -32,7 +32,7 @@
                 <div class="datepicker d-flex mb-20">
                     <div class="d-flex align-items-center">
                         <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i class="fa fa-calendar"></i></span>
-                        <input class="monthpicker" name="monthpicker2" placeholder="Choose a date" />
+                        <input class="flat-monthpicker" name="monthpicker2" placeholder="Choose a date" />
                     </div>
                 </div>
 
@@ -131,7 +131,7 @@
                 <div class="datepicker d-flex mb-20">
                     <div class="d-flex align-items-center">
                         <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i class="fa fa-calendar"></i></span>
-                        <input class="monthpicker" name="monthpicker3" placeholder="Choose a date" />
+                        <input class="flat-monthpicker" name="monthpicker3" placeholder="Choose a date" />
                     </div>
                 </div>
 
