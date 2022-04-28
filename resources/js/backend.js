@@ -275,11 +275,14 @@ jQuery(function ($) {
 
         $(this).closest('tr').remove();
     });
+
+    $('.modal-overlay').on('click', function () {
+        resetForm($('.modal.active form'));
+    })
 })
 
 window.onDatepickerPopoverClose = function (startDate, endDate) {
     var url = new URL(window.location);
-    console.log($('.mrp-lowerMonth').text(), $('.mrp-upperMonth').text());
     $('#sla-data-range').css('pointer-events', 'none');
     url.searchParams.set('startDate', $('.mrp-lowerMonth').text());
     url.searchParams.set('endDate', $('.mrp-upperMonth').text());

@@ -18,12 +18,12 @@
             <div class="cat2">
                 <div class="modal__select select blue mb-15">
                     <input class="select__input" type="hidden" name="expensetype" value="1">
-{{--                    <div class="select__head">Expenses type</div>--}}
+                    {{--                    <div class="select__head">Expenses type</div>--}}
                     <div class="select__head">Summ $ (USD)</div>
                     <ul class="select__list" style="display: none;">
                         <li class="select__item" data-prop="1">Summ $ (USD)</li>
-{{--                        <li class="select__item" data-prop="2">% of Ad spend</li>--}}
-{{--                        <li class="select__item" data-prop="3">% of net revenue</li>--}}
+                        {{--                        <li class="select__item" data-prop="2">% of Ad spend</li>--}}
+                        {{--                        <li class="select__item" data-prop="3">% of net revenue</li>--}}
                     </ul>
                 </div>
                 <p class="modal__text">
@@ -31,8 +31,9 @@
                 </p>
                 <div class="datepicker d-flex mb-20">
                     <div class="d-flex align-items-center">
-                        <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i class="fa fa-calendar"></i></span>
-                        <input class="flat-monthpicker" name="monthpicker2" placeholder="Choose a date" />
+                        <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i
+                                class="fa fa-calendar"></i></span>
+                        <input class="flat-monthpicker" name="monthpicker2" placeholder="Choose a date"/>
                     </div>
                 </div>
 
@@ -53,38 +54,38 @@
                     <textarea class="input-field textarea mt-15" name="comment" placeholder="Comment"></textarea>
                 </div>
 
-{{--                <div class="modal__select secondary select alt mt-15">--}}
-{{--                    <input class="select__input" value="1" type="hidden" name="repeated2">--}}
-{{--                    <div class="select__head open">--}}
-{{--                        <div class="repeat d-flex align-items-center">--}}
-{{--                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">--}}
-{{--                            <span>Don't repeat in future</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <ul class="select__list" style="display: block;">--}}
-{{--                        <li data-prop="0" class="select__item">--}}
-{{--                            <div class="repeat d-flex align-items-center">--}}
-{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
-{{--                                     alt="repeat">--}}
-{{--                                <span>Don't repeat in future</span>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
-{{--                        <li data-prop="1" class="select__item">--}}
-{{--                            <div class="repeat alt d-flex align-items-center">--}}
-{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"--}}
-{{--                                     alt="repeat">--}}
-{{--                                <span>Weekly</span>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
-{{--                        <li data-prop="2" class="select__item">--}}
-{{--                            <div class="repeat d-flex align-items-center">--}}
-{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
-{{--                                     alt="repeat">--}}
-{{--                                <span>Repeat monthly</span>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </div>--}}
+                {{--                <div class="modal__select secondary select alt mt-15">--}}
+                {{--                    <input class="select__input" value="1" type="hidden" name="repeated2">--}}
+                {{--                    <div class="select__head open">--}}
+                {{--                        <div class="repeat d-flex align-items-center">--}}
+                {{--                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">--}}
+                {{--                            <span>Don't repeat in future</span>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                    <ul class="select__list" style="display: block;">--}}
+                {{--                        <li data-prop="0" class="select__item">--}}
+                {{--                            <div class="repeat d-flex align-items-center">--}}
+                {{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+                {{--                                     alt="repeat">--}}
+                {{--                                <span>Don't repeat in future</span>--}}
+                {{--                            </div>--}}
+                {{--                        </li>--}}
+                {{--                        <li data-prop="1" class="select__item">--}}
+                {{--                            <div class="repeat alt d-flex align-items-center">--}}
+                {{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"--}}
+                {{--                                     alt="repeat">--}}
+                {{--                                <span>Weekly</span>--}}
+                {{--                            </div>--}}
+                {{--                        </li>--}}
+                {{--                        <li data-prop="2" class="select__item">--}}
+                {{--                            <div class="repeat d-flex align-items-center">--}}
+                {{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+                {{--                                     alt="repeat">--}}
+                {{--                                <span>Repeat monthly</span>--}}
+                {{--                            </div>--}}
+                {{--                        </li>--}}
+                {{--                    </ul>--}}
+                {{--                </div>--}}
             </div>
 
             <div class="cat1 default-shown">
@@ -108,10 +109,6 @@
                         <!--			<button class="drag-drop__button" type="submit">Upload</button>-->
                     </div>
                 </div>
-                <div class="modal__url d-flex align-items-center">
-                    <input class="field-text align-self-end blue" type="text" placeholder="or paste URL adress">
-                    <button type="submit" href="#" class="blue">Submit</button>
-                </div>
             </div>
 
             <div class="cat3">
@@ -130,8 +127,9 @@
                 </p>
                 <div class="datepicker d-flex mb-20">
                     <div class="d-flex align-items-center">
-                        <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i class="fa fa-calendar"></i></span>
-                        <input class="flat-monthpicker" name="monthpicker3" placeholder="Choose a date" />
+                        <span class="mrp-icon icon-calendar d-flex justify-content-center align-items-center"><i
+                                class="fa fa-calendar"></i></span>
+                        <input class="flat-monthpicker" name="monthpicker3" placeholder="Choose a date"/>
                     </div>
                 </div>
 
@@ -148,42 +146,42 @@
                 </div>
                 <div class="cat3_3">
                     <div class="form-group">
-                        <input class="input-field" type="number" min="1"  max="100" name="ad-spend-commission">
+                        <input class="input-field" type="number" min="1" max="100" name="ad-spend-commission">
                     </div>
                 </div>
 
-{{--                <div class="modal__select secondary select alt mt-15">--}}
-{{--                    <input class="select__input" value="1" type="hidden" name="repeated3">--}}
-{{--                    <div class="select__head open">--}}
-{{--                        <div class="repeat d-flex align-items-center">--}}
-{{--                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">--}}
-{{--                            <span>Don't repeat in future</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <ul class="select__list" style="display: block;">--}}
-{{--                        <li data-prop="0" class="select__item">--}}
-{{--                            <div class="repeat d-flex align-items-center">--}}
-{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
-{{--                                     alt="repeat">--}}
-{{--                                <span>Don't repeat in future</span>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
-{{--                        <li data-prop="1" class="select__item">--}}
-{{--                            <div class="repeat alt d-flex align-items-center">--}}
-{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"--}}
-{{--                                     alt="repeat">--}}
-{{--                                <span>Weekly</span>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
-{{--                        <li data-prop="2" class="select__item">--}}
-{{--                            <div class="repeat d-flex align-items-center">--}}
-{{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
-{{--                                     alt="repeat">--}}
-{{--                                <span>Repeat monthly</span>--}}
-{{--                            </div>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </div>--}}
+                {{--                <div class="modal__select secondary select alt mt-15">--}}
+                {{--                    <input class="select__input" value="1" type="hidden" name="repeated3">--}}
+                {{--                    <div class="select__head open">--}}
+                {{--                        <div class="repeat d-flex align-items-center">--}}
+                {{--                            <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}" alt="repeat">--}}
+                {{--                            <span>Don't repeat in future</span>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                    <ul class="select__list" style="display: block;">--}}
+                {{--                        <li data-prop="0" class="select__item">--}}
+                {{--                            <div class="repeat d-flex align-items-center">--}}
+                {{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+                {{--                                     alt="repeat">--}}
+                {{--                                <span>Don't repeat in future</span>--}}
+                {{--                            </div>--}}
+                {{--                        </li>--}}
+                {{--                        <li data-prop="1" class="select__item">--}}
+                {{--                            <div class="repeat alt d-flex align-items-center">--}}
+                {{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat-grey.svg') }}"--}}
+                {{--                                     alt="repeat">--}}
+                {{--                                <span>Weekly</span>--}}
+                {{--                            </div>--}}
+                {{--                        </li>--}}
+                {{--                        <li data-prop="2" class="select__item">--}}
+                {{--                            <div class="repeat d-flex align-items-center">--}}
+                {{--                                <img class="mr-7" src="{{ asset('frontend/images/dist/icons/repeat.svg') }}"--}}
+                {{--                                     alt="repeat">--}}
+                {{--                                <span>Repeat monthly</span>--}}
+                {{--                            </div>--}}
+                {{--                        </li>--}}
+                {{--                    </ul>--}}
+                {{--                </div>--}}
             </div>
         </div>
 
@@ -198,7 +196,9 @@
 
         <button type="submit" class="btn__modal blue mt-30">Submit</button>
         <div class="type1">
-            <a href="{{ asset('xlsx/Day.xlsx') }}" class="btn__modal blue mt-30" download>Download Sample</a>
+            <div class="cat1 default-shown">
+                <a href="{{ asset('xlsx/Day.xlsx') }}" class="btn__modal azure mt-30" download>Download Sample</a>
+            </div>
         </div>
     </form>
     <div class="modal__close">

@@ -126,7 +126,7 @@ class AnalyticsController extends Controller
      */
     public function beautifyImportedExpense($item, $obj1): object
     {
-        $item->type = "Expense (".$obj1->format('F').")";
+        $item->type = "Ad spend (".$obj1->format('F').")";
         $item->class = 'minus';
         $item->editable = false;
         $item->source = 'Imported';

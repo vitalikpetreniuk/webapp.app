@@ -90,9 +90,11 @@
             series0.bullets.push(function () {
                 var graphics = am5.Circle.new(root, {
                     fill: am5.color('#31DB42'),
+                    tooltip: tooltip
                 }, circleTemplate);
                 return am5.Bullet.new(root, {
                     sprite: graphics,
+                    tooltip: tooltip,
                     radius: 1
                 });
             });
@@ -112,6 +114,7 @@
             var starTemplate = am5.Template.new({});
 
             series0.strokes.template.set("strokeOpacity", 0);
+            series0.set('tooltip', tooltip);
 
 // Add cursor
 // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/

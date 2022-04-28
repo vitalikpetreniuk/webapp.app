@@ -42,13 +42,16 @@ trait ExpenseRevenueTrate
         return true;
     }
 
+    /**
+     * Bulk удаление импортированыех с файла записей
+     * @param string $date дата в формате месяц.год
+     * @return void
+     */
     public function deleteImported($date)
     {
         $date = Carbon::createFromFormat('m.Y', $date);
         $from = $date->firstOfMonth()->format('Y-m-d');
         $to = $date->lastOfMonth()->format('Y-m-d');
-        $sql = "DELETE from $this->table WHERE from_file = true AND date BETWEEN $from AND $to";
-        var_dump($sql);
         DB::delete("DELETE from $this->table WHERE from_file = true AND date BETWEEN ? AND ?", [$from, $to]);
     }
 }

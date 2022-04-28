@@ -35,11 +35,6 @@
                 <div class="drag-drop__success">Successfully sent!</div>
                 <div class="drag-drop__error">Warning or error!</div>
             </div>
-            <div class="modal__url d-flex align-items-center">
-                <input disabled class="field-text align-self-end turquoise" type="text"
-                       placeholder="or paste URL adress">
-                <button type="submit" href="#" class="turquoise">Submit</button>
-            </div>
         </div>
         <div class="type2">
             <div class="form-group">
@@ -47,8 +42,9 @@
             </div>
             <button type="submit" class="btn__modal turquoise mt-30">Submit</button>
         </div>
+        <button type="submit" class="btn__modal turquoise mt-30">Submit</button>
         <div class="type1">
-            <a href="{{ asset('xlsx/sample.xlsx') }}" class="btn__modal turquoise mt-30" download>Download Sample</a>
+            <a href="{{ asset('xlsx/sample.xlsx') }}" class="btn__modal mentol mt-30" download>Download Sample</a>
         </div>
     </form>
     <div class="modal__close">
