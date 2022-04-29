@@ -42,12 +42,20 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Возращает расходы на маркетинг
+     * Возращает расходы на маркетинг (среднее)
      * @return float|int - расходы на маркетинг
      */
     public function getMarketingCosts()
     {
         return $this->loopSumAverage('_getMarketingCosts');
+    }
+
+    /**
+     * Возращает расходы на маркетинг суму)
+     * @return float|int - расходы на маркетинг
+     */
+    public function getMarketingCostsSum() {
+        return $this->loopSum('_getMarketingCosts');
     }
 
     /**
@@ -78,10 +86,10 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Считает net_revenue за период
+     * Считает net_revenue за период (сума)
      * @return int|float - revenue
      */
-    public function getNetRevenue()
+    public function getNetRevenueSum()
     {
         return $this->loopSum('_getNetRevenue');
     }
@@ -110,7 +118,7 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Получает суму фиксированных расходов за период
+     * Получает суму фиксированных расходов за период (среднее)
      * @return int|float - средняя расходов
      */
     public function getFixedExpensesTotal()
@@ -118,14 +126,14 @@ class ExpenseCalculationsController extends ExpenseController
         return $this->loopSumAverage('_getFixedExpensesTotal');
     }
 
+
     /**
-     * Получить массив expenses которые введены вручную (фиксированные расходы)
-     * @return array массив объектов
+     * Получает суму фиксированных расходов за период (суму)
+     * @return int|float - средняя расходов
      */
-    public function getFixedExpensesStatements()
+    public function getFixedExpensesTotalSum()
     {
-        $fixed_statements = DB::select("SELECT * FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [1, $this->fromstring, $this->tostring]);
-        return $fixed_statements ?: [];
+        return $this->loopSum('_getFixedExpensesTotal');
     }
 
     /**
@@ -142,7 +150,7 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Получает Cost of Good Sold - себестоимость за период
+     * Получает Cost of Good Sold - себестоимость за период (среднее)
      * @return float|int|null cost of good sold или ноль если не записано
      */
     public function getCogs()
@@ -214,7 +222,7 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Подсчёт сумы расходов на маркетинг за период
+     * Подсчёт сумы расходов на маркетинг за период (среднее)
      * @return float|int - сума расходов на маркетинг
      */
     public function countTotalMarketingCosts()

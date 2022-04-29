@@ -19,10 +19,10 @@ class Plchart extends Component
         $this->endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['endDate']) : Carbon::now()->lastOfMonth();
 
         $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
-        $this->fixed_costs = $controller->getFixedExpensesTotal();
+        $this->fixed_costs = $controller->getFixedExpensesTotalSum();
         $this->globalcogs = $controller->getCogs();
-        $this->net_revenue = (int)$controller->getNetRevenue();
-        $this->marketing_costs = $controller->getMarketingCosts();
+        $this->net_revenue = (int)$controller->getNetRevenueSum();
+        $this->marketing_costs = $controller->getMarketingCostsSum();
     }
 
     /**
