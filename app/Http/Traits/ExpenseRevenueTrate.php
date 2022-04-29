@@ -49,7 +49,7 @@ trait ExpenseRevenueTrate
      */
     public function deleteImported($date)
     {
-        $date = Carbon::createFromFormat('m.Y', $date);
+        $date = Carbon::createFromFormat('j.m.Y', '1.' . $date);
         $from = $date->firstOfMonth()->format('Y-m-d');
         $to = $date->lastOfMonth()->format('Y-m-d');
         DB::delete("DELETE from $this->table WHERE from_file = true AND date BETWEEN ? AND ?", [$from, $to]);
