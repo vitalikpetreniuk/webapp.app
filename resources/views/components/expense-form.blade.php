@@ -7,7 +7,7 @@
             <div class="modal__select select blue mb-15">
                 <input class="select__input" onchange="expenseInputChange(event)" type="hidden" name="expensecategory"
                        id="expense-category" value="1">
-                <div class="select__head">Category</div>
+                <div class="select__head">Ad Spend</div>
                 <ul class="select__list" style="display: none;">
                     <li class="select__item" data-prop="1">Ad Spend</li>
                     <li class="select__item" data-prop="2">Fixed</li>
