@@ -44,7 +44,7 @@
 
     $(function () {
         if (url.searchParams.get("startDate")) {
-            startMonth = MONTHS.indexOf(url.searchParams.get("startDate").slice(0, 3));
+            startMonth = MONTHS.indexOf(url.searchParams.get("startDate").slice(0, 3)) + 1;
             if (startMonth == 0) startMonth = 1;
             startYear = Number(url.searchParams.get("startDate").slice(4, 8));
             endMonth = MONTHS.indexOf(url.searchParams.get("endDate").slice(0, 3)) + 1;

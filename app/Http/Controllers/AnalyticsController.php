@@ -17,8 +17,8 @@ class AnalyticsController extends Controller
 {
     public function __construct()
     {
-        $startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('M Y', $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
-        $endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('M Y', $_GET['endDate']) : Carbon::now()->subMonth()->lastOfMonth();
+        $startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
+        $endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['endDate']) : Carbon::now()->lastOfMonth();
         $this->from = $startDate;
         $this->to = $endDate;
 
@@ -239,6 +239,8 @@ class AnalyticsController extends Controller
     {
         if (ExpenseController::isPercent($item)) {
             $item->amount = number_format($item->amount, 2, '.', ',') . '%';
+        }elseif ($item->class == 'plus') {
+            $item->amount = number_format($item->amount, 2, '.', ',') . '$';
         } else {
             $item->amount = '-$' . number_format($item->amount, 2, '.', ',');
         }

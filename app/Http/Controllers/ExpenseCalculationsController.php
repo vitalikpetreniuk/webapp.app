@@ -83,7 +83,7 @@ class ExpenseCalculationsController extends ExpenseController
      */
     public function getNetRevenue()
     {
-        return $this->loopSumAverage('_getNetRevenue');
+        return $this->loopSum('_getNetRevenue');
     }
 
     /**
@@ -249,5 +249,33 @@ class ExpenseCalculationsController extends ExpenseController
         }
 
         return (array_sum($value) / $this->duration) ?: 1;
+    }
+
+    /**
+     * Подсчёт сумы значения за период
+     * @param string $callback название метода
+     * @return float|int - результат
+     */
+    private function loopSum($callback) {
+        $value = [];
+        // делаем клоны чтобы не перезаписать дату в construct
+        $obj1 = clone $this->from;
+        $obj2 = clone $this->to;
+        foreach (range(1, $this->duration) as $i) {
+            if ($i == 1) {
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            } else {
+                $obj1->addMonths(1);
+                $startdate = $obj1->format('Y-m-d');
+                $obj3 = clone $obj1;
+                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
+            }
+
+            $value[] = call_user_func(array(__NAMESPACE__ . '\ExpenseCalculationsController', $callback), $startdate, $enddate);
+        }
+
+        return array_sum($value) ?: 1;
     }
 }
