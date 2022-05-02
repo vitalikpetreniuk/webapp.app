@@ -36,7 +36,7 @@ class Plchart extends Component
         if (!isset($this->globalcogs) || $this->fixed_costs == 1) return false;
 
         foreach (range(0.01, 0.42, 0.05) as $marketing_costs) {
-            $y = $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
+            $y = $this->countYFormula($marketing_costs);
 
             $returned[] = array(
                 'x' => round($marketing_costs, 2) ?: 1,
@@ -48,8 +48,18 @@ class Plchart extends Component
     }
 
     /**
+     * Подсчет y при заданом marketing_costs
+     * @param float $marketing_costs траты на маркетинг
+     * @return float|int y
+     */
+    public function countYFormula($marketing_costs)
+    {
+        return $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
+    }
+
+    /**
      * Положение точки на графике
-     * @return false|string json точки на графике
+     * @return array массив x и y точки на графике
      */
     public function currentBullet()
     {
@@ -60,7 +70,7 @@ class Plchart extends Component
             "y" => $this->net_revenue,
         ];
 
-        return json_encode($returned);
+        return $returned;
     }
 
     /**
@@ -72,6 +82,17 @@ class Plchart extends Component
     {
         $chart_data = $this->chartData();
         $current_bullet = $this->currentBullet();
-        return view('components.plchart', compact('chart_data', 'current_bullet'));
+
+        if ($current_bullet[0]['y'] > $this->countYFormula($current_bullet[0]['x'])) {
+            $color = '#31DB42';
+        } else {
+            $color = '#F62A2A';
+        }
+
+        return view('components.plchart', [
+            'chart_data' => $chart_data,
+            'current_bullet' => json_encode($current_bullet),
+            'color' => $color,
+        ]);
     }
 }

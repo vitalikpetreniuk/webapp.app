@@ -89,7 +89,7 @@
 
             series0.bullets.push(function () {
                 var graphics = am5.Circle.new(root, {
-                    fill: am5.color('#31DB42'),
+                    fill: am5.color('{{ $color }}'),
                     tooltip: tooltip
                 }, circleTemplate);
                 return am5.Bullet.new(root, {

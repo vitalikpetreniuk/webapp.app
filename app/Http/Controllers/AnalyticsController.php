@@ -226,9 +226,9 @@ class AnalyticsController extends Controller
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             }
 
-            $revenues = DB::select("SELECT sum(amount) as amount FROM expenses WHERE from_file = true AND date BETWEEN ? AND ?", [$startdate, $enddate]);
-            if ((isset($revenues[0]->amount))) {
-                $value[] = $this->beautifyImportedExpense($revenues[0], $obj1);
+            $expenses = DB::select("SELECT sum(amount) as amount FROM expenses WHERE from_file = true AND date BETWEEN ? AND ?", [$startdate, $enddate]);
+            if ((isset($expenses[0]->amount))) {
+                $value[] = $this->beautifyImportedExpense($expenses[0], $obj1);
             }
         }
 
