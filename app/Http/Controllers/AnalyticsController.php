@@ -126,7 +126,7 @@ class AnalyticsController extends Controller
      */
     public function beautifyImportedExpense($item, $obj1): object
     {
-        $item->type = "Ad spend (".$obj1->format('F').")";
+        $item->type = "Ad spend <br> (".$obj1->format('F').")";
         $item->class = 'minus';
         $item->editable = false;
         $item->source = 'Imported';
@@ -143,7 +143,7 @@ class AnalyticsController extends Controller
      */
     public function beautifyImportedRevenue($item, $obj1): object
     {
-        $item->type = "Revenue (".$obj1->format('F').")";
+        $item->type = "Revenue <br>(".$obj1->format('F').")";
         $item->class = 'plus';
         $item->editable = false;
         $item->source = 'Imported';
@@ -226,7 +226,7 @@ class AnalyticsController extends Controller
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             }
 
-            $revenues = DB::select("SELECT sum(amount) as amount FROM expenses WHERE date BETWEEN ? AND ?", [$startdate, $enddate]);
+            $revenues = DB::select("SELECT sum(amount) as amount FROM expenses WHERE from_file = true AND date BETWEEN ? AND ?", [$startdate, $enddate]);
             if ((isset($revenues[0]->amount))) {
                 $value[] = $this->beautifyImportedExpense($revenues[0], $obj1);
             }

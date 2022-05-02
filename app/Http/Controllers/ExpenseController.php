@@ -220,7 +220,7 @@ class ExpenseController extends Controller
      */
     protected function expenseCategory3($request)
     {
-        $date = Carbon::createFromFormat('j.m.y', '1' . $request->input('monthpicker3'))->firstOfMonth();
+        $date = Carbon::createFromFormat('j.m.y', '1.' . $request->input('monthpicker3'))->firstOfMonth();
         $amount = $request->input('cost-of-good-sold') ?? $request->input('affiliate-commission') ?? $request->input('ad-spend-commission');
 
         try {
