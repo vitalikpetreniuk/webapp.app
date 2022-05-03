@@ -42,9 +42,9 @@
             </div>
             <button type="submit" class="btn__modal turquoise mt-30">Submit</button>
         </div>
-        <button type="submit" class="btn__modal turquoise mt-30">Submit</button>
+        <button type="submit" class="btn__modal mentol mt-30">Submit</button>
         <div class="type1">
-            <a href="{{ asset('xlsx/sample.xlsx') }}" class="btn__modal mentol mt-30" download>Download Sample</a>
+            <a href="{{ asset('xlsx/sample.xlsx') }}" class="btn__modal turquoise mt-30" download>Download Sample</a>
         </div>
     </form>
     <div class="modal__close">

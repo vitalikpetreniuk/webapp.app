@@ -91,7 +91,7 @@ class Plchart extends Component
 
         return view('components.plchart', [
             'chart_data' => $chart_data,
-            'current_bullet' => json_encode($current_bullet),
+            'current_bullet' => $current_bullet,
             'color' => $color,
         ]);
     }

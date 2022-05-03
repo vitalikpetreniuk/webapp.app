@@ -279,11 +279,23 @@ jQuery(function ($) {
     $('.modal-overlay').on('click', function () {
         resetForm($('.modal.active form'));
     })
+
+    if (sessionStorage.getItem('startDate') && $('.mrp-lowerMonth').length) {
+        let url = new URL(window.location);
+        if (!url.searchParams.get('startDate')) {
+            url.searchParams.set('startDate', sessionStorage.getItem('startDate'));
+            url.searchParams.set('endDate', sessionStorage.getItem('endDate'));
+            window.history.pushState({}, '', url);
+            window.location.reload();
+        }
+    }
 })
 
 window.onDatepickerPopoverClose = function (startDate, endDate) {
-    var url = new URL(window.location);
+    let url = new URL(window.location);
     $('#sla-data-range').css('pointer-events', 'none');
+    sessionStorage.setItem('startDate', $('.mrp-lowerMonth').text());
+    sessionStorage.setItem('endDate', $('.mrp-upperMonth').text());
     url.searchParams.set('startDate', $('.mrp-lowerMonth').text());
     url.searchParams.set('endDate', $('.mrp-upperMonth').text());
     window.history.pushState({}, '', url);

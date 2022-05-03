@@ -4,12 +4,13 @@ namespace App\View\Components;
 
 use App\Http\Controllers\ExpenseCalculationsController;
 use App\Http\Traits\CogsTrait;
+use App\Http\Traits\NumbersTrait;
 use Carbon\Carbon;
 use Illuminate\View\Component;
 
 class SweetspotTable extends Component
 {
-    use CogsTrait;
+    use CogsTrait, NumbersTrait;
 
     /**
      * Create a new component instance.
@@ -45,11 +46,15 @@ class SweetspotTable extends Component
 
         if (!isset($this->globalcogs) || $this->fixed_costs == 1) return $returned;
 
-        foreach (range(0.1, 0.45, 0.01) as $marketing_cost) {
-            $revenue_needed = $this->fixed_costs / ($this->globalcogs - $marketing_cost);
-            $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
-            $allowable_marketing_cost = $revenue_needed * $marketing_cost;
-            $returned[] = compact('marketing_cost', 'revenue_needed', 'derivative', 'allowable_marketing_cost');
+        foreach (range(0.01, 0.45, 0.01) as $marketing_cost) {
+            try {
+                $revenue_needed = $this->fixed_costs / ($this->globalcogs - $marketing_cost);
+                $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
+                $allowable_marketing_cost = $revenue_needed * $marketing_cost;
+                $returned[] = compact('marketing_cost', 'revenue_needed', 'derivative', 'allowable_marketing_cost');
+            } catch (\ErrorException $error) {
+                continue;
+            }
         }
 
         for ($i = 1; $i < count($returned); $i++) {
@@ -73,7 +78,6 @@ class SweetspotTable extends Component
 
             if (isset($prev['change_in_difference'])) {
                 $old_change_in_difference = $prev['change_in_difference'];
-//
 
                 $current['optimal_coefficient'] = $optimal_coefficient = $change_in_difference - $old_change_in_difference;
                 if ($optimal_coefficient < 0) {
@@ -91,7 +95,15 @@ class SweetspotTable extends Component
      */
     public function getData()
     {
-        return $this->_getData();
+        $data = $this->_getData();
+        foreach ($data as &$item) {
+            $item['revenue_needed'] = $this->basicDollarNumberFormat($item['revenue_needed']);
+            if (isset($item['optimal_coefficient'])) {
+                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 2);
+            }
+            $item['allowable_marketing_cost'] = $this->basicDollarNumberFormat($item['allowable_marketing_cost']);
+        }
+        return $data;
     }
 
     /**
@@ -174,7 +186,8 @@ class SweetspotTable extends Component
      * @param float|int $marketing_cost marketing_cost
      * @return float|int derivative_rate за период
      */
-    public function getMonthDerivativeRate($fixed_costs, $globalcogs, $marketing_cost) {
+    public function getMonthDerivativeRate($fixed_costs, $globalcogs, $marketing_cost)
+    {
         return $fixed_costs / pow(($globalcogs - $marketing_cost), 2);
     }
 
@@ -195,7 +208,6 @@ class SweetspotTable extends Component
 
         return array_sum($fixedarr) / pow(($num1 - $marketing_cost) / $this->duration, 2);
     }
-
     /**
      * Get the view / contents that represent the component.
      *

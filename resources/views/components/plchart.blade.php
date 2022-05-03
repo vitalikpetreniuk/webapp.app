@@ -1,4 +1,18 @@
 <div id="chartdiv" class="mt-20"></div>
+@if(isset($current_bullet))
+    <?php
+    ?>
+    <i class="dot green"></i>
+    <i class="dot red"></i>
+    <div class="chart-info d-flex flex-column">
+        <span><b>MCaPoS:</b>  {{ number_format($current_bullet[0]['x'], 2, '.', ',') }}</span>
+        <span><b>Revenue:</b> ${{ number_format($current_bullet[0]['y'], 2, '.', ',') }}</span>
+        <i class="icon-info">
+            <img src="{{ asset('frontend/images/dist/icons/i.svg') }}" alt="">
+        </i>
+        <span class="help">Marketing cost as percentage of sales</span>
+    </div>
+@endif
 @if(isset($chart_data))
     <script>
         am5.ready(function () {
@@ -124,7 +138,7 @@
                 snapToSeries: [series0, series]
             }));
             <?php if (isset($current_bullet)) : ?>
-            series0.data.setAll(<?= $current_bullet ?>);
+            series0.data.setAll(<?= json_encode($current_bullet) ?>);
             series0.appear(1000);
             <?php endif; ?>
 
