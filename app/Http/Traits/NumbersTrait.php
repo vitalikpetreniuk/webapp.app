@@ -9,6 +9,7 @@ trait NumbersTrait
 {
     /**
      * Форматирование сумы с знаком долара и округлением
+     * @param int|float $num число для форматирования
      * @return string отформатированная сума
      */
     public function basicDollarNumberFormat($num) {

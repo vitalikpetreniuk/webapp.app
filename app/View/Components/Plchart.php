@@ -18,6 +18,12 @@ class Plchart extends Component
         $this->startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
         $this->endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['endDate']) : Carbon::now()->lastOfMonth();
 
+        if ($this->endDate->year - $this->startDate->year == 0) {
+            $this->duration = $this->endDate->month - $this->startDate->month + 1 ?: 1;
+        } else {
+            $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
+        }
+
         $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
         $this->fixed_costs = $controller->getFixedExpensesTotalSum();
         $this->globalcogs = $controller->getCogs();
@@ -61,7 +67,7 @@ class Plchart extends Component
      * Положение точки на графике
      * @return array массив x и y точки на графике
      */
-    public function currentBullet()
+    public function currentBullet(): array
     {
         $returned = [];
 
@@ -74,6 +80,19 @@ class Plchart extends Component
     }
 
     /**
+     * Форматирование даты для отображения в легенде
+     * @return string дата строкой
+     */
+    private function chartDate(): string
+    {
+        if ($this->duration > 1) {
+            return $this->startDate->format('M Y').' - '. $this->endDate->format('M Y');
+        }else {
+            return $this->startDate->format('M Y');
+        }
+    }
+
+    /**
      * Get the view / contents that represent the component.
      *
      * @return \Illuminate\Contracts\View\View|\Closure|string
@@ -82,17 +101,22 @@ class Plchart extends Component
     {
         $chart_data = $this->chartData();
         $current_bullet = $this->currentBullet();
+        $date_period = $this->chartDate();
 
         if ($current_bullet[0]['y'] > $this->countYFormula($current_bullet[0]['x'])) {
-            $color = '#31DB42';
+            $color = 'green';
+            $hex = '#31DB42';
         } else {
-            $color = '#F62A2A';
+            $color = '#red';
+            $hex = '#F62A2A';
         }
 
         return view('components.plchart', [
             'chart_data' => $chart_data,
             'current_bullet' => $current_bullet,
             'color' => $color,
+            'hex' => $hex,
+            'date_period' => $date_period,
         ]);
     }
 }
