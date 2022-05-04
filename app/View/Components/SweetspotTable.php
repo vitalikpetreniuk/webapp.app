@@ -46,7 +46,7 @@ class SweetspotTable extends Component
 
         if (!isset($this->globalcogs) || $this->fixed_costs == 1) return $returned;
 
-        foreach (range(0.01, 0.45, 0.01) as $marketing_cost) {
+        foreach (range(0.01, 0.44, 0.01) as $marketing_cost) {
             try {
                 $revenue_needed = $this->fixed_costs / ($this->globalcogs - $marketing_cost);
                 $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
