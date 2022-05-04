@@ -111,12 +111,18 @@ class Plchart extends Component
             $hex = '#F62A2A';
         }
 
-        return view('components.plchart', [
-            'chart_data' => $chart_data,
-            'current_bullet' => $current_bullet,
-            'color' => $color,
-            'hex' => $hex,
-            'date_period' => $date_period,
-        ]);
+        $data = [];
+
+        if ($chart_data) {
+            $data = [
+                'chart_data' => $chart_data,
+                'current_bullet' => $current_bullet,
+                'color' => $color,
+                'hex' => $hex,
+                'date_period' => $date_period,
+            ];
+        }
+
+        return view('components.plchart', $data);
     }
 }
