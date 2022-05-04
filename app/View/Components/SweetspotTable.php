@@ -99,7 +99,7 @@ class SweetspotTable extends Component
         foreach ($data as &$item) {
             $item['revenue_needed'] = $this->basicDollarNumberFormat($item['revenue_needed']);
             if (isset($item['optimal_coefficient'])) {
-                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 3);
+                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
             }
             $item['allowable_marketing_cost'] = $this->basicDollarNumberFormat($item['allowable_marketing_cost']);
         }
