@@ -2,12 +2,15 @@
 
 namespace App\View\Components;
 
-use App\Http\Controllers\ExpenseCalculationsController;
+use App\Http\Controllers\CalculationsController;
+use App\Http\Traits\AnalyticsTrait;
 use Carbon\Carbon;
 use Illuminate\View\Component;
 
 class Plchart extends Component
 {
+    use AnalyticsTrait;
+
     /**
      * Create a new component instance.
      *
@@ -24,7 +27,7 @@ class Plchart extends Component
             $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
         }
 
-        $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
+        $controller = new CalculationsController($this->startDate, $this->endDate);
         $this->fixed_costs = $controller->getFixedExpensesTotalSum();
         $this->globalcogs = $controller->getCogs();
         $this->net_revenue = (int)$controller->getNetRevenueSum();
@@ -60,7 +63,11 @@ class Plchart extends Component
      */
     public function countYFormula($marketing_costs)
     {
-        return $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
+        if ($this->duration == 1) {
+            return $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
+        }else {
+            return $this->getRevenueNeeded($marketing_costs);
+        }
     }
 
     /**

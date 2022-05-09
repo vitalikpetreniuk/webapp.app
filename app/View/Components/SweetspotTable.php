@@ -2,7 +2,8 @@
 
 namespace App\View\Components;
 
-use App\Http\Controllers\ExpenseCalculationsController;
+use App\Http\Controllers\CalculationsController;
+use App\Http\Traits\AnalyticsTrait;
 use App\Http\Traits\CogsTrait;
 use App\Http\Traits\NumbersTrait;
 use Carbon\Carbon;
@@ -10,7 +11,7 @@ use Illuminate\View\Component;
 
 class SweetspotTable extends Component
 {
-    use CogsTrait, NumbersTrait;
+    use CogsTrait, NumbersTrait, AnalyticsTrait;
 
     /**
      * Create a new component instance.
@@ -24,16 +25,16 @@ class SweetspotTable extends Component
         $this->startDate = $startDate;
         $this->endDate = $endDate;
 
-        $controller = new ExpenseCalculationsController($this->startDate, $this->endDate);
-        $this->fixed_costs = $controller->getFixedExpensesTotal(); //уже среднее значение
-
-        $this->globalcogs = 1 - $controller->getCogs(); //уже среднее значение
+        $this->controller = new CalculationsController($this->startDate, $this->endDate);
+        $this->fixed_costs = $this->controller->getFixedExpensesTotalSum();
 
         if ($this->endDate->year - $this->startDate->year == 0) {
             $this->duration = $this->endDate->month - $this->startDate->month + 1 ?: 1;
         } else {
             $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
         }
+
+        $this->globalcogs = $this->getSweetspotCogs();
     }
 
     /**
@@ -48,7 +49,7 @@ class SweetspotTable extends Component
 
         foreach (range(0.01, 0.44, 0.01) as $marketing_cost) {
             try {
-                $revenue_needed = $this->fixed_costs / ($this->globalcogs - $marketing_cost);
+                $revenue_needed = $this->getRevenueNeeded($marketing_cost);
                 $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
                 $allowable_marketing_cost = $revenue_needed * $marketing_cost;
                 $returned[] = compact('marketing_cost', 'revenue_needed', 'derivative', 'allowable_marketing_cost');
@@ -87,6 +88,22 @@ class SweetspotTable extends Component
         }
 
         return $returned;
+    }
+
+    /**
+     * Cogs спец формула для sweetspot
+     * @return float|int число cogs
+     */
+    public function getSweetspotCogs()
+    {
+        if ($this->duration == 1) return $this->controller->getCogs();
+
+        $loopedcogs = $this->controller->loop('_getCogs');
+        $loopedrevenue = $this->controller->loop('_getNetRevenue');
+
+        return (array_sum(array_map(function ($el1, $el2) {
+            return $el1 * $el2;
+        }, $loopedcogs, $loopedrevenue)) / $this->controller->getNetRevenueSum());
     }
 
     /**
@@ -208,6 +225,7 @@ class SweetspotTable extends Component
 
         return array_sum($fixedarr) / pow(($num1 - $marketing_cost) / $this->duration, 2);
     }
+
     /**
      * Get the view / contents that represent the component.
      *

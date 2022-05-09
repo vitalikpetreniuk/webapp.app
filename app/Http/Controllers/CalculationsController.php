@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ExpenseCalculationsController extends ExpenseController
+class CalculationsController extends ExpenseController
 {
 
     public function __construct($from, $to)
@@ -237,26 +237,7 @@ class ExpenseCalculationsController extends ExpenseController
      */
     private function loopSumAverage($callback)
     {
-        $value = [];
-        // делаем клоны чтобы не перезаписать дату в construct
-        $obj1 = clone $this->from;
-        $obj2 = clone $this->to;
-        foreach (range(1, $this->duration) as $i) {
-            if ($i == 1) {
-                $startdate = $obj1->format('Y-m-d');
-                $obj3 = clone $obj1;
-                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
-            } else {
-                $obj1->addMonths(1);
-                $startdate = $obj1->format('Y-m-d');
-                $obj3 = clone $obj1;
-                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
-            }
-
-            $value[] = call_user_func(array(__NAMESPACE__ . '\ExpenseCalculationsController', $callback), $startdate, $enddate);
-        }
-
-        return (array_sum($value) / $this->duration) ?: 1;
+        return ($this->loopSum($callback) / $this->duration) ?: 1;
     }
 
     /**
@@ -265,10 +246,18 @@ class ExpenseCalculationsController extends ExpenseController
      * @return float|int - результат
      */
     private function loopSum($callback) {
+        return array_sum($this->loop($callback)) ?: 1;
+    }
+
+    /**
+     * Подсчет значений за каждый месяц периода
+     * @param string $callback название метода
+     * @return array массив значений
+     */
+    public function loop($callback) {
         $value = [];
         // делаем клоны чтобы не перезаписать дату в construct
         $obj1 = clone $this->from;
-        $obj2 = clone $this->to;
         foreach (range(1, $this->duration) as $i) {
             if ($i == 1) {
                 $startdate = $obj1->format('Y-m-d');
@@ -281,9 +270,9 @@ class ExpenseCalculationsController extends ExpenseController
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             }
 
-            $value[] = call_user_func(array(__NAMESPACE__ . '\ExpenseCalculationsController', $callback), $startdate, $enddate);
+            $value[] = call_user_func(array(__NAMESPACE__ . '\CalculationsController', $callback), $startdate, $enddate);
         }
 
-        return array_sum($value) ?: 1;
+        return $value;
     }
 }
