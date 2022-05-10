@@ -102,8 +102,8 @@ class SweetspotTable extends Component
         $loopedrevenue = $this->controller->loop('_getNetRevenue');
 
         return (array_sum(array_map(function ($el1, $el2) {
-            return $el1 * $el2;
-        }, $loopedcogs, $loopedrevenue)) / $this->controller->getNetRevenueSum());
+                return $el1 * $el2;
+            }, $loopedcogs, $loopedrevenue)) / $this->controller->getNetRevenueSum());
     }
 
     /**

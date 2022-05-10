@@ -15,8 +15,8 @@ trait AnalyticsTrait
     {
         if ($this->duration > 1) {
             return $this->fixed_costs / ($this->globalcogs - $marketing_cost);
-        } else {
-            return $this->fixed_costs / (1 - $this->globalcogs - $marketing_cost);
         }
+
+        return $this->fixed_costs / ($this->globalcogs - $marketing_cost);
     }
 }
