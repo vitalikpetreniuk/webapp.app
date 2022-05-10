@@ -146,7 +146,8 @@
                 </div>
                 <div class="cat3_3">
                     <div class="form-group">
-                        <input class="input-field" type="number" min="1" max="100" name="ad-spend-commission">
+                        <input class="input-field" type="number" min="0.01"
+                               step="0.01" max="100" name="ad-spend-commission">
                     </div>
                 </div>
 

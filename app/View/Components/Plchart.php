@@ -31,7 +31,11 @@ class Plchart extends Component
         $this->fixed_costs = $controller->getFixedExpensesTotalSum();
         $this->globalcogs = $controller->getCogs();
         $this->net_revenue = (int)$controller->getNetRevenueSum();
-        $this->marketing_costs = $controller->getMarketingCostsSum();
+        if ($this->duration > 1) {
+            $this->marketing_costs = $controller->getMarketingCostsSum();
+        }else {
+            $this->marketing_costs = $controller->countTotalMarketingCosts();
+        }
     }
 
     /**
@@ -70,6 +74,14 @@ class Plchart extends Component
         }
     }
 
+    public function countXFormula() {
+        if ($this->duration > 1) {
+            return $this->marketing_costs / $this->net_revenue;
+        }
+
+        return 1 * $this->marketing_costs / $this->net_revenue;
+    }
+
     /**
      * Положение точки на графике
      * @return array массив x и y точки на графике
@@ -79,7 +91,7 @@ class Plchart extends Component
         $returned = [];
 
         $returned[] = [
-            "x" => $this->marketing_costs / $this->net_revenue,
+            "x" => $this->countXFormula(),
             "y" => $this->net_revenue,
         ];
 

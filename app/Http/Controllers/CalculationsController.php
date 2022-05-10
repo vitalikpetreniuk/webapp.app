@@ -218,7 +218,7 @@ class CalculationsController extends ExpenseController
         $percent_of_ad_spend = $this->getMonthPercentOfAdSpend();
         $percent_of_revenue = $this->getMonthPercentOfRevenue();
 
-        return $ad_spend + ($ad_spend * $percent_of_ad_spend) + ($ad_spend * $percent_of_revenue);
+        return $ad_spend + ($this->getNetRevenueSum() * $percent_of_revenue) + ($ad_spend * $percent_of_ad_spend);
     }
 
     /**
