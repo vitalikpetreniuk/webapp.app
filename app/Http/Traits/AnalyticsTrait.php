@@ -13,10 +13,11 @@ trait AnalyticsTrait
      */
     private function getRevenueNeeded($marketing_cost)
     {
+//        dd($this->globalcogs);
         if ($this->duration > 1) {
             return $this->fixed_costs / ($this->globalcogs - $marketing_cost);
         }
 
-        return $this->fixed_costs / ($this->globalcogs - $marketing_cost);
+        return $this->fixed_costs / (1 - $this->globalcogs - $marketing_cost);
     }
 }

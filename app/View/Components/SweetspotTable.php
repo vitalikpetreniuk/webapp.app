@@ -47,7 +47,9 @@ class SweetspotTable extends Component
 
         if (!isset($this->globalcogs) || $this->fixed_costs == 1) return $returned;
 
-        foreach (range(0.01, 0.44, 0.01) as $marketing_cost) {
+        $max = ($this->globalcogs - 0.01 < 0.45) ?: 0.44;
+
+        foreach (range(0.01, $max, 0.01) as $marketing_cost) {
             try {
                 $revenue_needed = $this->getRevenueNeeded($marketing_cost);
                 $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
@@ -83,6 +85,10 @@ class SweetspotTable extends Component
                 $current['optimal_coefficient'] = $optimal_coefficient = $change_in_difference - $old_change_in_difference;
                 if ($optimal_coefficient < 0) {
                     $current['optimal_coefficient'] = $optimal_coefficient = 0;
+                }
+
+                if ($optimal_coefficient > 100) {
+                    array_splice($returned, $i+1);
                 }
             }
         }
@@ -193,8 +199,9 @@ class SweetspotTable extends Component
      */
     public function getDerivativeRate($fixed_costs, $globalcogs, $marketing_cost)
     {
-        if ($this->duration > 1) return $this->getRangeDerivativeRate($marketing_cost);
-        return $this->getMonthDerivativeRate($fixed_costs, $globalcogs, $marketing_cost);
+//        if ($this->duration > 1)
+            return $this->getRangeDerivativeRate($marketing_cost);
+//        return $this->getMonthDerivativeRate($fixed_costs, $globalcogs, $marketing_cost);
     }
 
     /**

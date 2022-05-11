@@ -48,7 +48,7 @@ class Plchart extends Component
 
         if (!isset($this->globalcogs) || $this->fixed_costs == 1) return false;
 
-        foreach (range(0.01, 0.42, 0.05) as $marketing_costs) {
+        foreach (range(0.01, 0.42, 0.02) as $marketing_costs) {
             $y = $this->countYFormula($marketing_costs);
 
             $returned[] = array(

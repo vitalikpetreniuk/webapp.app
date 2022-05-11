@@ -54,7 +54,8 @@ class CalculationsController extends ExpenseController
      * Возращает расходы на маркетинг суму)
      * @return float|int - расходы на маркетинг
      */
-    public function getMarketingCostsSum() {
+    public function getMarketingCostsSum()
+    {
         return $this->loopSum('_getMarketingCosts');
     }
 
@@ -68,7 +69,9 @@ class CalculationsController extends ExpenseController
     {
         if (!$marketing_costs) return 0;
         if (in_array(1, [$this->getFixedExpensesTotal(), $this->getFixedExpensesTotal(), $this->getCogs(), $marketing_costs], true)) return 0;
-        return $net_revenue * (1 - $this->getMonthAffiliateCost()) - $this->getFixedExpensesTotal() - ($this->getCogs() * $net_revenue) - $marketing_costs * 1.05;
+
+        $ad_spend_commission = $this->getMonthPercentOfAdSpend() + 1;
+        return $net_revenue * (1 - $this->getMonthAffiliateCost()) - $this->getFixedExpensesTotal() - ($this->getCogs() * $net_revenue) - $this->getAdSpend() * $ad_spend_commission;
     }
 
     /**
@@ -231,6 +234,16 @@ class CalculationsController extends ExpenseController
     }
 
     /**
+     * Подсчёт ad_spend за период
+     * @return float|int сума ad_spend
+     */
+    public function getAdSpend() {
+        $ad_spend = DB::select("SELECT sum(amount) as amount FROM $this->expenses_table WHERE from_file = true AND date BETWEEN ? AND ?", [$this->fromstring, $this->tostring]);
+
+        return isset($ad_spend[0]->amount) ? $ad_spend[0]->amount : 0;
+    }
+
+    /**
      * Подсчёт среднего значения за период
      * @param string $callback название метода
      * @return float|int - результат
@@ -245,7 +258,8 @@ class CalculationsController extends ExpenseController
      * @param string $callback название метода
      * @return float|int - результат
      */
-    private function loopSum($callback) {
+    private function loopSum($callback)
+    {
         return array_sum($this->loop($callback)) ?: 1;
     }
 
@@ -254,7 +268,8 @@ class CalculationsController extends ExpenseController
      * @param string $callback название метода
      * @return array массив значений
      */
-    public function loop($callback) {
+    public function loop($callback)
+    {
         $value = [];
         // делаем клоны чтобы не перезаписать дату в construct
         $obj1 = clone $this->from;
