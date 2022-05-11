@@ -1,4 +1,38 @@
-<div id="chartdiv" class="mt-20"></div>
+<div class="d-flex scheme">
+    <div id="chartdiv" class="mt-20"></div>
+    @if(isset($current_bullet))
+        <?php
+        ?>
+        <div class="d-flex flex-column info">
+            <div><b>{{ $date_period }}</b> is Here</div>
+            <?php if ($color == 'green') : ?>
+            <div class="d-flex align-items-center mark">
+                <i class="dot green"></i>
+                <div>
+                    <b>Green:</b>
+                    <span>profitable</span>
+                </div>
+            </div>
+            <?php else: ?>
+            <div class="d-flex align-items-center mark">
+                <i class="dot red"></i>
+                <div>
+                    <b>Red:</b>
+                    <span>unprofitable</span>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div class="chart-info d-flex flex-column">
+                <span><b>MCaPoS:</b>  {{ number_format($current_bullet[0]['x'], 2, '.', ',') }}</span>
+                <span><b>Revenue:</b> ${{ number_format($current_bullet[0]['y'], 2, '.', ',') }}</span>
+                <i class="icon-info">
+                    <img src="{{ asset('frontend/images/dist/icons/i.svg') }}" alt="">
+                </i>
+                <span class="help">Marketing cost as percentage of sales</span>
+            </div>
+        </div>
+    @endif
+</div>
 @if(isset($chart_data))
     <script>
         am5.ready(function () {
@@ -89,10 +123,12 @@
 
             series0.bullets.push(function () {
                 var graphics = am5.Circle.new(root, {
-                    fill: am5.color('#31DB42'),
+                    fill: am5.color('{{ $hex }}'),
+                    tooltip: tooltip
                 }, circleTemplate);
                 return am5.Bullet.new(root, {
                     sprite: graphics,
+                    tooltip: tooltip,
                     radius: 1
                 });
             });
@@ -112,6 +148,7 @@
             var starTemplate = am5.Template.new({});
 
             series0.strokes.template.set("strokeOpacity", 0);
+            series0.set('tooltip', tooltip);
 
 // Add cursor
 // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
@@ -121,7 +158,7 @@
                 snapToSeries: [series0, series]
             }));
             <?php if (isset($current_bullet)) : ?>
-            series0.data.setAll(<?= $current_bullet ?>);
+            series0.data.setAll(<?= json_encode($current_bullet) ?>);
             series0.appear(1000);
             <?php endif; ?>
 

@@ -3,6 +3,8 @@
 
 import 'flot';
 import autoComplete from "@tarekraafat/autocomplete.js/dist/autoComplete.min.js";
+import flatpickr from "flatpickr";
+import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect/index.js";
 
 jQuery(function ($) {
 
@@ -246,9 +248,21 @@ jQuery(function ($) {
 		})
 	})
 	
-	$('form').on('submit', function (e) {
+	$('.modal form').on('submit', function (e) {
 		e.preventDefault()
 	})
+
+	flatpickr($('.flat-monthpicker'), {
+		defaultDate: "today",
+		plugins: [
+			new monthSelectPlugin({
+				shorthand: true,
+				dateFormat: "m.y",
+				altFormat: "F Y",
+				theme: "dark"
+			})
+		]
+	});
 	
 	
 

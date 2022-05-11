@@ -2,7 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Http\Controllers\ExpenseCalculationsController;
+use App\Http\Controllers\CalculationsController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\RevenueController;
 use App\Models\Revenue;
@@ -37,7 +37,7 @@ class Nav extends Component
 
         foreach ($data as $key => $item) {
 
-            $controller = new ExpenseCalculationsController(Carbon::createFromFormat('Y-m-d', $item->date), Carbon::createFromFormat('Y-m-d', $item->date));
+            $controller = new CalculationsController(Carbon::createFromFormat('Y-m-d', $item->date), Carbon::createFromFormat('Y-m-d', $item->date));
 
             $item->total_marketing_costs = $controller->countTotalMarketingCosts();
             if ($item->total_marketing_costs == 3) {

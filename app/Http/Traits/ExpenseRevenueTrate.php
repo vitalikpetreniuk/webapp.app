@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-trait ExpenseRevenueTrate {
+trait ExpenseRevenueTrate
+{
     /**
      * Проверка на формат даты
      * @param string $stringdate строка даты
@@ -38,5 +40,18 @@ trait ExpenseRevenueTrate {
             }
         }
         return true;
+    }
+
+    /**
+     * Bulk удаление импортированыех с файла записей
+     * @param string $date дата в формате месяц.год
+     * @return void
+     */
+    public function deleteImported($date)
+    {
+        $date = Carbon::createFromFormat('j.m.Y', '1.' . $date);
+        $from = $date->firstOfMonth()->format('Y-m-d');
+        $to = $date->lastOfMonth()->format('Y-m-d');
+        DB::delete("DELETE from $this->table WHERE from_file = true AND date BETWEEN ? AND ?", [$from, $to]);
     }
 }

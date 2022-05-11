@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ExpenseCalculationsController extends ExpenseController
+class CalculationsController extends ExpenseController
 {
 
     public function __construct($from, $to)
@@ -42,12 +42,21 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Возращает расходы на маркетинг
+     * Возращает расходы на маркетинг (среднее)
      * @return float|int - расходы на маркетинг
      */
     public function getMarketingCosts()
     {
         return $this->loopSumAverage('_getMarketingCosts');
+    }
+
+    /**
+     * Возращает расходы на маркетинг суму)
+     * @return float|int - расходы на маркетинг
+     */
+    public function getMarketingCostsSum()
+    {
+        return $this->loopSum('_getMarketingCosts');
     }
 
     /**
@@ -60,7 +69,9 @@ class ExpenseCalculationsController extends ExpenseController
     {
         if (!$marketing_costs) return 0;
         if (in_array(1, [$this->getFixedExpensesTotal(), $this->getFixedExpensesTotal(), $this->getCogs(), $marketing_costs], true)) return 0;
-        return $net_revenue * (1 - $this->getMonthAffiliateCost()) - $this->getFixedExpensesTotal() - ($this->getCogs() * $net_revenue) - $marketing_costs * 1.05;
+
+        $ad_spend_commission = $this->getMonthPercentOfAdSpend() + 1;
+        return $net_revenue * (1 - $this->getMonthAffiliateCost()) - $this->getFixedExpensesTotal() - ($this->getCogs() * $net_revenue) - $this->getAdSpend() * $ad_spend_commission;
     }
 
     /**
@@ -78,12 +89,12 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Считает net_revenue за период
+     * Считает net_revenue за период (сума)
      * @return int|float - revenue
      */
-    public function getNetRevenue()
+    public function getNetRevenueSum()
     {
-        return $this->loopSumAverage('_getNetRevenue');
+        return $this->loopSum('_getNetRevenue');
     }
 
     /**
@@ -110,7 +121,7 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Получает суму фиксированных расходов за период
+     * Получает суму фиксированных расходов за период (среднее)
      * @return int|float - средняя расходов
      */
     public function getFixedExpensesTotal()
@@ -118,14 +129,14 @@ class ExpenseCalculationsController extends ExpenseController
         return $this->loopSumAverage('_getFixedExpensesTotal');
     }
 
+
     /**
-     * Получить массив expenses которые введены вручную (фиксированные расходы)
-     * @return array массив объектов
+     * Получает суму фиксированных расходов за период (суму)
+     * @return int|float - средняя расходов
      */
-    public function getFixedExpensesStatements()
+    public function getFixedExpensesTotalSum()
     {
-        $fixed_statements = DB::select("SELECT * FROM $this->expenses_table WHERE type_of_sum = ? AND date BETWEEN ? AND ?", [1, $this->fromstring, $this->tostring]);
-        return $fixed_statements ?: [];
+        return $this->loopSum('_getFixedExpensesTotal');
     }
 
     /**
@@ -142,7 +153,7 @@ class ExpenseCalculationsController extends ExpenseController
     }
 
     /**
-     * Получает Cost of Good Sold - себестоимость за период
+     * Получает Cost of Good Sold - себестоимость за период (среднее)
      * @return float|int|null cost of good sold или ноль если не записано
      */
     public function getCogs()
@@ -169,7 +180,7 @@ class ExpenseCalculationsController extends ExpenseController
      */
     public function getMonthPercentOfAdSpend()
     {
-        return $this->loopSumAverage('_getMonthPercentOfAdSpend');
+        return $this->_getMonthPercentOfAdSpend();
     }
 
     /**
@@ -196,7 +207,7 @@ class ExpenseCalculationsController extends ExpenseController
      */
     public function getMonthPercentOfRevenue()
     {
-        return $this->loopSumAverage('_getMonthPercentOfRevenue');
+        return $this->_getMonthPercentOfRevenue();
     }
 
     /**
@@ -210,16 +221,26 @@ class ExpenseCalculationsController extends ExpenseController
         $percent_of_ad_spend = $this->getMonthPercentOfAdSpend();
         $percent_of_revenue = $this->getMonthPercentOfRevenue();
 
-        return $ad_spend + ($ad_spend * $percent_of_ad_spend) + ($ad_spend * $percent_of_revenue);
+        return $ad_spend + ($this->getNetRevenueSum() * $percent_of_revenue) + ($ad_spend * $percent_of_ad_spend);
     }
 
     /**
-     * Подсчёт сумы расходов на маркетинг за период
+     * Подсчёт сумы расходов на маркетинг за период (среднее)
      * @return float|int - сума расходов на маркетинг
      */
     public function countTotalMarketingCosts()
     {
         return $this->loopSumAverage('_countTotalMarketingCosts');
+    }
+
+    /**
+     * Подсчёт ad_spend за период
+     * @return float|int сума ad_spend
+     */
+    public function getAdSpend() {
+        $ad_spend = DB::select("SELECT sum(amount) as amount FROM $this->expenses_table WHERE from_file = true AND date BETWEEN ? AND ?", [$this->fromstring, $this->tostring]);
+
+        return isset($ad_spend[0]->amount) ? $ad_spend[0]->amount : 0;
     }
 
     /**
@@ -229,10 +250,29 @@ class ExpenseCalculationsController extends ExpenseController
      */
     private function loopSumAverage($callback)
     {
+        return ($this->loopSum($callback) / $this->duration) ?: 1;
+    }
+
+    /**
+     * Подсчёт сумы значения за период
+     * @param string $callback название метода
+     * @return float|int - результат
+     */
+    private function loopSum($callback)
+    {
+        return array_sum($this->loop($callback)) ?: 1;
+    }
+
+    /**
+     * Подсчет значений за каждый месяц периода
+     * @param string $callback название метода
+     * @return array массив значений
+     */
+    public function loop($callback)
+    {
         $value = [];
         // делаем клоны чтобы не перезаписать дату в construct
         $obj1 = clone $this->from;
-        $obj2 = clone $this->to;
         foreach (range(1, $this->duration) as $i) {
             if ($i == 1) {
                 $startdate = $obj1->format('Y-m-d');
@@ -245,9 +285,9 @@ class ExpenseCalculationsController extends ExpenseController
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             }
 
-            $value[] = call_user_func(array(__NAMESPACE__ . '\ExpenseCalculationsController', $callback), $startdate, $enddate);
+            $value[] = call_user_func(array(__NAMESPACE__ . '\CalculationsController', $callback), $startdate, $enddate);
         }
 
-        return (array_sum($value) / $this->duration) ?: 1;
+        return $value;
     }
 }

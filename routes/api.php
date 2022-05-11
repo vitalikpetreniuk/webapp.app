@@ -21,12 +21,14 @@ use App\Http\Controllers\RevenueController;
 
 Route::get('expense/{expense}', [ExpenseController::class, 'getSingle']);
 Route::post('expense/{expense}', [ExpenseController::class, 'update']);
-Route::delete('expense/{expense}', [ExpenseController::class, 'delete']);
+Route::delete('expense/{expense}', [ExpenseController::class, 'delete'])->whereNumber('expense');
+
 Route::post('expense', [ExpenseController::class, 'store']);
+Route::delete('expense/{date}', [ExpenseController::class, 'deleteImported']);
+
 Route::get('sources', [SourceController::class, 'list']);
 Route::get('tags', [TagController::class, 'list']);
 
-
-Route::get('revenue/{revenue}', [RevenueController::class, 'getSingle']);
+Route::get('revenue/{revenue}', [RevenueController::class, 'getSingle'])->whereNumber('revenue');
 Route::post('revenue/{revenue}', [RevenueController::class, 'update']);
-Route::delete('revenue/{revenue}', [RevenueController::class, 'delete']);
+Route::delete('revenue/{date}', [RevenueController::class, 'deleteImported']);

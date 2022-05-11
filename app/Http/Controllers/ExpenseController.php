@@ -19,7 +19,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class ExpenseController extends Controller
 {
     use ExpenseRevenueTrate;
+
     protected $dateFormat = 'Y-m-d H:i:sO';
+
+    public $table = 'expenses';
 
     public function val()
     {
@@ -154,7 +157,7 @@ class ExpenseController extends Controller
      */
     protected function expenseCategory2($request)
     {
-        $date = Carbon::createFromFormat('m.y', $request->input('monthpicker2'))->firstOfMonth();
+        $date = Carbon::createFromFormat('j.m.y', '1.' . $request->input('monthpicker2'))->firstOfMonth();
 
         if (!$request->input('source')) {
             $source = null;
@@ -217,8 +220,7 @@ class ExpenseController extends Controller
      */
     protected function expenseCategory3($request)
     {
-        $date = Carbon::createFromFormat('m.y', $request->input('monthpicker3'))->firstOfMonth();
-
+        $date = Carbon::createFromFormat('j.m.y', '1.' . $request->input('monthpicker3'))->firstOfMonth();
         $amount = $request->input('cost-of-good-sold') ?? $request->input('affiliate-commission') ?? $request->input('ad-spend-commission');
 
         try {
@@ -241,17 +243,6 @@ class ExpenseController extends Controller
     }
 
     /**
-     * Получить все expense за период
-     * @param string $from - дата начала
-     * @param string $to - дата конца
-     * @return array - массив объектов expense
-     */
-    public static function getAllExpenses($from, $to)
-    {
-        return DB::select('SELECT * FROM expenses WHERE date BETWEEN ? AND ?', [$from, $to]);
-    }
-
-    /**
      * Получение айтема expense для api
      * @param Expense $expense
      * @return Expense
@@ -268,6 +259,7 @@ class ExpenseController extends Controller
      */
     public static function isPercent($expense)
     {
+        if (!isset($expense->type_of_sum)) return false;
         $percent_from_ad_spend = in_array($expense->type_of_sum, [2]) || in_array($expense->type_variable, [1, 2]);
         $percent_from_net_revenue = in_array($expense->type_of_sum, [3]) || in_array($expense->type_variable, [3]);
 

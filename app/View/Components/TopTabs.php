@@ -35,10 +35,10 @@ class TopTabs extends Component
                 'url' => route('sweetspot'),
                 'active' => $name == 'sweetspot' ?: false,
             ],
-            'Special event Analytics' => [
-                'url' => route('special'),
-                'active' => $name == 'special' ?: false,
-            ],
+//            'Special event Analytics' => [
+//                'url' => route('special'),
+//                'active' => $name == 'special' ?: false,
+//            ],
         ];
 
         return $tabs;

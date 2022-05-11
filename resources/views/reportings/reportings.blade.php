@@ -19,31 +19,26 @@
                 @php
                     $type = $item->class == 'plus' ? 'revenue' : 'expense'
                 @endphp
-                <tr @if($item->editable) data-id="{{ $item->id }}" @endif data-type="{{ $type }}">
+                <tr @if($item->editable) data-id="{{ $item->id }}" @endif @if(isset($item->from_file)) data-date="{{ $item->from_file }}" @endif data-type="{{ $type }}">
                     <td>{!! $item->type !!}</td>
                     <td class="{{ $item->class }}">
                         <span>{{ $item->amount }}</span>
-                        @if($item->editable)
-                            <div class="edit-block d-flex justify-content-center align-items-center">
-                                @if(false)
-                                    <button class="btn__done d-flex align-items-center justify-content-center">
-                                        <img src="{{ asset('frontend/images/dist/icons/done.svg') }}" alt="done">
-                                    </button>
-                                @endif
-                                <button class="btn__delete d-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('frontend/images/dist/icons/cross.svg') }}" alt="cross">
-                                </button>
+                        <div class="edit-block d-flex justify-content-center align-items-center">
+                            <button class="btn__delete d-flex align-items-center justify-content-center">
+                                <img src="{{ asset('frontend/images/dist/icons/cross.svg') }}" alt="cross">
+                            </button>
+                            @if($item->editable)
                                 <button rel="pop-2" class="btn__edit d-flex align-items-center justify-content-center">
                                     <img src="{{ asset('frontend/images/dist/icons/pencil.svg') }}" alt="pencil">
                                 </button>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </td>
                     <td>@if(isset($item->source))
                             {{ $item->source }}
                         @endif</td>
                     <td>@if(isset($item->tags))
-                        {{ $item->tags }}
+                            {{ $item->tags }}
                         @endif</td>
                     <td>
                         @if(isset($item->comment))

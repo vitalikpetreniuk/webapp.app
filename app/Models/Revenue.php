@@ -21,6 +21,7 @@ class Revenue extends Model
         'gross_sales_amount',
         'amount',
         'refund_amount',
+        'from_file',
         'user_id'
     ];
 
