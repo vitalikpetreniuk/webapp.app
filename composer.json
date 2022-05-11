@@ -15,8 +15,6 @@
         "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "^1.21",
         "proengsoft/laravel-jsvalidation": "^4.7",
-        "tymon/jwt-auth": "*",
-      "ext-http": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
