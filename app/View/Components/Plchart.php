@@ -46,7 +46,7 @@ class Plchart extends Component
     {
         $returned = [];
 
-        if (!isset($this->globalcogs) || $this->fixed_costs == 1) return false;
+        if (!isset($this->globalcogs) || !$this->globalcogs || $this->fixed_costs == 1) return false;
 
         foreach (range(0.01, 0.42, 0.02) as $marketing_costs) {
             $y = $this->countYFormula($marketing_costs);
@@ -118,29 +118,32 @@ class Plchart extends Component
      */
     public function render()
     {
-        $chart_data = $this->chartData();
-        $current_bullet = $this->currentBullet();
-        $date_period = $this->chartDate();
-
-        if ($current_bullet[0]['y'] > $this->countYFormula($current_bullet[0]['x'])) {
-            $color = 'green';
-            $hex = '#31DB42';
-        } else {
-            $color = '#red';
-            $hex = '#F62A2A';
-        }
-
         $data = [];
 
-        if ($chart_data) {
-            $data = [
-                'chart_data' => $chart_data,
-                'current_bullet' => $current_bullet,
-                'color' => $color,
-                'hex' => $hex,
-                'date_period' => $date_period,
-            ];
+        if (isset($this->globalcogs) && $this->globalcogs && $this->fixed_costs !== 1) {
+            $chart_data = $this->chartData();
+            $current_bullet = $this->currentBullet();
+            $date_period = $this->chartDate();
+
+            if ($current_bullet[0]['y'] > $this->countYFormula($current_bullet[0]['x'])) {
+                $color = 'green';
+                $hex = '#31DB42';
+            } else {
+                $color = '#red';
+                $hex = '#F62A2A';
+            }
+
+            if ($chart_data) {
+                $data = [
+                    'chart_data' => $chart_data,
+                    'current_bullet' => $current_bullet,
+                    'color' => $color,
+                    'hex' => $hex,
+                    'date_period' => $date_period,
+                ];
+            }
         }
+
 
         return view('components.plchart', $data);
     }
