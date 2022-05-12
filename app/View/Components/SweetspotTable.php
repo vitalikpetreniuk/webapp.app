@@ -11,8 +11,6 @@ use Illuminate\View\Component;
 
 class SweetspotTable extends Component
 {
-    use CogsTrait, NumbersTrait, AnalyticsTrait;
-
     /**
      * Create a new component instance.
      *
@@ -34,7 +32,7 @@ class SweetspotTable extends Component
             $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
         }
 
-        $this->globalcogs = $this->getSweetspotCogs();
+        $this->globalcogs = $this->controller->getCogs();
     }
 
     /**
@@ -51,10 +49,12 @@ class SweetspotTable extends Component
 
         foreach (range(0.01, $max, 0.01) as $marketing_cost) {
             try {
-                $revenue_needed = $this->getRevenueNeeded($marketing_cost);
+                $revenue_needed = $this->controller->getRevenueNeeded($marketing_cost);
                 $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
                 $allowable_marketing_cost = $revenue_needed * $marketing_cost;
                 $returned[] = compact('marketing_cost', 'revenue_needed', 'derivative', 'allowable_marketing_cost');
+//                echo '<hr>';
+//                var_dump($derivative, $marketing_cost);
             } catch (\ErrorException $error) {
                 continue;
             }
@@ -88,28 +88,12 @@ class SweetspotTable extends Component
                 }
 
                 if ($optimal_coefficient > 100) {
-                    array_splice($returned, $i+1);
+                    array_splice($returned, $i + 1);
                 }
             }
         }
 
         return $returned;
-    }
-
-    /**
-     * Cogs спец формула для sweetspot
-     * @return float|int число cogs
-     */
-    public function getSweetspotCogs()
-    {
-        if ($this->duration == 1) return $this->controller->getCogs();
-
-        $loopedcogs = $this->controller->loop('_getCogs');
-        $loopedrevenue = $this->controller->loop('_getNetRevenue');
-
-        return (array_sum(array_map(function ($el1, $el2) {
-                return $el1 * $el2;
-            }, $loopedcogs, $loopedrevenue)) / $this->controller->getNetRevenueSum());
     }
 
     /**
@@ -120,11 +104,11 @@ class SweetspotTable extends Component
     {
         $data = $this->_getData();
         foreach ($data as &$item) {
-            $item['revenue_needed'] = $this->basicDollarNumberFormat($item['revenue_needed']);
+            $item['revenue_needed'] = $this->controller->basicDollarNumberFormat($item['revenue_needed']);
             if (isset($item['optimal_coefficient'])) {
                 $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
             }
-            $item['allowable_marketing_cost'] = $this->basicDollarNumberFormat($item['allowable_marketing_cost']);
+            $item['allowable_marketing_cost'] = $this->controller->basicDollarNumberFormat($item['allowable_marketing_cost']);
         }
         return $data;
     }
@@ -152,7 +136,7 @@ class SweetspotTable extends Component
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             }
 
-            $value[] = $this->getCogs($startdate, $enddate);
+            $value[] = $this->controller->getCogs($startdate, $enddate);
 
         }
 
@@ -182,7 +166,7 @@ class SweetspotTable extends Component
                 $enddate = $obj3->lastOfMonth()->format('Y-m-d');
             }
 
-            $value[] = $this->getFixedExpenses($startdate, $enddate);
+            $value[] = $this->controller->getFixedExpenses($startdate, $enddate);
 
         }
 
@@ -200,7 +184,7 @@ class SweetspotTable extends Component
     public function getDerivativeRate($fixed_costs, $globalcogs, $marketing_cost)
     {
 //        if ($this->duration > 1)
-            return $this->getRangeDerivativeRate($marketing_cost);
+        return $this->getRangeDerivativeRate($marketing_cost);
 //        return $this->getMonthDerivativeRate($fixed_costs, $globalcogs, $marketing_cost);
     }
 
@@ -222,15 +206,7 @@ class SweetspotTable extends Component
      */
     private function getRangeDerivativeRate($marketing_cost)
     {
-        $cogsarr = $this->getRangeCogs();
-        $fixedarr = $this->getRangeFixedCosts();
-
-        $num1 = array_reduce($cogsarr, function ($carry, $item) {
-            $carry += 1 - $item;
-            return $carry;
-        });
-
-        return array_sum($fixedarr) / pow(($num1 - $marketing_cost) / $this->duration, 2);
+        return $this->fixed_costs / pow(1- $this->globalcogs-$marketing_cost, 2);
     }
 
     /**
