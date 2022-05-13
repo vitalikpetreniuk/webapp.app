@@ -4,7 +4,7 @@
         <div class="mounthly-calc__list">
             @foreach($data as $item)
             <div class="title">
-                <span>{{ $item->month }}</span>
+                <span>{{ $item->month }} {{$item->year}}</span>
             </div>
             <ul class="inner">
                 <li class="d-flex align-items-center justify-content-between">

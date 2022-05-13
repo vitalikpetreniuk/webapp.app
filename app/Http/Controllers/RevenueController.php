@@ -118,7 +118,7 @@ class RevenueController extends Controller
      */
     public static function getYearNavDate($from, $to)
     {
-        return DB::select("SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"YEAR\", MIN(date) as date, SUM(amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2", [$from, $to]);
+        return DB::select("SELECT TO_CHAR(date, 'Month') AS \"month\", EXTRACT(year from date) AS \"year\", MIN(date) as date, SUM(amount) as sum FROM revenues WHERE date BETWEEN ? AND ? GROUP BY 1, 2", [$from, $to]);
     }
 
     /**
