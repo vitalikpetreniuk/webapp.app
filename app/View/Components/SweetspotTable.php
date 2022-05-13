@@ -106,8 +106,26 @@ class SweetspotTable extends Component
         foreach ($data as &$item) {
             $item['revenue_needed'] = $this->controller->basicDollarNumberFormat($item['revenue_needed']);
             if (isset($item['optimal_coefficient'])) {
-                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
+                $item['optimal_coefficient_full'] = number_format($item['optimal_coefficient'], 5);
+                if ($item['optimal_coefficient'] < 0.1) {
+                    $item['optimal_coefficient'] = 0;
+                }
+                elseif ($item['optimal_coefficient'] < 1) {
+                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 1);
+                }else {
+                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 0);
+                }
             }
+//            if (isset($item['optimal_coefficient']) && $this->duration == 1) {
+//                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
+//            }elseif (isset($item['optimal_coefficient']) && $this->duration > 1) {
+//                if ($item['optimal_coefficient'] < 1 ) $item['optimal_coefficient'] = number_format($item['optimal_coefficient'] * 100, 1);
+//                $item['optimal_coefficient'] = $item['optimal_coefficient'] < 1 ? number_format($item['optimal_coefficient'] * 100, 1) : number_format($item['optimal_coefficient'], 0);
+//            }
+//            $item['allowable_marketing_cost'] = $this->controller->basicDollarNumberFormat($item['allowable_marketing_cost']);
+//            if (isset($item['optimal_coefficient'])) {
+//                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
+//            }
             $item['allowable_marketing_cost'] = $this->controller->basicDollarNumberFormat($item['allowable_marketing_cost']);
         }
         return $data;
