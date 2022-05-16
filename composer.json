@@ -16,7 +16,8 @@
         "phpoffice/phpspreadsheet": "^1.21",
         "proengsoft/laravel-jsvalidation": "^4.7",
         "tymon/jwt-auth": "*",
-      "ext-http": "*"
+      "ext-http": "*",
+      "ext-intl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

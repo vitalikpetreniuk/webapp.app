@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\CogsTrait;
 use App\Http\Traits\ExpenseRevenueTrate;
+use App\Http\Traits\NumbersTrait;
 use App\Models\Expense;
 use App\Models\Revenue;
 use App\Models\User;
@@ -18,7 +19,7 @@ use Illuminate\Http\Request;
 
 class RevenueController extends Controller
 {
-    use ExpenseRevenueTrate;
+    use ExpenseRevenueTrate, NumbersTrait;
 
     public $table = 'revenues';
 
@@ -82,7 +83,7 @@ class RevenueController extends Controller
                         'coupon_amount' => $row[4],
                         'shipping_amount' => $row[5],
                         'gross_sales_amount' => $row[6],
-                        'amount' => $row[7],
+                        'amount' => $this->basicNumberParse($row[7]),
                         'refund_amount' => $row[8],
                         'from_file' => true,
                         'user_id' => Auth::id(),

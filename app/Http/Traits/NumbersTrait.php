@@ -4,6 +4,7 @@ namespace App\Http\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use NumberFormatter;
 
 trait NumbersTrait
 {
@@ -20,4 +21,19 @@ trait NumbersTrait
         }
         return $newnum . '$';
    }
+
+    /**
+     * @throws \Exception
+     */
+    public function basicNumberParse($num) {
+       $fmt = new NumberFormatter( 'de_DE', NumberFormatter::DECIMAL );
+       $fmt2 = new NumberFormatter( 'en_EN', NumberFormatter::DECIMAL );
+           if($fmt2->parse($num)) {
+               return $fmt2->parse($num);
+           }else if($fmt->parse($num)) {
+               return $fmt->parse($num);
+           }else {
+               throw new \Exception('Unknown number format');
+           }
+       }
 }

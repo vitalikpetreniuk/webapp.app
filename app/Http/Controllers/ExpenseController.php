@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Traits\CogsTrait;
 use App\Http\Traits\ExpenseRevenueTrate;
+use App\Http\Traits\NumbersTrait;
 use App\Models\Expense;
-use App\Models\Revenue;
 use App\Models\Source;
 use App\Models\Tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\This;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ExpenseController extends Controller
 {
-    use ExpenseRevenueTrate;
+    use ExpenseRevenueTrate, NumbersTrait;
 
     protected $dateFormat = 'Y-m-d H:i:sO';
 
@@ -136,7 +133,7 @@ class ExpenseController extends Controller
                     [
                         'date' => $date,
                         'user_id' => Auth::id(),
-                        'amount' => $row[6],
+                        'amount' => $this->basicNumberParse($row[6]),
                         'type_of_sum' => 2,
                         'from_file' => true
                     ]
@@ -144,10 +141,11 @@ class ExpenseController extends Controller
             }
             $send['success'] = true;
             $send['message'] = 'XLSX was successfully imported';
-            echo json_encode($send);
         } catch (\Exception $exception) {
             $send = $this->userUnderstandableError($exception, true);
         }
+
+        echo json_encode($send);
     }
 
     /**
@@ -199,17 +197,6 @@ class ExpenseController extends Controller
             $send = $this->userUnderstandableError($exception);
         }
 
-//        if ($request->input('repeated2')) {
-//            $arr = [
-//                'expense_id' => $created->id,
-//                'period' => $request->input('repeated2'),
-//                'user_id' => Auth::id()
-//            ];
-//
-//            FutureExpense::insert($arr);
-//
-//        }
-
         echo json_encode($send);
     }
 
@@ -235,11 +222,11 @@ class ExpenseController extends Controller
 
             $send['success'] = true;
             $send['message'] = 'Expense was created';
-            echo json_encode($send);
         } catch (\Exception $exception) {
-            echo json_encode($this->userUnderstandableError($exception));
+            $send = $this->userUnderstandableError($exception);
         }
 
+        echo json_encode($send);
     }
 
     /**
