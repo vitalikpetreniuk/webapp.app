@@ -14,7 +14,7 @@
             <td>{{ $item['marketing_cost'] }}</td>
             <td>{{ $item['revenue_needed'] }}</td>
             <td class="bold">
-                @if(isset($item['optimal_coefficient']))<span>{{ $item['optimal_coefficient'] }}%</span>@endif
+                @if(isset($item['optimal_coefficient']))<span>{{ $item['optimal_coefficient'] }}</span>@endif
                 @if(isset($item['optimal_coefficient_full']))<div class="help">{{ $item['optimal_coefficient_full'] }}</div>@endif
             </td>
             <td>{{ $item['allowable_marketing_cost'] }}</td>

@@ -50,7 +50,7 @@ class SweetspotTable extends Component
         foreach (range(0.01, $max, 0.01) as $marketing_cost) {
             try {
                 $revenue_needed = $this->controller->getRevenueNeeded($marketing_cost);
-                $derivative = $this->getDerivativeRate($this->fixed_costs, $this->globalcogs, $marketing_cost);
+                $derivative = $this->getDerivativeRate($marketing_cost);
                 $allowable_marketing_cost = $revenue_needed * $marketing_cost;
                 $returned[] = compact('marketing_cost', 'revenue_needed', 'derivative', 'allowable_marketing_cost');
 //                echo '<hr>';
@@ -109,12 +109,11 @@ class SweetspotTable extends Component
                 $item['optimal_coefficient_full'] = number_format($item['optimal_coefficient'], 5);
                 if ($item['optimal_coefficient'] < 0.1) {
                     $item['optimal_coefficient'] = 0;
-                }
-                elseif ($item['optimal_coefficient'] < 1) {
-                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 1);
                 }else {
-                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 0);
+                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 1);
                 }
+
+                $item['optimal_coefficient']*=10;
             }
 //            if (isset($item['optimal_coefficient']) && $this->duration == 1) {
 //                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
@@ -162,44 +161,12 @@ class SweetspotTable extends Component
     }
 
     /**
-     * Получить fixed_costs за период
-     * @return array массив значений за каждый месяц
-     */
-    private function getRangeFixedCosts()
-    {
-        $value = [];
-        // делаем клоны чтобы не перезаписать дату в construct
-        $obj1 = clone $this->startDate;
-        $obj2 = clone $this->endDate;
-
-        foreach (range(1, $this->duration) as $i) {
-            if ($i == 1) {
-                $startdate = $obj1->format('Y-m-d');
-                $obj3 = clone $obj1;
-                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
-            } else {
-                $obj1->addMonths();
-                $startdate = $obj1->format('Y-m-d');
-                $obj3 = clone $obj1;
-                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
-            }
-
-            $value[] = $this->controller->getFixedExpenses($startdate, $enddate);
-
-        }
-
-        return $value;
-    }
-
-    /**
      * Общая функция для проверки как дальше считать derivative_rate
      * две формулы одна на месяц другая на период
-     * @param float|int $fixed_costs фиксированные расходы
-     * @param float|int $globalcogs Cost of good sold
      * @param float|int $marketing_cost marketing_cost
      * @return float|int derivative_rate
      */
-    public function getDerivativeRate($fixed_costs, $globalcogs, $marketing_cost)
+    public function getDerivativeRate($marketing_cost)
     {
 //        if ($this->duration > 1)
         return $this->getRangeDerivativeRate($marketing_cost);
