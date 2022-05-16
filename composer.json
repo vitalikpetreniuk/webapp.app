@@ -2,11 +2,13 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
-        "ext-json": "*",
         "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -15,9 +17,8 @@
         "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "^1.21",
         "proengsoft/laravel-jsvalidation": "^4.7",
-        "tymon/jwt-auth": "*",
-      "ext-http": "*",
-      "ext-intl": "*"
+        "ext-http": "@stable",
+        "ext-intl": "@stable"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -62,7 +63,12 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "ext-http": "1.0.0",
+            "ext-intl": "1.0.0",
+            "ext-json": "1.0.0"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
