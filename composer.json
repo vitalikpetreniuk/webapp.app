@@ -17,7 +17,7 @@
         "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "^1.21",
         "proengsoft/laravel-jsvalidation": "^4.7",
-        "ext-http": "7.4.*",
+        "ext-http": "^7.4",
         "ext-intl": "@stable"
     },
     "require-dev": {
@@ -65,7 +65,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "platform": {
-            "ext-http": "7.4.*",
+            "ext-http": "1.0.0",
             "ext-intl": "1.0.0",
             "ext-json": "1.0.0"
         }
