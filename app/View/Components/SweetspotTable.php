@@ -26,11 +26,8 @@ class SweetspotTable extends Component
         $this->controller = new CalculationsController($this->startDate, $this->endDate);
         $this->fixed_costs = $this->controller->getFixedExpensesTotalSum();
 
-        if ($this->endDate->year - $this->startDate->year == 0) {
-            $this->duration = $this->endDate->month - $this->startDate->month + 1 ?: 1;
-        } else {
-            $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
-        }
+        $this->duration = $this->endDate->diffInMonths($this->startDate);
+        if ($this->duration === 0) $this->duration = 1;
 
         $this->globalcogs = $this->controller->getCogs();
     }
@@ -113,7 +110,7 @@ class SweetspotTable extends Component
                     $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 1);
                 }
 
-                $item['optimal_coefficient']*=10;
+                $item['optimal_coefficient']*=100;
             }
 //            if (isset($item['optimal_coefficient']) && $this->duration == 1) {
 //                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
@@ -128,36 +125,6 @@ class SweetspotTable extends Component
             $item['allowable_marketing_cost'] = $this->controller->basicDollarNumberFormat($item['allowable_marketing_cost']);
         }
         return $data;
-    }
-
-    /**
-     * Получить Cost of goods sold за период
-     * @return array массив значений за каждый месяц периода
-     */
-    private function getRangeCogs()
-    {
-        $value = [];
-        // делаем клоны чтобы не перезаписать дату в construct
-        $obj1 = clone $this->startDate;
-        $obj2 = clone $this->endDate;
-
-        foreach (range(1, $this->duration) as $i) {
-            if ($i == 1) {
-                $startdate = $obj1->format('Y-m-d');
-                $obj3 = clone $obj1;
-                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
-            } else {
-                $obj1->addMonths();
-                $startdate = $obj1->format('Y-m-d');
-                $obj3 = clone $obj1;
-                $enddate = $obj3->lastOfMonth()->format('Y-m-d');
-            }
-
-            $value[] = $this->controller->getCogs($startdate, $enddate);
-
-        }
-
-        return $value;
     }
 
     /**
