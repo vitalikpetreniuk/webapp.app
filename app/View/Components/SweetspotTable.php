@@ -106,11 +106,9 @@ class SweetspotTable extends Component
                 $item['optimal_coefficient_full'] = number_format($item['optimal_coefficient'], 5);
                 if ($item['optimal_coefficient'] < 0.1) {
                     $item['optimal_coefficient'] = 0;
-                }else {
-                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 1);
+                } else {
+                    $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 2) * 100;
                 }
-
-                $item['optimal_coefficient']*=100;
             }
 //            if (isset($item['optimal_coefficient']) && $this->duration == 1) {
 //                $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 5);
@@ -158,7 +156,7 @@ class SweetspotTable extends Component
      */
     private function getRangeDerivativeRate($marketing_cost)
     {
-        return $this->fixed_costs / pow(1- $this->globalcogs-$marketing_cost, 2);
+        return $this->fixed_costs / pow(1 - $this->globalcogs - $marketing_cost, 2);
     }
 
     /**
