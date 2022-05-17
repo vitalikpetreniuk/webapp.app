@@ -30,8 +30,8 @@ class Nav extends Component
      */
     public function render()
     {
-        $from = Carbon::now()->subYear()->format('Y-m-d');
-        $to = Carbon::now()->format('Y-m-d');
+        $from = DB::selectOne('SELECT date FROM expenses ORDER BY date LIMIT 1')->date;
+        $to = DB::selectOne('SELECT date FROM expenses ORDER BY date DESC LIMIT 1')->date;
         /* Получение сумы растрат */
         $data = RevenueController::getYearNavDate($from, $to);
 
