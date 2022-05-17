@@ -30,20 +30,25 @@ class Nav extends Component
      */
     public function render()
     {
-        $from = Carbon::now()->subYear()->format('Y-m-d');
-        $to = Carbon::now()->format('Y-m-d');
-        /* Получение сумы растрат */
-        $data = RevenueController::getYearNavDate($from, $to);
+        $from = DB::selectOne('SELECT date FROM expenses ORDER BY date LIMIT 1');
+        $from = isset($from->date) ? $from->date : null;
+        $to = DB::selectOne('SELECT date FROM expenses ORDER BY date DESC LIMIT 1');
+        $to = isset($to->date) ? $to->date : null;
+        if (!$from || !$to) $data = [];
+        if (!isset($data)) {
+            /* Получение сумы растрат */
+            $data = RevenueController::getYearNavDate($from, $to);
 
-        foreach ($data as $key => $item) {
+            foreach ($data as $key => $item) {
 
-            $controller = new CalculationsController(Carbon::createFromFormat('Y-m-d', $item->date), Carbon::createFromFormat('Y-m-d', $item->date));
+                $controller = new CalculationsController(Carbon::createFromFormat('Y-m-d', $item->date), Carbon::createFromFormat('Y-m-d', $item->date));
 
-            $item->total_marketing_costs = $controller->countTotalMarketingCosts();
-            if ($item->total_marketing_costs == 3) {
-                $item->total_marketing_costs = 0;
+                $item->total_marketing_costs = $controller->countTotalMarketingCosts();
+                if ($item->total_marketing_costs == 3) {
+                    $item->total_marketing_costs = 0;
+                }
+                $item->net_profit = $controller->countMonthNetTotal($item->sum, $item->total_marketing_costs);
             }
-            $item->net_profit = $controller->countMonthNetTotal($item->sum, $item->total_marketing_costs);
         }
 
         return view('components.nav', compact('data'));
