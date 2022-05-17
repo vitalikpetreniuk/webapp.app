@@ -39,6 +39,6 @@ trait MarketingCostsTrait
      */
     public function getMarketingCostsSum()
     {
-        return $this->loopSum('_getMarketingCosts');
+        return $this->_getMarketingCosts($this->fromstring, $this->tostring);
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Traits\MarketingCostsTrait;
 use App\Http\Traits\NetTotalTrait;
 use App\Http\Traits\NumbersTrait;
 use App\Http\Traits\RevenueTrait;
+use App\Http\Traits\SetDurationTrait;
 use App\Http\Traits\TotalMarketingCostsTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,18 +28,16 @@ class CalculationsController extends ExpenseController
         $this->fromstring = $from->firstOfMonth()->format('Y-m-d');
         $this->to = $to->lastOfMonth();
         $this->tostring = $to->lastOfMonth()->format('Y-m-d');
+
+        $this->duration = $this->to->diffInMonths($this->from);
+        if ($this->duration === 0) $this->duration = 1;
+
         $this->expenses_table = 'expenses';
         $this->revenues_table = 'revenues';
-        if ($this->to->year - $this->from->year == 0) {
-            $this->duration = $this->to->month - $this->from->month + 1 ?: 1;
-        } else {
-            $this->duration = ($this->to->month - $this->from->month <= 1 ? $this->to->month - $this->from->month + 1 : 1) + ($this->to->year - $this->from->year) * 12;
-        }
-
         $this->fixed_costs = $this->getFixedExpensesTotalSum();
-
         $this->globalcogs = $this->getCogs();
     }
+
     /**
      * Подсчёт среднего значения за период
      * @param string $callback название метода

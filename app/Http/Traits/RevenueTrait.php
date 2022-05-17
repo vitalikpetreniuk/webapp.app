@@ -18,7 +18,7 @@ trait RevenueTrait
 
         $amount = DB::select("SELECT SUM(amount) as amount FROM $this->revenues_table WHERE date BETWEEN ? AND ?", [$from, $to]);
 
-        return isset($amount[0]->amount) ? $amount[0]->amount : 0;
+        return isset($amount[0]->amount) ? (int) $amount[0]->amount : 0;
     }
 
     /**
@@ -27,6 +27,6 @@ trait RevenueTrait
      */
     public function getNetRevenueSum()
     {
-        return $this->loopSum('_getNetRevenue');
+        return $this->_getNetRevenue($this->fromstring, $this->tostring);
     }
 }

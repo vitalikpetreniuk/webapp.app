@@ -18,22 +18,23 @@ class Plchart extends Component
      */
     public function __construct()
     {
-        $this->startDate = isset($_GET['startDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
-        $this->endDate = isset($_GET['endDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['endDate']) : Carbon::now()->lastOfMonth();
+        $this->from = isset($_GET['startDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['startDate'])->firstOfMonth() : Carbon::now()->subMonth()->firstOfMonth();
+        $this->to = isset($_GET['endDate']) ? Carbon::createFromFormat('j M Y', '1 ' . $_GET['endDate']) : Carbon::now()->lastOfMonth();
 
-        if ($this->endDate->year - $this->startDate->year == 0) {
-            $this->duration = $this->endDate->month - $this->startDate->month + 1 ?: 1;
-        } else {
-            $this->duration = ($this->endDate->month - $this->startDate->month <= 1 ? $this->endDate->month - $this->startDate->month + 1 : 1) + ($this->endDate->year - $this->startDate->year) * 12;
-        }
+        $controller = new CalculationsController($this->from, $this->to);
 
-        $controller = new CalculationsController($this->startDate, $this->endDate);
+        $this->expenses_table = 'expenses';
+        $this->revenues_table = 'revenues';
         $this->fixed_costs = $controller->getFixedExpensesTotalSum();
         $this->globalcogs = $controller->getCogs();
-        $this->net_revenue = (int)$controller->getNetRevenueSum();
+        $this->net_revenue = $controller->getNetRevenueSum();
+
+        $this->duration = $this->to->diffInMonths($this->from);
+        if ($this->duration === 0) $this->duration = 1;
+
         if ($this->duration > 1) {
             $this->marketing_costs = $controller->getMarketingCostsSum();
-        }else {
+        } else {
             $this->marketing_costs = $controller->countTotalMarketingCosts();
         }
     }
@@ -69,12 +70,13 @@ class Plchart extends Component
     {
         if ($this->duration == 1) {
             return $this->fixed_costs / ((1 - $this->globalcogs) - $marketing_costs);
-        }else {
+        } else {
             return $this->getRevenueNeeded($marketing_costs);
         }
     }
 
-    public function countXFormula() {
+    public function countXFormula()
+    {
         if ($this->duration > 1) {
             return $this->marketing_costs / $this->net_revenue;
         }
@@ -105,9 +107,9 @@ class Plchart extends Component
     private function chartDate(): string
     {
         if ($this->duration > 1) {
-            return $this->startDate->format('M Y').' - '. $this->endDate->format('M Y');
-        }else {
-            return $this->startDate->format('M Y');
+            return $this->from->format('M Y') . ' - ' . $this->to->format('M Y');
+        } else {
+            return $this->to->format('M Y');
         }
     }
 

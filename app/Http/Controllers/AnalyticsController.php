@@ -22,11 +22,8 @@ class AnalyticsController extends Controller
         $this->from = $startDate;
         $this->to = $endDate;
 
-        if ($endDate->year - $startDate->year == 0) {
-            $this->duration = $endDate->month - $startDate->month + 1 ?: 1;
-        } else {
-            $this->duration = ($endDate->month - $startDate->month <= 1 ? $endDate->month - $startDate->month + 1 : 1) + ($endDate->year - $startDate->year) * 12;
-        }
+        $this->duration = $this->to->diffInMonths($this->from);
+        if ($this->duration === 0) $this->duration = 1;
     }
 
     /**
