@@ -11,7 +11,7 @@ trait TotalMarketingCostsTrait
      * Подсчёт сумы расходов на маркетинг
      * @return float|int - сума расходов на маркетинг
      */
-    private function _countTotalMarketingCosts($from = false, $to = false)
+    private function _countTotalMarketingCosts()
     {
         $ad_spend = $this->getMarketingCosts();
 
@@ -34,7 +34,8 @@ trait TotalMarketingCostsTrait
      * Подсчёт ad_spend за период
      * @return float|int сума ad_spend
      */
-    public function getAdSpend() {
+    public function getAdSpend()
+    {
         $ad_spend = DB::select("SELECT sum(amount) as amount FROM $this->expenses_table WHERE from_file = true AND date BETWEEN ? AND ?", [$this->fromstring, $this->tostring]);
 
         return isset($ad_spend[0]->amount) ? $ad_spend[0]->amount : 0;
@@ -60,11 +61,10 @@ trait TotalMarketingCostsTrait
 
         $percent_of_revenue = DB::select("SELECT amount FROM $this->expenses_table WHERE type_variable = ? AND date BETWEEN ? AND ?", [2, $from, $to]);
         if (!isset($percent_of_revenue[0])) return 0;
-        if ($percent_of_revenue[0]->amount >= 1) {
-            return $percent_of_revenue[0]->amount / 100;
-        } else {
-            return $percent_of_revenue[0]->amount / 10;
-        }
+
+        $percent_of_revenue = (float) $percent_of_revenue[0]->amount;
+
+        return $percent_of_revenue / 100;
     }
 
     /**

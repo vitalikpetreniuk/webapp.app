@@ -104,9 +104,11 @@ class SweetspotTable extends Component
             $item['revenue_needed'] = $this->controller->basicDollarNumberFormat($item['revenue_needed']);
             if (isset($item['optimal_coefficient'])) {
                 $item['optimal_coefficient_full'] = number_format($item['optimal_coefficient'], 5);
-                if ($item['optimal_coefficient'] < 0.1) {
+                if ($item['optimal_coefficient'] < 0.001) {
                     $item['optimal_coefficient'] = 0;
-                } else {
+                } else if ($item['optimal_coefficient'] < 0.01) {
+                    $item['optimal_coefficient'] = round(number_format($item['optimal_coefficient'], 3) * 100);
+                }else {
                     $item['optimal_coefficient'] = number_format($item['optimal_coefficient'], 2) * 100;
                 }
             }
