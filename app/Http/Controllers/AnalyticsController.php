@@ -22,7 +22,7 @@ class AnalyticsController extends Controller
         $this->from = $startDate;
         $this->to = $endDate;
 
-        $this->duration = $this->to->diffInMonths($this->from);
+        $this->duration = $this->to->diffInMonths($this->from) + 1;
         if ($this->duration === 0) $this->duration = 1;
     }
 

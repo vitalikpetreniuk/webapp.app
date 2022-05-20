@@ -29,8 +29,7 @@ class Plchart extends Component
         $this->globalcogs = $controller->getCogs();
         $this->net_revenue = $controller->getNetRevenueSum();
 
-        $this->duration = $this->to->diffInMonths($this->from);
-        if ($this->duration === 0) $this->duration = 1;
+        $this->duration = $this->to->diffInMonths($this->from) + 1;
 
         if ($this->duration > 1) {
             $this->marketing_costs = $controller->getMarketingCostsSum();

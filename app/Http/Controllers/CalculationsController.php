@@ -29,9 +29,7 @@ class CalculationsController extends ExpenseController
         $this->to = $to->lastOfMonth();
         $this->tostring = $to->lastOfMonth()->format('Y-m-d');
 
-        $this->duration = $this->to->diffInMonths($this->from);
-        if ($this->duration === 0) $this->duration = 1;
-
+        $this->duration = $this->to->diffInMonths($this->from) + 1;
         $this->expenses_table = 'expenses';
         $this->revenues_table = 'revenues';
         $this->fixed_costs = $this->getFixedExpensesTotalSum();
