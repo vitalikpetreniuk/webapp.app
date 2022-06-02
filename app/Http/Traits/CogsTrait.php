@@ -51,6 +51,8 @@ trait CogsTrait
         $loopedcogs = $this->loop('getRangeCogs');
         $loopedrevenue = $this->loop('_getNetRevenue');
 
+        if(!$this->getNetRevenueSum()) return 0;
+
         return (array_sum(array_map(function ($el1, $el2) {
                 return $el1 * $el2;
             }, $loopedcogs, $loopedrevenue)) / $this->getNetRevenueSum());
