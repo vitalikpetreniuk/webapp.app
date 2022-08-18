@@ -24,7 +24,13 @@ trait ExpenseRevenueTrate
             return false;
         }
 
-        return Carbon::createFromFormat("n" . $sep . "j" . $sep . "Y", $stringdate);
+        try {
+            $date = Carbon::createFromFormat("n" . $sep . "j" . $sep . "Y", $stringdate);
+        } catch (\Exception $exception) {
+            $date = Carbon::createFromFormat("Y" . $sep . "n" . $sep . "j", $stringdate);
+        }
+
+        return $date;
     }
 
     /**

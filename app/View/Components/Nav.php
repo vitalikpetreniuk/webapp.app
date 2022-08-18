@@ -30,6 +30,7 @@ class Nav extends Component
      */
     public function render()
     {
+        /* TODO: Replace from and to with postgres min and max */
         $from = DB::selectOne('SELECT date FROM expenses ORDER BY date LIMIT 1');
         $from = isset($from->date) ? $from->date : null;
         $to = DB::selectOne('SELECT date FROM expenses ORDER BY date DESC LIMIT 1');

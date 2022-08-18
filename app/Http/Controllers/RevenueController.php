@@ -68,6 +68,7 @@ class RevenueController extends Controller
         $reader = IOFactory::createReader("Xlsx");
         $spreadsheet = $reader->load(storage_path("app" . DIRECTORY_SEPARATOR . $path));
         $sheet = $spreadsheet->getActiveSheet()->toArray();
+        unset($sheet[0]);
 
         try {
             foreach ($sheet as $row) {
@@ -76,7 +77,7 @@ class RevenueController extends Controller
                 if (!$date) continue;
                 Revenue::create(
                     [
-                        'date' => $date,
+                        'date' => $date->format('Y-m-d'),
                         'number_of_items_sold' => $row[1],
                         'number_of_orders' => $row[2],
                         'average_net_sales_amount' => $row[3],
