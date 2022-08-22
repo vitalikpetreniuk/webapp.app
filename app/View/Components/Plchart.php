@@ -80,6 +80,8 @@ class Plchart extends Component
             return $this->marketing_costs / $this->net_revenue;
         }
 
+        if(!$this->net_revenue) return 1;
+
         return 1 * $this->marketing_costs / $this->net_revenue;
     }
 
